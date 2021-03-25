@@ -1,2 +1,6 @@
-### Jetbrains
+# Jetbrains
 .idea
+
+# Project
+bin
+out
