@@ -1,11 +1,11 @@
-package cli
+package commands
 
 import (
-	"github.com/restechnica/semverbot/internal/config"
 	"github.com/spf13/cobra"
-)
 
-const DefaultVersion = "v0.0.0"
+	"github.com/restechnica/semverbot/internal/config"
+	"github.com/restechnica/semverbot/pkg/cli"
+)
 
 func NewRootCommand() *cobra.Command {
 	var command = &cobra.Command{
@@ -13,7 +13,7 @@ func NewRootCommand() *cobra.Command {
 		PersistentPreRunE: RootCommandPersistentPreRunE,
 	}
 
-	command.PersistentFlags().StringVarP(&ConfigFlag, "config", "c", "", "sbot config")
+	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "", "sbot config")
 
 	command.AddCommand(NewGetCommand())
 	command.AddCommand(NewPredictCommand())
@@ -22,10 +22,10 @@ func NewRootCommand() *cobra.Command {
 }
 
 func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error) {
-	Config = LoadDefaultConfig()
+	cli.Config = LoadDefaultConfig()
 
-	if ConfigFlag != "" {
-		Config, err = LoadConfig(ConfigFlag, Config)
+	if cli.ConfigFlag != "" {
+		cli.Config, err = LoadConfig(cli.ConfigFlag, cli.Config)
 	}
 
 	return err

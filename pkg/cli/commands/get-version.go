@@ -1,8 +1,10 @@
-package cli
+package commands
 
 import (
 	"fmt"
 	"strings"
+
+	"github.com/restechnica/semverbot/pkg/cli"
 
 	"github.com/restechnica/semverbot/internal/commands"
 
@@ -19,7 +21,7 @@ func NewGetVersionCommand() *cobra.Command {
 }
 
 func GetVersionCommandRun(cmd *cobra.Command, args []string) {
-	var version = GetVersionOrDefault(DefaultVersion)
+	var version = GetVersionOrDefault(cli.DefaultVersion)
 	fmt.Println(version)
 }
 

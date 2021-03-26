@@ -1,9 +1,11 @@
-package cli
+package commands
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/restechnica/semverbot/pkg/cli"
 )
 
 func NewPredictVersionCommand() *cobra.Command {
@@ -12,7 +14,7 @@ func NewPredictVersionCommand() *cobra.Command {
 		Run: PredictVersionCommandRun,
 	}
 
-	command.PersistentFlags().StringVarP(&ModeFlag, "mode", "m", "auto", "sbot mode")
+	command.PersistentFlags().StringVarP(&cli.ModeFlag, "mode", "m", "auto", "sbot mode")
 
 	return command
 }
@@ -24,7 +26,7 @@ func PredictVersionCommandRun(cmd *cobra.Command, args []string) {
 
 func PredictVersion() (version string) {
 	//var mnger = semver.NewManager()
-	version = GetVersionOrDefault(DefaultVersion)
+	version = GetVersionOrDefault(cli.DefaultVersion)
 
 	return
 }
