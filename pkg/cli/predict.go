@@ -1,6 +1,8 @@
 package cli
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+)
 
 func NewPredictCommand() *cobra.Command {
 	var command = &cobra.Command{

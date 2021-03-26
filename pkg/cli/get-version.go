@@ -2,8 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"github.com/restechnica/semverbot/internal/commands"
 	"strings"
+
+	"github.com/restechnica/semverbot/internal/commands"
 
 	"github.com/spf13/cobra"
 )
@@ -11,14 +12,14 @@ import (
 func NewGetVersionCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use: "version",
-		Run: RunGetVersionCommand,
+		Run: GetVersionCommandRun,
 	}
 
 	return command
 }
 
-func RunGetVersionCommand(cmd *cobra.Command, args []string) {
-	var version = GetVersionOrDefault("v0.0.0")
+func GetVersionCommandRun(cmd *cobra.Command, args []string) {
+	var version = GetVersionOrDefault(DefaultVersion)
 	fmt.Println(version)
 }
 

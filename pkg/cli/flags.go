@@ -1,5 +1,6 @@
 package cli
 
 var (
-	Config string
+	ConfigFlag string
+	ModeFlag   string
 )
