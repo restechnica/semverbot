@@ -2,13 +2,11 @@ package commands
 
 import (
 	"fmt"
-	"strings"
-
-	"github.com/restechnica/semverbot/pkg/cli"
-
-	"github.com/restechnica/semverbot/internal/commands"
 
 	"github.com/spf13/cobra"
+
+	"github.com/restechnica/semverbot/pkg/api"
+	"github.com/restechnica/semverbot/pkg/cli"
 )
 
 func NewGetVersionCommand() *cobra.Command {
@@ -21,22 +19,7 @@ func NewGetVersionCommand() *cobra.Command {
 }
 
 func GetVersionCommandRun(cmd *cobra.Command, args []string) {
-	var version = GetVersionOrDefault(cli.DefaultVersion)
+	var versionAPI = api.NewVersionAPI()
+	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
 	fmt.Println(version)
-}
-
-func GetVersion() (version string, err error) {
-	var cmder = commands.ExecCommander{}
-	version, err = cmder.Output("git", "describe", "--tags")
-	return strings.TrimSpace(version), err
-}
-
-func GetVersionOrDefault(defaultVersion string) (version string) {
-	var err error
-
-	if version, err = GetVersion(); err != nil {
-		version = defaultVersion
-	}
-
-	return version
 }
