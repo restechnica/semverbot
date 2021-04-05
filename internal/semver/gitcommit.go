@@ -13,13 +13,14 @@ const GitCommit = "git-commit"
 // GitCommitMode implementation of the Mode interface.
 // It makes use of several matching strategies based on git commit messages.
 type GitCommitMode struct {
-	Matches map[string]string
+	Commander commands.Commander
+	Matches   map[string]string
 }
 
 // NewGitCommitMode creates a new GitCommitMode.
 // Returns the new GitCommitMode.
 func NewGitCommitMode(matchers map[string]string) GitCommitMode {
-	return GitCommitMode{Matches: matchers}
+	return GitCommitMode{Commander: commands.ExecCommander{}, Matches: matchers}
 }
 
 // Increment increments a given version using the GitCommitMode.
@@ -28,8 +29,7 @@ func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, e
 	var message string
 	var matchedMode Mode
 
-	var cmder = commands.NewExecCommander()
-	if message, err = cmder.Output("git", "show", "-s", "--format=%s"); err != nil {
+	if message, err = mode.Commander.Output("git", "show", "-s", "--format=%s"); err != nil {
 		return
 	}
 
