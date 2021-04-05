@@ -1,9 +1,10 @@
 package commands
 
 import (
+	"github.com/restechnica/semverbot/internal/semver"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
-	"github.com/restechnica/semverbot/internal/config"
 	"github.com/restechnica/semverbot/pkg/cli"
 )
 
@@ -13,7 +14,8 @@ func NewRootCommand() *cobra.Command {
 		PersistentPreRunE: RootCommandPersistentPreRunE,
 	}
 
-	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "", "sbot config")
+	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "",
+		`sbot config (default ".semverbot.yaml")`)
 
 	command.AddCommand(NewGetCommand())
 	command.AddCommand(NewPredictCommand())
@@ -22,20 +24,24 @@ func NewRootCommand() *cobra.Command {
 }
 
 func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error) {
-	cli.Config = LoadDefaultConfig()
-
-	if cli.ConfigFlag != "" {
-		cli.Config, err = LoadConfig(cli.ConfigFlag, cli.Config)
-	}
-
+	SetConfigDefaults()
+	err = LoadConfig()
 	return err
 }
 
-func LoadConfig(path string, target config.Root) (result config.Root, err error) {
-	var loader = config.NewYAMLLoader()
-	return loader.Overload(path, target)
+func LoadConfig() (err error) {
+	if cli.ConfigFlag != "" {
+		viper.SetConfigFile(cli.ConfigFlag)
+	} else {
+		viper.AddConfigPath(".")
+		viper.SetConfigName(".semverbot")
+		viper.SetConfigType("yaml")
+	}
+
+	return viper.ReadInConfig()
 }
 
-func LoadDefaultConfig() config.Root {
-	return config.NewRoot()
+func SetConfigDefaults() {
+	viper.SetDefault("semver.mode", "auto")
+	viper.SetDefault("semver.matchers", []semver.Mode{})
 }

@@ -1,0 +1,11 @@
+---
+git:
+  config:
+    'user.email': github-actions@github.com
+    'user.name': github-actions
+  unshallow: true
+semver:
+  matchers:
+    'fix/': patch
+    'feature/': minor
+    'release/': major

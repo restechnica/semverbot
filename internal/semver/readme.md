@@ -1,0 +1,3 @@
+this stuff needs to move to the pkg folder somewhere
+
+perhaps ./pkg/core/semver.go or ./pkg/core/semver/...
