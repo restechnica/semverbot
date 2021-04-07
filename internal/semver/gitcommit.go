@@ -1,9 +1,6 @@
 package semver
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/restechnica/semverbot/internal/commands"
 )
 
@@ -11,19 +8,19 @@ import (
 const GitCommit = "git-commit"
 
 // GitCommitMode implementation of the Mode interface.
-// It makes use of several matching strategies based on git commit messages.
+// It increments the semver level based on the latest git commit messages.
 type GitCommitMode struct {
-	Commander commands.Commander
-	Matches   map[string]string
+	Commander    commands.Commander
+	ModeDetector ModeDetector
 }
 
 // NewGitCommitMode creates a new GitCommitMode.
 // Returns the new GitCommitMode.
-func NewGitCommitMode(matchers map[string]string) GitCommitMode {
-	return GitCommitMode{Commander: commands.ExecCommander{}, Matches: matchers}
+func NewGitCommitMode(detector ModeDetector) GitCommitMode {
+	return GitCommitMode{Commander: commands.ExecCommander{}, ModeDetector: detector}
 }
 
-// Increment increments a given version using the GitCommitMode.
+// Increment increments a given version based on the latest git commit message.
 // Returns the incremented version.
 func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, err error) {
 	var message string
@@ -33,29 +30,9 @@ func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, e
 		return
 	}
 
-	if matchedMode, err = mode.GetMatchedMode(message); err != nil {
+	if matchedMode, err = mode.ModeDetector.DetectMode(message); err != nil {
 		return
 	}
 
 	return matchedMode.Increment(targetVersion)
-}
-
-// GetMatchedMode gets the mode that testMatches specific tokens within the git commit message.
-// It returns the matched mode.
-func (mode GitCommitMode) GetMatchedMode(message string) (matched Mode, err error) {
-	for match, mode := range mode.Matches {
-		if strings.Contains(message, match) {
-			switch mode {
-			case Patch:
-				matched = NewPatchMode()
-			case Minor:
-				matched = NewMinorMode()
-			case Major:
-				matched = NewMajorMode()
-			}
-			return
-		}
-	}
-
-	return matched, fmt.Errorf(`could not match a mode to the commit message "%s"`, message)
 }

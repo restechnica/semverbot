@@ -5,22 +5,23 @@ import (
 )
 
 type SemverModeAPI struct {
-	GitBranchMatchers map[string]string
-	GitCommitMatchers map[string]string
+	GitBranchMode semver.GitCommitMode
+	GitCommitMode semver.GitCommitMode
 }
 
-func NewSemverModeAPI(gitBranchMatchers map[string]string, gitCommitMatchers map[string]string) SemverModeAPI {
-	return SemverModeAPI{GitBranchMatchers: gitBranchMatchers, GitCommitMatchers: gitCommitMatchers}
+func NewSemverModeAPI(detector semver.ModeDetector) SemverModeAPI {
+	return SemverModeAPI{
+		GitBranchMode: semver.NewGitCommitMode(detector),
+		GitCommitMode: semver.NewGitCommitMode(detector),
+	}
 }
 
 func (api SemverModeAPI) SelectMode(mode string) semver.Mode {
 	switch mode {
 	case semver.Auto:
-		return semver.NewAutoMode([]semver.Mode{
-			semver.NewGitCommitMode(api.GitCommitMatchers),
-		})
+		return semver.NewAutoMode([]semver.Mode{api.GitBranchMode, api.GitCommitMode})
 	case semver.GitCommit:
-		return semver.NewGitCommitMode(api.GitCommitMatchers)
+		return api.GitCommitMode
 	case semver.Patch:
 		return semver.NewPatchMode()
 	case semver.Minor:

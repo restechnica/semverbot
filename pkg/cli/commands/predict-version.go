@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"github.com/restechnica/semverbot/internal/semver"
 
 	"github.com/restechnica/semverbot/pkg/api"
 	"github.com/spf13/cobra"
@@ -27,8 +28,10 @@ func PredictVersionCommandRunE(cmd *cobra.Command, args []string) error {
 	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
 
 	var mode = viper.GetString("semver.mode")
-	var gitCommitMatchers = viper.GetStringMapString("semver.matchers")
-	var semverModeAPI = api.NewSemverModeAPI(nil, gitCommitMatchers)
+	var modeDetectionMap = viper.GetStringMapStringSlice("semver.modes.detection")
+	var modeDetector = semver.NewModeDetector(modeDetectionMap)
+
+	var semverModeAPI = api.NewSemverModeAPI(modeDetector)
 	var semverMode = semverModeAPI.SelectMode(mode)
 
 	var incrementedVersion, err = semverMode.Increment(version)

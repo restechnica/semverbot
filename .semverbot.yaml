@@ -5,7 +5,13 @@ git:
     'user.name': github-actions
   unshallow: true
 semver:
-  matchers:
-    'fix/': patch
-    'feature/': minor
-    'release/': major
+  modes:
+    detection:
+      patch:
+        - 'fix/'
+      minor:
+        - 'feature/'
+      major:
+        - 'release/'
+        - 'releae/'
+
