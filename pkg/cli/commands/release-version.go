@@ -11,14 +11,18 @@ import (
 
 func NewReleaseVersionCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:  "version",
-		RunE: ReleaseVersionCommandRunE,
+		Use:     "version",
+		PreRunE: ReleaseVersionCommandPreRunE,
+		RunE:    ReleaseVersionCommandRunE,
 	}
 
-	command.PersistentFlags().StringVarP(&cli.ModeFlag, "mode", "m", "auto", "sbot mode")
-	_ = viper.BindPFlag("semver.mode", command.PersistentFlags().Lookup("mode"))
+	command.Flags().StringVarP(&cli.ModeFlag, "mode", "m", "", "sbot mode")
 
 	return command
+}
+
+func ReleaseVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error) {
+	return viper.BindPFlag("semver.mode", cmd.Flags().Lookup("mode"))
 }
 
 func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
