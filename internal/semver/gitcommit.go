@@ -21,7 +21,7 @@ func NewGitCommitMode(detector ModeDetector) GitCommitMode {
 }
 
 // Increment increments a given version based on the latest git commit message.
-// Returns the incremented version.
+// Returns the incremented version or an error if it failed to detect the mode based on the git commit.
 func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, err error) {
 	var message string
 	var matchedMode Mode
