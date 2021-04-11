@@ -15,7 +15,7 @@ func NewRootCommand() *cobra.Command {
 	}
 
 	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "",
-		`sbot config (default ".semverbot.yaml")`)
+		`sbot config (default ".semverbot.toml")`)
 
 	command.AddCommand(NewGetCommand())
 	command.AddCommand(NewPredictCommand())
@@ -35,7 +35,7 @@ func LoadConfig() (err error) {
 	} else {
 		viper.AddConfigPath(".")
 		viper.SetConfigName(".semverbot")
-		viper.SetConfigType("yaml")
+		viper.SetConfigType("toml")
 	}
 
 	return viper.ReadInConfig()
