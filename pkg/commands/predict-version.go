@@ -32,7 +32,7 @@ func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
 
 	var mode = viper.GetString("semver.mode")
-	var modeDetectionMap = viper.GetStringMapStringSlice("semver.modes.detection")
+	var modeDetectionMap = viper.GetStringMapStringSlice("semver.detection")
 	var modeDetector = semver.NewModeDetector(modeDetectionMap)
 
 	var semverModeAPI = api.NewSemverModeAPI(modeDetector)
