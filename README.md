@@ -16,8 +16,8 @@ Without these configs `sbot` might show unexpected behaviour and will not be abl
 
 #### prefix
 
-Controls the prefix of git tags. The "v" prefix is used by default due to its popularity.
-Some Golang tooling completely depend on it.
+Controls the prefix of git tags. The `v prefix`, e.g. `v1.0.1` is used by default due to its popularity.
+Some Golang tools completely depend on it.
 
 #### fetch
 
@@ -34,6 +34,41 @@ Each level will be assigned a collection of matching strings, which will be matc
 
 e.g.: while the `git-branch` mode is selected, `sbot` will match the strings against the name of the branch
 where a merge originated from to identify the `semver level`.
+
+### Mode
+`sbot` supports multiple modes to detect and increment `semver levels`.
+Each mode uses different criteria for their `semver level` detection system.
+A `mode` flag is provided as well.
+
+#### Available modes
+**auto** (default)
+
+Attempts a series of modes int he following order:
+1. `git-branch`
+1. `git-commit` - if `git-branch` failed
+1. `patch` - if `git-commit` failed
+
+**git-branch**
+
+Detects and increments a `semver level` based on the **name** of the `git` branch from where a merge commit originated from.
+This only works when the old branch has not been deleted yet. The branch name is matched with the `semver.detection` configuration.
+
+**git-commit**
+
+Detects and increments a `semver level` based on the `git` commit message.
+The commit message is matched with the `semver.detection` configuration.
+
+**major**
+
+Increments the `major` level.
+
+**minor**
+
+Increments the `minor` level.
+
+**patch**
+
+Increments the `patch` level.
 
 ## Defaults
 
