@@ -20,6 +20,7 @@ func NewRootCommand() *cobra.Command {
 		`sbot config (default ".semverbot.toml")`)
 
 	command.AddCommand(NewGetCommand())
+	command.AddCommand(NewInitCommand())
 	command.AddCommand(NewPredictCommand())
 	command.AddCommand(NewReleaseCommand())
 	command.AddCommand(NewUpdateCommand())
