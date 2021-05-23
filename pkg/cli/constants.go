@@ -1,5 +1,5 @@
 package cli
 
 const (
-	DefaultVersion = "v0.0.0"
+	DefaultVersion = "0.0.0"
 )

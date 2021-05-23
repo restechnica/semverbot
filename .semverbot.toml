@@ -1,11 +1,17 @@
 [git]
-unshallow = true
 
 [git.config]
-"user.email" = "github-actions@github.com"
-"user.name" = "github-actions"
+email = "github-actions@github.com"
+name = "github-actions"
 
-[semver.modes.detection]
+[git.tags]
+prefix = "v"
+fetch = false
+
+[semver]
+mode = "auto"
+
+[semver.detection]
 patch = ["fix/"]
 minor = ["feature/"]
 major = ["release/"]

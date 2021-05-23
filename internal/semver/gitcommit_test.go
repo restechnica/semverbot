@@ -12,12 +12,9 @@ import (
 )
 
 var modeDetectionMap = map[string][]string{
-	"[fix]":     {Patch},
-	"fix/":      {Patch},
-	"[feature]": {Minor},
-	"feature/":  {Minor},
-	"[release]": {Major},
-	"release/":  {Major},
+	Patch: {"[fix]", "fix/"},
+	Minor: {"[feature]", "feature/"},
+	Major: {"[release]", "release/"},
 }
 
 func TestGitCommitMode_GitCommitConstant(t *testing.T) {
@@ -123,7 +120,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 	var errorTests = []ErrorTest{
 		{Name: "ReturnErrorOnUnmatchedMode", Message: "[fix some message", Version: "0.0.0", GitError: nil},
 		{Name: "ReturnErrorOnInvalidVersion", Message: "[fix] some message", Version: "invalid", GitError: nil},
-		{Name: "ReturnErrorOnInvalidCharacter", Message: "[fix] some message", Version: "v1.0.0", GitError: nil},
+		//{Name: "ReturnErrorOnInvalidCharacter", Message: "[fix] some message", Version: "v1.0.0", GitError: nil}, // commented out due to TolerantParse
 		{Name: "ReturnErrorOnGitError", Message: "[fix] some message", Version: "1.0.0",
 			GitError: fmt.Errorf("some-error")},
 	}
