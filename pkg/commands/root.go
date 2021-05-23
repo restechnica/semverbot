@@ -64,28 +64,29 @@ func LoadConfig() (err error) {
 }
 
 func LoadDefaultConfig() {
-	viper.SetDefault("git.tags.prefix", "v")
-	viper.SetDefault("semver.detection", map[string][]string{})
-	viper.SetDefault("semver.mode", "auto")
+	viper.SetDefault(cli.GitTagsPrefixConfigKey, "v")
+	viper.SetDefault(cli.SemverDetectionConfigKey, map[string][]string{})
+	viper.SetDefault(cli.SemverModeConfigKey, "auto")
 }
 
 func LoadFlags(cmd *cobra.Command) (err error) {
-	return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch"))
+	return err
+	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch"))
 }
 
 func SetGitConfigIfConfigured() (err error) {
 	var gitAPI = api.NewGitAPI()
 
-	if viper.IsSet("git.config.email") {
-		var email = viper.GetString("git.config.email")
+	if viper.IsSet(cli.GitConfigEmailConfigKey) {
+		var email = viper.GetString(cli.GitConfigEmailConfigKey)
 
 		if err = gitAPI.SetConfigIfNotSet("user.email", email); err != nil {
 			return err
 		}
 	}
 
-	if viper.IsSet("git.config.name") {
-		var name = viper.GetString("git.config.name")
+	if viper.IsSet(cli.GitConfigNameConfigKey) {
+		var name = viper.GetString(cli.GitConfigNameConfigKey)
 
 		if err = gitAPI.SetConfigIfNotSet("user.name", name); err != nil {
 			return err

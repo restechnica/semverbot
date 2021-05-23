@@ -24,15 +24,15 @@ func NewReleaseVersionCommand() *cobra.Command {
 }
 
 func ReleaseVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error) {
-	return viper.BindPFlag("semver.mode", cmd.Flags().Lookup("mode"))
+	return viper.BindPFlag(cli.SemverModeConfigKey, cmd.Flags().Lookup("mode"))
 }
 
 func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
 	var versionAPI = api.NewVersionAPI()
 	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
 
-	var mode = viper.GetString("semver.mode")
-	var modeDetectionMap = viper.GetStringMapStringSlice("semver.modes.detection")
+	var mode = viper.GetString(cli.SemverModeConfigKey)
+	var modeDetectionMap = viper.GetStringMapStringSlice(cli.SemverDetectionConfigKey)
 	var modeDetector = semver.NewModeDetector(modeDetectionMap)
 
 	var semverModeAPI = api.NewSemverModeAPI(modeDetector)
@@ -45,7 +45,7 @@ func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	var gitTagPrefix = viper.GetString("git.tags.prefix")
+	var gitTagPrefix = viper.GetString(cli.GitTagsPrefixConfigKey)
 	incrementedVersion = fmt.Sprintf("%s%s", gitTagPrefix, incrementedVersion)
 
 	var gitAPI = api.NewGitAPI()

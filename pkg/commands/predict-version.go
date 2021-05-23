@@ -24,15 +24,15 @@ func NewPredictVersionCommand() *cobra.Command {
 }
 
 func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error) {
-	return viper.BindPFlag("semver.mode", cmd.Flags().Lookup("mode"))
+	return viper.BindPFlag(cli.SemverModeConfigKey, cmd.Flags().Lookup("mode"))
 }
 
 func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var versionAPI = api.NewVersionAPI()
 	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
 
-	var mode = viper.GetString("semver.mode")
-	var modeDetectionMap = viper.GetStringMapStringSlice("semver.detection")
+	var mode = viper.GetString(cli.SemverModeConfigKey)
+	var modeDetectionMap = viper.GetStringMapStringSlice(cli.SemverDetectionConfigKey)
 	var modeDetector = semver.NewModeDetector(modeDetectionMap)
 
 	var semverModeAPI = api.NewSemverModeAPI(modeDetector)
