@@ -17,7 +17,7 @@ func (api GitAPI) CreateAnnotatedTag(tag string) (err error) {
 }
 
 func (api GitAPI) FetchTags() (err error) {
-	return api.commander.Run("git", "fetch", "--tags")
+	return api.commander.Run("git", "fetch", "--unshallow")
 }
 
 func (api GitAPI) GetConfig(key string) (value string, err error) {
