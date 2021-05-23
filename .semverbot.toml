@@ -5,6 +5,9 @@ unshallow = true
 "user.email" = "github-actions@github.com"
 "user.name" = "github-actions"
 
+[git.tags]
+prefix = "v"
+
 [semver.modes.detection]
 patch = ["fix/"]
 minor = ["feature/"]

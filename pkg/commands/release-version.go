@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -42,6 +43,9 @@ func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
 	if incrementedVersion, err = semverMode.Increment(version); err != nil {
 		return err
 	}
+
+	var gitTagPrefix = viper.GetString("git.tags.prefix")
+	incrementedVersion = fmt.Sprintf("%s%s", gitTagPrefix, incrementedVersion)
 
 	var gitAPI = api.NewGitAPI()
 	err = gitAPI.CreateAnnotatedTag(incrementedVersion)
