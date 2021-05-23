@@ -42,6 +42,7 @@ func LoadConfig() (err error) {
 }
 
 func LoadDefaultConfig() {
+	viper.SetDefault("git.tags.prefix", "v")
 	viper.SetDefault("semver.matchers", []semver.Mode{})
 	viper.SetDefault("semver.mode", "auto")
 }
