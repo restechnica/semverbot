@@ -13,3 +13,7 @@ func NewGitAPI() GitAPI {
 func (api GitAPI) CreateAnnotatedTag(tag string) (err error) {
 	return api.commander.Run("git", "tag", "-a", tag, "-m", tag)
 }
+
+func (api GitAPI) FetchTags() (err error) {
+	return api.commander.Run("git", "fetch", "--tags")
+}

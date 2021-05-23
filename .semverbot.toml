@@ -1,5 +1,4 @@
 [git]
-unshallow = true
 
 [git.config]
 "user.email" = "github-actions@github.com"
@@ -7,6 +6,7 @@ unshallow = true
 
 [git.tags]
 prefix = "v"
+fetch = false
 
 [semver.modes.detection]
 patch = ["fix/"]
