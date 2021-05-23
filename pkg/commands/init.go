@@ -28,8 +28,9 @@ major = ["release/"]
 
 func NewInitCommand() *cobra.Command {
 	var command = &cobra.Command{
-		Use:  "init",
-		RunE: InitCommandRunE,
+		Use:   "init",
+		RunE:  InitCommandRunE,
+		Short: "Creates a default .semverbot.toml config",
 	}
 
 	return command
