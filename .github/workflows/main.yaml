@@ -30,9 +30,12 @@ jobs:
 
       - name: release
         run: |
+          ./bin/sbot update version
+
           CURRENT_RELEASE_VERSION=$(./bin/sbot get version)
           NEXT_RELEASE_VERSION=$(./bin/sbot predict version)
           echo current version: $CURRENT_RELEASE_VERSION
           echo next version: $NEXT_RELEASE_VERSION
+
           ./bin/sbot release version
           git push origin v$NEXT_RELEASE_VERSION

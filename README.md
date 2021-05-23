@@ -83,7 +83,6 @@ name = "semverbot"
 
 [git.tags]
 prefix = "v"
-fetch = false
 
 [semver]
 mode = "auto"
