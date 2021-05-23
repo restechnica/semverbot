@@ -20,7 +20,7 @@ func NewMajorMode() MajorMode {
 func (majorMode MajorMode) Increment(targetVersion string) (nextVersion string, err error) {
 	var version blangsemver.Version
 
-	if version, err = blangsemver.Parse(targetVersion); err != nil {
+	if version, err = Parse(targetVersion); err != nil {
 		return
 	}
 
