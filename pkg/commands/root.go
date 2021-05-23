@@ -40,11 +40,11 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 		return err
 	}
 
-	if err = FetchGitTagsIfConfigured(); err != nil {
+	if err = SetGitConfigIfConfigured(); err != nil {
 		return err
 	}
 
-	if err = SetGitConfigIfConfigured(); err != nil {
+	if err = FetchGitTagsIfConfigured(); err != nil {
 		return err
 	}
 
