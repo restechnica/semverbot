@@ -1,8 +1,6 @@
 package api
 
 import (
-	"strings"
-
 	"github.com/restechnica/semverbot/internal/commands"
 	"github.com/restechnica/semverbot/internal/semver"
 	"github.com/restechnica/semverbot/pkg/cli"
@@ -18,7 +16,7 @@ func NewVersionAPI() VersionAPI {
 
 func (api VersionAPI) GetVersion() (version string, err error) {
 	version, err = api.Commander.Output("git", "describe", "--tags")
-	return strings.TrimSpace(version), err
+	return semver.Trim(version)
 }
 
 func (api VersionAPI) GetVersionOrDefault(defaultVersion string) (version string) {

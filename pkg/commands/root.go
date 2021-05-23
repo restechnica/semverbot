@@ -19,12 +19,10 @@ func NewRootCommand() *cobra.Command {
 	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "",
 		`sbot config (default ".semverbot.toml")`)
 
-	command.PersistentFlags().BoolVarP(&cli.FetchFlag, "fetch", "f", false,
-		`fetch all git tags before run (default "false")`)
-
 	command.AddCommand(NewGetCommand())
 	command.AddCommand(NewPredictCommand())
 	command.AddCommand(NewReleaseCommand())
+	command.AddCommand(NewUpdateCommand())
 
 	return command
 }
@@ -42,18 +40,6 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 
 	if err = SetGitConfigIfConfigured(); err != nil {
 		return err
-	}
-
-	if err = FetchGitTagsIfConfigured(); err != nil {
-		return err
-	}
-
-	return err
-}
-
-func FetchGitTagsIfConfigured() (err error) {
-	if viper.GetBool("git.tags.fetch") {
-		err = api.NewGitAPI().FetchTags()
 	}
 
 	return err
@@ -78,7 +64,6 @@ func LoadConfig() (err error) {
 }
 
 func LoadDefaultConfig() {
-	viper.SetDefault("git.tags.fetch", false)
 	viper.SetDefault("git.tags.prefix", "v")
 	viper.SetDefault("semver.detection", map[string][]string{})
 	viper.SetDefault("semver.mode", "auto")
