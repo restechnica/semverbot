@@ -19,7 +19,7 @@ func (c ExecCommander) Output(name string, arg ...string) (string, error) {
 	return string(output), err
 }
 
-// Output runs a command.
+// Run runs a command.
 // Returns an error if it failed.
 func (c ExecCommander) Run(name string, arg ...string) error {
 	return exec.Command(name, arg...).Run()

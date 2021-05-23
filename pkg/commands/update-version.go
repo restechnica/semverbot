@@ -1,9 +1,10 @@
 package commands
 
 import (
-	"github.com/spf13/cobra"
+	"fmt"
 
 	"github.com/restechnica/semverbot/pkg/api"
+	"github.com/spf13/cobra"
 )
 
 func NewUpdateVersionCommand() *cobra.Command {
@@ -17,5 +18,10 @@ func NewUpdateVersionCommand() *cobra.Command {
 
 func UpdateVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var gitAPI = api.NewGitAPI()
-	return gitAPI.FetchTags()
+
+	if err = gitAPI.FetchTags(); err != nil {
+		fmt.Println("something went wrong while updating the version, you probably already have the latest version")
+	}
+
+	return err
 }
