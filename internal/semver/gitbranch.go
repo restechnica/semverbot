@@ -29,8 +29,8 @@ func (mode GitBranchMode) Increment(targetVersion string) (nextVersion string, e
 	var branchName string
 	var matchedMode Mode
 
-	if branchName, err = mode.Commander.Output("git", "name-rev", "--name-only", "--refs='refs/heads/*'",
-		"--refs='refs/remotes/*'", "HEAD^2"); err != nil {
+	if branchName, err = mode.Commander.Output("git", "name-rev", "--name-only", "--refs=refs/heads/*",
+		"--refs=refs/remotes/*", "HEAD^2"); err != nil {
 		return
 	}
 
