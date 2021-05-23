@@ -1,8 +1,6 @@
 package api
 
 import (
-	"fmt"
-
 	"github.com/restechnica/semverbot/internal/commands"
 )
 
@@ -32,7 +30,6 @@ func (api GitAPI) SetConfig(key string, value string) (err error) {
 
 func (api GitAPI) SetConfigIfNotSet(key string, value string) (err error) {
 	if _, err = api.GetConfig(key); err != nil {
-		fmt.Println("lolly")
 		err = api.SetConfig(key, value)
 	}
 
