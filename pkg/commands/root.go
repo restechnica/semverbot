@@ -3,11 +3,11 @@ package commands
 import (
 	"errors"
 
-	"github.com/restechnica/semverbot/pkg/api"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/restechnica/semverbot/internal/semver"
+	"github.com/restechnica/semverbot/pkg/api"
 	"github.com/restechnica/semverbot/pkg/cli"
 )
 
@@ -41,10 +41,20 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 		return err
 	}
 
+	if err = FetchGitTagsIfConfigured(); err != nil {
+		return err
+	}
+
+	if err = SetGitConfigIfConfigured(); err != nil {
+		return err
+	}
+
+	return err
+}
+
+func FetchGitTagsIfConfigured() (err error) {
 	if viper.GetBool("git.tags.fetch") {
-		if err = api.NewGitAPI().FetchTags(); err != nil {
-			return err
-		}
+		err = api.NewGitAPI().FetchTags()
 	}
 
 	return err
@@ -77,4 +87,26 @@ func LoadDefaultConfig() {
 
 func LoadFlags(cmd *cobra.Command) (err error) {
 	return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch"))
+}
+
+func SetGitConfigIfConfigured() (err error) {
+	var gitAPI = api.NewGitAPI()
+
+	if viper.IsSet("git.config.email") {
+		var email = viper.GetString("git.config.email")
+
+		if err = gitAPI.SetConfigIfNotSet("user.email", email); err != nil {
+			return err
+		}
+	}
+
+	if viper.IsSet("git.config.name") {
+		var name = viper.GetString("git.config.name")
+
+		if err = gitAPI.SetConfigIfNotSet("user.name", name); err != nil {
+			return err
+		}
+	}
+
+	return err
 }

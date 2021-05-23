@@ -1,12 +1,16 @@
 [git]
 
 [git.config]
-"user.email" = "github-actions@github.com"
-"user.name" = "github-actions"
+email = "github-actions@github.com"
+name = "github-actions"
 
 [git.tags]
 prefix = "v"
 fetch = false
+
+[semver]
+
+[semver.modes]
 
 [semver.modes.detection]
 patch = ["fix/"]
