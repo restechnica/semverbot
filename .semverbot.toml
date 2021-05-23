@@ -1,8 +1,8 @@
 [git]
 
 [git.config]
-email = "github-actions@github.com"
-name = "github-actions"
+email = "semverbot@github.com"
+name = "semverbot"
 
 [git.tags]
 prefix = "v"
