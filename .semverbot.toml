@@ -9,10 +9,9 @@ prefix = "v"
 fetch = false
 
 [semver]
+mode = "auto"
 
-[semver.modes]
-
-[semver.modes.detection]
+[semver.detection]
 patch = ["fix/"]
 minor = ["feature/"]
 major = ["release/"]
