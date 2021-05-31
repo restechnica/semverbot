@@ -21,19 +21,6 @@ prefix = "v"
 mode = "auto"
 
 [semver.detection]
-[git]
-
-[git.config]
-email = "semverbot@github.com"
-name = "semverbot"
-
-[git.tags]
-prefix = "v"
-
-[semver]
-mode = "auto"
-
-[semver.detection]
 patch = ["fix/", "[fix]"]
 minor = ["feature/", "[feature]"]
 major = ["release/", "[release]"]
