@@ -88,7 +88,7 @@ prefix = "v"
 mode = "auto"
 
 [semver.detection]
-patch = ["fix/"]
-minor = ["feature/"]
-major = ["release/"]
+patch = ["fix/", "[fix]"]
+minor = ["feature/", "[feature]"]
+major = ["release/", "[release]"]
 ```
