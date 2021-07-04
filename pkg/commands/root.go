@@ -72,7 +72,7 @@ func LoadDefaultConfig() {
 
 func LoadFlags(cmd *cobra.Command) (err error) {
 	return err
-	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch"))
+	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch")) -- example on how to load flags
 }
 
 func SetGitConfigIfConfigured() (err error) {
