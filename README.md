@@ -1,6 +1,6 @@
 # Semverbot
 
-A CLI which automates semver versioning.
+A CLI which automates semver versioning based on git information.
 
 ## Why Semverbot?
 
@@ -67,7 +67,7 @@ Each command has a `-h, --help` flag available.
 
 ### `sbot get version`
 
-Gets the current version, which is the latest `git` annotated tag.
+Gets the current version, which is the latest `git` annotated tag without any prefix.
 
 ### `sbot init`
 
@@ -75,9 +75,7 @@ Generates a configuration with defaults, see [configuration defaults](#defaults)
 
 ### `sbot predict version [-m, --mode] <mode>`
 
-
-
-Gets the next version. Uses a mode to detect which semver level it should increment. Defaults to mode `auto`.
+Gets the next version, without any prefix. Uses a mode to detect which semver level it should increment. Defaults to mode `auto`.
 See [Modes](#modes) for more documentation on the supported modes.
 
 ### `sbot release version [-m, --mode] <mode>`
@@ -87,7 +85,7 @@ Defaults to mode `auto`. See [Modes](#modes) for more documentation on the suppo
 
 ### `sbot update version`
 
-Fetches all tags with `git` to make sure the current git repo has the latest tags available. Equivalent to `git fetch --unshallow`.
+Fetches all tags with `git` to make sure the git repo has the latest tags available. Equivalent to `git fetch --unshallow`.
 This command is very useful in pipelines where shallow clones are often the default to save time and space.
 
 ## Modes
@@ -161,18 +159,20 @@ major = ["release/", "[release]"]
 
 `git` requires `user.email` to be set. If not set, `sbot` will set `user.email` to the value of this property. Rest assured, `sbot` will not override an existing `user.email` value.
 
-Without this config `sbot` might show unexpected behaviour and will not be able to push tags.
+Without this config `sbot` might show unexpected behaviour.
 
 ### git.name
 
 `git` requires `user.name` to be set. If not set, `sbot` will set `user.name` to the value of this property. Rest assured, `sbot` will not override an existing `user.name` value.
 
-Without this config `sbot` might show unexpected behaviour and will not be able to push tags.
+Without this config `sbot` might show unexpected behaviour.
 
 ### git.tags.prefix
 
 Different platforms and environments work with different (or without) version prefixes. This option enables you to set whatever prefix you would like to work with.
 The 'v' prefix, e.g. `v1.0.1` is used by default due to its popularity, e.g. some Golang tools completely depend on it.
+
+Note: `sbot` will always display the version without the prefix.
 
 ### semver.detection
 
@@ -192,6 +192,70 @@ A `mode` flag enables you to switch modes on the fly.
 
 See [Modes](#modes) for documentation about the supported modes.
 
+## Examples
 
+### GitHub Workflow
 
+#### Shell
 
+```shell
+# installation
+SEMVERBOT_VERSION=0.1.2
+mkdir bin
+echo "$(pwd)/bin" >> $GITHUB_PATH
+curl -o bin/sbot -L https://github.com/restechnica/semverbot/releases/download/v$SEMVERBOT_VERSION/sbot-linux-amd64
+chmod +x bin/sbot
+
+# preparation
+sbot update version
+echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV
+
+# usage
+echo "current version: $(sbot get version)"
+echo "next version: $RELEASE_VERSION"
+sbot release version
+git push origin $(sbot get version) # add your prefix before the sbot command if applicable
+```
+
+#### Yaml
+
+```yaml
+name: main
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  SEMVERBOT_VERSION: "0.1.2"
+
+jobs:
+  build:
+    name: pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        - 
+      - name: set up path
+        run: |
+          mkdir bin
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+
+      - name: install semverbot
+        run: |
+          curl -o bin/sbot -L https://github.com/restechnica/semverbot/releases/download/v$SEMVERBOT_VERSION/sbot-linux-amd64
+          chmod +x bin/sbot
+          
+      - name: prepare release
+        run: |
+          sbot update version
+          echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV    
+          
+      - name: release
+        run: |
+          echo "current version: $(sbot get version)"
+          echo "next version: $RELEASE_VERSION"
+
+          sbot release version
+          git push origin $(sbot get version) # add your prefix before the sbot command if applicable
+```
