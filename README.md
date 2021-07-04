@@ -55,6 +55,7 @@ chmod +x bin/sbot
 ### homebrew
 
 `sbot` is available through the public tap [github.com/restechnica/homebrew-tap](https://github.com/restechnica/homebrew-tap)
+
 ```shell
 brew tap restechnica/tap git@github.com:restechnica/homebrew-tap.git
 brew install restechnica/tap/semverbot
@@ -68,30 +69,23 @@ Each command has a `-h, --help` flag available.
 
 Gets the current version, which is the latest `git` annotated tag.
 
-
-### init
-
-`sbot init`
+### `sbot init`
 
 Generates a configuration with defaults, see [configuration defaults](#defaults).
 
-### predict.version
+### `sbot predict version [-m, --mode] <mode>`
 
-`sbot predict version [-m, --mode] <mode>`
+
 
 Gets the next version. Uses a mode to detect which semver level it should increment. Defaults to mode `auto`.
 See [Modes](#modes) for more documentation on the supported modes.
 
-### release.version
-
-`sbot release version [-m, --mode] <mode>`
+### `sbot release version [-m, --mode] <mode>`
 
 Creates a new version, which is a `git` annotated tag. Uses a mode to detect which semver level it should increment.
 Defaults to mode `auto`. See [Modes](#modes) for more documentation on the supported modes.
 
-### update.version
-
-`sbot update version`
+### `sbot update version`
 
 Fetches all tags with `git` to make sure the current git repo has the latest tags available. Equivalent to `git fetch --unshallow`.
 This command is very useful in pipelines where shallow clones are often the default to save time and space.
