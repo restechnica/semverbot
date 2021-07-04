@@ -153,40 +153,40 @@ major = ["release/", "[release]"]
 
 ## Configuration properties
 
-### git
+### `git`
 
 `sbot` works with `git` under the hood, which needs to be set up properly. These config options make sure `git` is set up properly for your environment before running an `sbot` command. 
 
-### git.email
+### `git.email`
 
 `git` requires `user.email` to be set. If not set, `sbot` will set `user.email` to the value of this property. Rest assured, `sbot` will not override an existing `user.email` value.
 
 Without this config `sbot` might show unexpected behaviour and will not be able to push tags.
 
-### git.name
+### `git.name`
 
 `git` requires `user.name` to be set. If not set, `sbot` will set `user.name` to the value of this property. Rest assured, `sbot` will not override an existing `user.name` value.
 
 Without this config `sbot` might show unexpected behaviour and will not be able to push tags.
 
-### git.tags.prefix
+### `git.tags.prefix`
 
 Different platforms and environments work with different (or without) version prefixes. This option enables you to set whatever prefix you would like to work with.
 The 'v' prefix, e.g. `v1.0.1` is used by default due to its popularity, e.g. some Golang tools completely depend on it.
 
-### semver.detection
+### `semver.detection`
 
 Some `sbot` semver modes require input to detect which semver level should be incremented.
 Each level will be assigned a collection of matching strings, which are to be matched against `git` information.
 
 See [Modes](#modes) for documentation about the supported modes.
 
-### semver.detection.[level]
+### `semver.detection.[level]`
 
 An array of strings which are to be matched against git information, like branch names and commit messages.
 Whenever a match happens, `sbot` will increment the corresponding level.
 
-### semver.mode
+### `semver.mode`
 `sbot` supports multiple modes to detect which semver level it should increment. Each mode works with different criteria.
 A `mode` flag enables you to switch modes on the fly.
 
