@@ -130,7 +130,7 @@ Increments the `patch` level.
 
 ### Defaults
 
-`sbot init` generates the following default configuration:
+`sbot init` generates the following configuration:
 
 ```toml
 [git]
