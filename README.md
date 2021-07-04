@@ -2,6 +2,34 @@
 
 A CLI which automates semver versioning.
 
+## Why Semverbot?
+
+There are several reasons why you should consider using `sbot`, instead of tools like `npm` and `poetry`, for your semver versioning.
+
+### Focus on automation and pipelines
+
+* `sbot` uses `git` to manage versions, which today's standard for version control systems
+* `sbot` does **not** use a file to keep track of the version
+  * no pipeline loops
+  * no need to maintain the version in two places, e.g., both a package.json file and git tags
+* `sbot` is ready out of the box for pipeline usage
+
+### Convenience
+
+* `sbot` is platform independent
+  * support for Windows, Linux and macOS
+  * no dependency on 'complex' `npm`, `pip` or other package management installations
+* `sbot` is fast
+* `sbot` heavily simplifies incrementing semver levels based on git information
+  * today's `git` projects already hold a lot of useful semver information, e.g., branch names like `feature/xxx` or commit messages like `[fix] xxx`
+  * no need to create and maintain custom code for semver level detection
+
+### Configurability
+
+* `sbot` supports a well-documented configuration file
+  * intuitively customize how patch, minor and major levels are detected
+* `sbot` supports some flags to override parts of the configuration file on the fly
+
 ## Requirements
 
 `sbot` requires a `git` installation.
@@ -36,9 +64,7 @@ brew install restechnica/tap/semverbot
 
 Each command has a `-h, --help` flag available.
 
-### get.version
-
-`sbot get version`
+### `sbot get version`
 
 Gets the current version, which is the latest `git` annotated tag.
 
@@ -172,32 +198,6 @@ A `mode` flag enables you to switch modes on the fly.
 
 See [Modes](#modes) for documentation about the supported modes.
 
-## Why Semverbot?
 
-There are several reasons why you should consider using `sbot`, instead of tools like `npm` and `poetry`, for your semver versioning.
-
-### Focus on automation and pipelines
-
-* `sbot` makes use of today's version control system standard, `git`
-* `sbot` does **not** use a file to keep track of the version
-  * no pipeline loops
-  * no need to maintain the version in two places, e.g., both a package.json file and git tags
-* `sbot` is ready out of the box for pipeline usage
-  
-### Convenience
-
-* `sbot` is platform independent
-  * support for Windows, Linux and macOS
-  * no dependency on 'complex' `npm`, `pip` or other package management installations
-* `sbot` is fast
-* `sbot` simplifies incrementing semver levels based on git information
-  * today's `git` projects already hold a lot of useful senmver information, e.g., branch names like `feature/xxx` or commit messages like `[fix] xxx`
-  * no need to create and maintain custom code for such detection
-  
-### Configurability
-
-* `sbot` supports a well-documented configuration file
-  * easily customize how patch, minor and major levels are detected
-* `sbot` supports some flags to override parts of the configuration file on the fly
 
 
