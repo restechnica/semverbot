@@ -10,6 +10,8 @@ import (
 	"github.com/restechnica/semverbot/pkg/cli"
 )
 
+// NewRootCommand creates a new root command.
+// returns the new spf13/cobra command.
 func NewRootCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use:               "sbot",
@@ -29,6 +31,8 @@ func NewRootCommand() *cobra.Command {
 	return command
 }
 
+// RootCommandPersistentPreRunE runs before the command and any subcommand runs.
+// returns an error if it failed.
 func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error) {
 	LoadDefaultConfig()
 
@@ -47,6 +51,8 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 	return err
 }
 
+// LoadConfig loads the semverbot configuration file.
+// returns an error if it fails.
 func LoadConfig() (err error) {
 	if cli.ConfigFlag != "" {
 		viper.SetConfigFile(cli.ConfigFlag)
@@ -65,12 +71,15 @@ func LoadConfig() (err error) {
 	return err
 }
 
+// LoadDefaultConfig loads the default semverbot config.
 func LoadDefaultConfig() {
 	viper.SetDefault(cli.GitTagsPrefixConfigKey, "v")
 	viper.SetDefault(cli.SemverDetectionConfigKey, map[string][]string{})
 	viper.SetDefault(cli.SemverModeConfigKey, "auto")
 }
 
+// LoadFlags loads root command flags.
+// returns an error if it fails.
 func LoadFlags(cmd *cobra.Command) (err error) {
 	return err
 	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch")) -- example on how to load flags

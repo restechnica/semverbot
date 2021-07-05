@@ -11,6 +11,8 @@ import (
 	"github.com/restechnica/semverbot/pkg/cli"
 )
 
+// NewPredictVersionCommand creates a new predict version command.
+// returns the new spf13/cobra command.
 func NewPredictVersionCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use:     "version",
@@ -23,10 +25,14 @@ func NewPredictVersionCommand() *cobra.Command {
 	return command
 }
 
+// PredictVersionCommandPreRunE runs before the command runs.
+// returns an error if it fails.
 func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error) {
 	return viper.BindPFlag(cli.SemverModeConfigKey, cmd.Flags().Lookup("mode"))
 }
 
+// PredictVersionCommandRunE runs the command.
+// returns an error if the command fails.
 func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var versionAPI = api.NewVersionAPI()
 	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
