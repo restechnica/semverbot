@@ -10,6 +10,7 @@ type AutoMode struct {
 }
 
 // NewAutoMode creates a new AutoMode.
+// The order of modes in the modes slices is important and determines in which order the modes are applied in AutoMode.Increment.
 // Returns the new AutoMode.
 func NewAutoMode(modes []Mode) AutoMode {
 	return AutoMode{Modes: modes}

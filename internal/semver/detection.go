@@ -9,6 +9,8 @@ type ModeDetector struct {
 	ModeDetectionMap map[string][]string
 }
 
+// NewModeDetector creates a new ModeDetector with a detection configuration.
+// returns the new ModeDetector.
 func NewModeDetector(modeDetectionMap map[string][]string) ModeDetector {
 	return ModeDetector{ModeDetectionMap: modeDetectionMap}
 }
