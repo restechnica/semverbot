@@ -36,4 +36,4 @@ jobs:
           echo "next version: $(./bin/sbot predict version)"
 
           ./bin/sbot release version
-          git push origin v$(./bin/sbot get version)
+          ./bin/sbot push version
