@@ -2,9 +2,9 @@ package commands
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/restechnica/semverbot/pkg/api"
 	"github.com/restechnica/semverbot/pkg/cli"
