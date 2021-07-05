@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// ModeDetector detects which mode should be applied.
 type ModeDetector struct {
 	ModeDetectionMap map[string][]string
 }

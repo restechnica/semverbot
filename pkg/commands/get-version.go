@@ -9,6 +9,8 @@ import (
 	"github.com/restechnica/semverbot/pkg/cli"
 )
 
+// NewGetVersionCommand creates a new get version command.
+// returns the new spf13/cobra command.
 func NewGetVersionCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use: "version",
@@ -18,6 +20,7 @@ func NewGetVersionCommand() *cobra.Command {
 	return command
 }
 
+// GetVersionCommandRun runs the command.
 func GetVersionCommandRun(cmd *cobra.Command, args []string) {
 	var versionAPI = api.NewVersionAPI()
 	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)

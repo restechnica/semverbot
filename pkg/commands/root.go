@@ -85,6 +85,9 @@ func LoadFlags(cmd *cobra.Command) (err error) {
 	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch")) -- example on how to load flags
 }
 
+// SetGitConfigIfConfigured Sets the git config only when the semverbot config exists and
+// the git config does not exist.
+// returns an error if it fails.
 func SetGitConfigIfConfigured() (err error) {
 	var gitAPI = api.NewGitAPI()
 

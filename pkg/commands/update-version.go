@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewUpdateCommand creates a new update version command.
+// NewUpdateVersionCommand creates a new update version command.
 // returns the new spf13/cobra command.
 func NewUpdateVersionCommand() *cobra.Command {
 	var command = &cobra.Command{
