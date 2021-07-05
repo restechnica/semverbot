@@ -21,6 +21,8 @@ There are several reasons why you should consider using `sbot` for your semver v
   * no need to maintain the version in two places, e.g., both a package.json file and git tags
 * `sbot` is ready to be used in pipelines out of the box
 
+Note: it is still possible to use `sbot` and file-based versioning tools side-by-side
+
 ### Convenience
 
 * `sbot` is designed to be used by both developers and pipelines
