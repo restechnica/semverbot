@@ -24,6 +24,14 @@ func (api GitAPI) GetConfig(key string) (value string, err error) {
 	return api.commander.Output("git", "config", "--get", key)
 }
 
+func (api GitAPI) GetLatestAnnotatedTag() (value string, err error) {
+	return api.commander.Output("git", "describe", "--tags")
+}
+
+func (api GitAPI) PushTag(tag string) (err error) {
+	return api.commander.Run("git", "push", "origin", tag)
+}
+
 func (api GitAPI) SetConfig(key string, value string) (err error) {
 	return api.commander.Run("git", "config", key, value)
 }
