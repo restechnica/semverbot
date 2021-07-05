@@ -1,8 +1,8 @@
-name: main
+name: development
 
 on:
   push:
-    branches: [ main ]
+    branches-ignore: [ main ]
 
 jobs:
   build:
@@ -28,12 +28,7 @@ jobs:
       - name: test
         run: make test
 
-      - name: release
+      - name: get version
         run: |
           ./bin/sbot update version
-
           echo "current version: $(./bin/sbot get version)"
-          echo "next version: $(./bin/sbot predict version)"
-
-          ./bin/sbot release version
-          ./bin/sbot push version

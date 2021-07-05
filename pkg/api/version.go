@@ -1,21 +1,22 @@
 package api
 
 import (
-	"github.com/restechnica/semverbot/internal/commands"
+	"fmt"
+
 	"github.com/restechnica/semverbot/internal/semver"
 	"github.com/restechnica/semverbot/pkg/cli"
 )
 
 type VersionAPI struct {
-	Commander commands.Commander
+	GitAPI GitAPI
 }
 
 func NewVersionAPI() VersionAPI {
-	return VersionAPI{commands.NewExecCommander()}
+	return VersionAPI{NewGitAPI()}
 }
 
 func (api VersionAPI) GetVersion() (version string, err error) {
-	version, err = api.Commander.Output("git", "describe", "--tags")
+	version, err = api.GitAPI.GetLatestAnnotatedTag()
 	return semver.Trim(version)
 }
 
@@ -32,4 +33,10 @@ func (api VersionAPI) GetVersionOrDefault(defaultVersion string) (version string
 func (api VersionAPI) PredictVersion(mode semver.Mode) (version string, err error) {
 	version = api.GetVersionOrDefault(cli.DefaultVersion)
 	return mode.Increment(version)
+}
+
+func (api VersionAPI) PushVersion(prefix string) (err error) {
+	var version = api.GetVersionOrDefault(cli.DefaultVersion)
+	var prefixedVersion = fmt.Sprintf("%s%s", prefix, version)
+	return api.GitAPI.PushTag(prefixedVersion)
 }

@@ -22,6 +22,7 @@ func NewRootCommand() *cobra.Command {
 	command.AddCommand(NewGetCommand())
 	command.AddCommand(NewInitCommand())
 	command.AddCommand(NewPredictCommand())
+	command.AddCommand(NewPushCommand())
 	command.AddCommand(NewReleaseCommand())
 	command.AddCommand(NewUpdateCommand())
 

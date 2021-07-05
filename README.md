@@ -78,6 +78,10 @@ Generates a configuration with defaults, see [configuration defaults](#defaults)
 Gets the next version, without any prefix. Uses a mode to detect which semver level it should increment. Defaults to mode `auto`.
 See [Modes](#modes) for more documentation on the supported modes.
 
+### `sbot push version`
+
+Pushes the latest `git` tag. Equivalent to `git push origin {prefix}{version}`.
+
 ### `sbot release version [-m, --mode] <mode>`
 
 Creates a new version, which is a `git` annotated tag. Uses a mode to detect which semver level it should increment.
@@ -214,7 +218,7 @@ echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV
 echo "current version: $(sbot get version)"
 echo "next version: $RELEASE_VERSION"
 sbot release version
-git push origin $(sbot get version) # add your prefix before the sbot command if applicable
+sbot push version
 ```
 
 #### Yaml
@@ -257,5 +261,5 @@ jobs:
           echo "next version: $RELEASE_VERSION"
 
           sbot release version
-          git push origin $(sbot get version) # add your prefix before the sbot command if applicable
+          sbot push version
 ```
