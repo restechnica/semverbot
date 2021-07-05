@@ -15,7 +15,7 @@ There are several reasons why you should consider using `sbot`, instead of tools
 
 ### Focus on automation and pipelines
 
-* `sbot` uses `git` to manage versions, which is today's standard for version control systems
+* `sbot` uses `git` to manage versions, which is today's standard version control system
 * `sbot` does **not** use a file to keep track of the version
   * no pipeline loops
   * no need to maintain the version in two places, e.g., both a package.json file and git tags
