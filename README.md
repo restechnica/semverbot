@@ -208,6 +208,18 @@ See [Modes](#modes) for documentation about the supported modes.
 
 ## Examples
 
+## Local
+
+Make sure `sbot` is installed.
+
+```shell
+sbot init
+sbot release version
+sbot push version
+```
+
+These commands are basically all you need to work with `sbot` locally.
+
 ### GitHub Workflow
 
 #### Shell
