@@ -1,4 +1,11 @@
+
 # Semverbot
+
+[![github.com release badge](https://img.shields.io/github/release/restechnica/semverbot.svg)](https://github.com/restechnica/anyreleaser/semverbot/)
+[![github.com workflow badge](https://github.com/restechnica/semverbot/workflows/main/badge.svg)](https://github.com/restechnica/semverbot/actions?query=workflow%3Amain)
+[![go.pkg.dev badge](https://pkg.go.dev/badge/github.com/restechnica/semverbot)](https://pkg.go.dev/github.com/restechnica/semverbot)
+[![goreportcard.com badge](https://goreportcard.com/badge/github.com/restechnica/semverbot)](https://goreportcard.com/report/github.com/restechnica/semverbot)
+[![img.shields.io MPL2 license badge](https://img.shields.io/github/license/restechnica/semverbot)](./LICENSE)
 
 A CLI which automates semver versioning based on git information.
 
