@@ -11,18 +11,19 @@ A CLI which automates semver versioning based on git information.
 
 ## Why Semverbot?
 
-There are several reasons why you should consider using `sbot`, instead of tools like `npm` and `poetry`, for your semver versioning.
+There are several reasons why you should consider using `sbot` for your semver versioning.
 
-### Focus on automation and pipelines
+### Automation and pipelines
 
-* `sbot` uses `git` to manage versions, which is today's standard version control system
+* `sbot` uses `git` under the hood, which is today's widely adopted version control system
 * `sbot` does **not** use a file to keep track of the version
   * no pipeline loops
   * no need to maintain the version in two places, e.g., both a package.json file and git tags
-* `sbot` is ready out of the box for pipeline usage
+* `sbot` is ready to be used in pipelines out of the box
 
 ### Convenience
 
+* `sbot` is designed to be used by both developers and pipelines
 * `sbot` is platform independent
   * support for Windows, Linux and macOS
   * no dependency on 'complex' `npm`, `pip` or other package management installations
