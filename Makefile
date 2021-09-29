@@ -34,8 +34,8 @@ format:
 # get all dependencies
 provision:
 	@echo "Getting dependencies ..."
-	@go get golang.org/x/tools/cmd/goimports
-	@go get github.com/gregoryv/uncover/...
+	@go install golang.org/x/tools/cmd/goimports@latest
+	@go install github.com/gregoryv/uncover/cmd/uncover@latest
 	@go mod download
 	@echo "Done!"
 
