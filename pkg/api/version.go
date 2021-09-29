@@ -19,9 +19,12 @@ func NewVersionAPI() VersionAPI {
 }
 
 // GetVersion gets the current version.
+// Git adds newlines to certain command output, which is why the version is trimmed.
 // returns the current version or an error if the GitAPI failed.
 func (api VersionAPI) GetVersion() (version string, err error) {
-	version, err = api.GitAPI.GetLatestAnnotatedTag()
+	if version, err = api.GitAPI.GetLatestAnnotatedTag(); err != nil {
+		return version, err
+	}
 	return semver.Trim(version)
 }
 
