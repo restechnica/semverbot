@@ -23,8 +23,14 @@ func NewUpdateVersionCommand() *cobra.Command {
 func UpdateVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var gitAPI = api.NewGitAPI()
 
+	if err = gitAPI.FetchUnshallow(); err != nil {
+		fmt.Println("something went wrong while fetching from git, attempting to fetch tags anyway")
+	}
+
 	if err = gitAPI.FetchTags(); err != nil {
-		fmt.Println("something went wrong while updating the version, you probably already have the latest version")
+		fmt.Println("something went wrong while updating the version")
+	} else {
+		fmt.Println("successfully fetched the latest git tags")
 	}
 
 	return err
