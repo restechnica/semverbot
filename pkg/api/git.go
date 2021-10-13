@@ -24,6 +24,12 @@ func (api GitAPI) CreateAnnotatedTag(tag string) (err error) {
 // FetchTags fetches all tags from the remote origin.
 // returns an error if the command fails.
 func (api GitAPI) FetchTags() (err error) {
+	return api.commander.Run("git", "fetch", "--tags")
+}
+
+// FetchUnshallow convert a shallow repository to a complete one.
+// returns an error if the command fails.
+func (api GitAPI) FetchUnshallow() (err error) {
 	return api.commander.Run("git", "fetch", "--unshallow")
 }
 
