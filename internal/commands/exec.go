@@ -2,7 +2,6 @@ package commands
 
 import (
 	"bytes"
-	"fmt"
 	"os/exec"
 )
 
@@ -20,39 +19,19 @@ func NewExecCommander() *ExecCommander {
 // Returns the output of the command or an error if it failed.
 func (c ExecCommander) Output(name string, arg ...string) (string, error) {
 	var command = exec.Command(name, arg...)
+	var buffer bytes.Buffer
 
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-
-	command.Stdout = &stdout
-	command.Stderr = &stderr
+	command.Stdout = &buffer
+	command.Stderr = &buffer
 
 	var err = command.Run()
 
-	if err != nil || !isEmpty(&stderr) {
-		return stdout.String(), fmt.Errorf("%s: %s", err, stderr.String())
-	}
-
-	return stdout.String(), err
+	return buffer.String(), err
 }
 
 // Run runs a command.
 // Returns an error if it failed.
 func (c ExecCommander) Run(name string, arg ...string) error {
-	var command = exec.Command(name, arg...)
-
-	var stderr bytes.Buffer
-	command.Stderr = &stderr
-
-	var err = command.Run()
-
-	if err != nil || !isEmpty(&stderr) {
-		return fmt.Errorf("%s: %s", err, stderr.String())
-	}
-
-	return nil
-}
-
-func isEmpty(buffer *bytes.Buffer) bool {
-	return buffer.Len() == 0
+	var _, err = c.Output(name, arg...)
+	return err
 }
