@@ -25,8 +25,13 @@ func (c ExecCommander) Output(name string, arg ...string) (string, error) {
 	command.Stderr = &buffer
 
 	var err = command.Run()
+	var output = buffer.String()
 
-	return buffer.String(), err
+	if err != nil {
+		return "", CommandError{Command: command, Err: err, Output: output}
+	}
+
+	return output, err
 }
 
 // Run runs a command.
