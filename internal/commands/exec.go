@@ -28,7 +28,7 @@ func (c ExecCommander) Output(name string, arg ...string) (string, error) {
 	var output = buffer.String()
 
 	if err != nil {
-		return "", CommandError{Command: command, Err: err, Output: output}
+		return "", CommandError{Arguments: command.Args, Err: err, Output: output}
 	}
 
 	return output, err
