@@ -6,27 +6,9 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
+
+	"github.com/restechnica/semverbot/pkg/cli"
 )
-
-// InitCommandSemverbotConfig the default semverbot config.
-const InitCommandSemverbotConfig = `[git]
-
-[git.config]
-email = "semverbot@github.com"
-name = "semverbot"
-
-[git.tags]
-prefix = "v"
-
-[semver]
-mode = "auto"
-
-[semver.detection]
-patch = ["fix/", "[fix]"]
-minor = ["feature/", "[feature]"]
-major = ["release/", "[release]"]
-
-`
 
 // NewInitCommand creates a new init command.
 // returns a new init spf13/cobra command.
@@ -44,11 +26,10 @@ func NewInitCommand() *cobra.Command {
 // returns an error if the command failed.
 func InitCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var file *os.File
-	var path = ".semverbot.toml"
 
-	if _, err = os.Stat(path); !os.IsNotExist(err) {
+	if _, err = os.Stat(cli.DefaultConfigFilePath); !os.IsNotExist(err) {
 		var prompt = &survey.Confirm{
-			Message: "Do you wish to overwrite your current semverbot config?",
+			Message: "Do you wish to overwrite your current config?",
 		}
 
 		var isOk = false
@@ -62,11 +43,11 @@ func InitCommandRunE(cmd *cobra.Command, args []string) (err error) {
 		}
 	}
 
-	if file, err = os.Create(path); err != nil {
+	if file, err = os.Create(cli.DefaultConfigFilePath); err != nil {
 		return err
 	}
 
-	if _, err = io.WriteString(file, InitCommandSemverbotConfig); err != nil {
+	if _, err = io.WriteString(file, cli.DefaultConfig); err != nil {
 		_ = file.Close()
 		return err
 	}
