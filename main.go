@@ -1,8 +1,6 @@
 package main
 
-import (
-	"github.com/restechnica/semverbot/cmd"
-)
+import "github.com/restechnica/semverbot/cmd"
 
 // main bootstraps the `sbot` CLI app.
 func main() {
