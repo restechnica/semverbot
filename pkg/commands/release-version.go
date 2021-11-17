@@ -1,14 +1,12 @@
 package commands
 
 import (
-	"fmt"
+	"github.com/restechnica/semverbot/pkg/core"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/restechnica/semverbot/pkg/api"
 	"github.com/restechnica/semverbot/pkg/cli"
-	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // NewReleaseVersionCommand creates a new release version command.
@@ -34,28 +32,12 @@ func ReleaseVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 // ReleaseVersionCommandRunE runs the command.
 // Returns an error if the command fails.
 func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
-	var versionAPI = api.NewVersionAPI()
-	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
-
-	var mode = viper.GetString(cli.SemverModeConfigKey)
-	var modeDetectionMap = viper.GetStringMapStringSlice(cli.SemverMatchConfigKey)
-	var modeDetector = semver.NewModeDetector(modeDetectionMap)
-
-	var semverModeAPI = api.NewSemverModeAPI(modeDetector)
-	var semverMode = semverModeAPI.SelectMode(mode)
-
-	var incrementedVersion string
-	var err error
-
-	if incrementedVersion, err = semverMode.Increment(version); err != nil {
-		return err
+	var options = &core.ReleaseVersionOptions{
+		DefaultVersion: cli.DefaultVersion,
+		GitTagsPrefix:  viper.GetString(cli.GitTagsPrefixConfigKey),
+		SemverMatchMap: viper.GetStringMapStringSlice(cli.SemverMatchConfigKey),
+		SemverMode:     viper.GetString(cli.SemverModeConfigKey),
 	}
 
-	var gitTagPrefix = viper.GetString(cli.GitTagsPrefixConfigKey)
-	incrementedVersion = fmt.Sprintf("%s%s", gitTagPrefix, incrementedVersion)
-
-	var gitAPI = api.NewGitAPI()
-	err = gitAPI.CreateAnnotatedTag(incrementedVersion)
-
-	return err
+	return core.ReleaseVersion(options)
 }
