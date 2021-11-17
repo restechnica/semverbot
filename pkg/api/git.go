@@ -57,7 +57,7 @@ func (api GitAPI) SetConfig(key string, value string) (err error) {
 	return api.commander.Run("git", "config", key, value)
 }
 
-// SetConfigIfNotSet sets a git config key and value only if the config does not exist.
+// SetConfigIfNotSet sets a git config key and value if the config does not exist.
 // returns an error if the command failed.
 func (api GitAPI) SetConfigIfNotSet(key string, value string) (err error) {
 	if _, err = api.GetConfig(key); err != nil {
