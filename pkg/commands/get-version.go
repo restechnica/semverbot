@@ -2,9 +2,9 @@ package commands
 
 import (
 	"fmt"
+
 	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/core"
-
 	"github.com/spf13/cobra"
 )
 
