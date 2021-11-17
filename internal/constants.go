@@ -1,4 +1,4 @@
-package cli
+package internal
 
 const (
 	// DefaultConfig the default config.
@@ -14,7 +14,7 @@ prefix = "v"
 [semver]
 mode = "auto"
 
-[semver.detection]
+[semver.match]
 patch = ["fix/", "[fix]"]
 minor = ["feature/", "[feature]"]
 major = ["release/", "[release]"]

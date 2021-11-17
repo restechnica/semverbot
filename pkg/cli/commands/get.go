@@ -5,7 +5,7 @@ import (
 )
 
 // NewGetCommand creates a new get command.
-// returns a new init spf13/cobra command.
+// Returns a new init spf13/cobra command.
 func NewGetCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use: "get",

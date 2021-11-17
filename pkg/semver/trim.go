@@ -3,7 +3,7 @@ package semver
 import blangsemver "github.com/blang/semver/v4"
 
 // Trim trims a semver version string of anything but major.minor.patch information.
-// returns the trimmed semver version.
+// Returns the trimmed semver version.
 func Trim(version string) (string, error) {
 	var semverVersion blangsemver.Version
 	var err error

@@ -24,15 +24,15 @@ func NewGitCommitMode(detector ModeDetector) GitCommitMode {
 // Returns the incremented version or an error if it failed to detect the mode based on the git commit.
 func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, err error) {
 	var message string
-	var matchedMode Mode
+	var detectedMode Mode
 
 	if message, err = mode.Commander.Output("git", "show", "-s", "--format=%s"); err != nil {
 		return
 	}
 
-	if matchedMode, err = mode.ModeDetector.DetectMode(message); err != nil {
+	if detectedMode, err = mode.ModeDetector.DetectMode(message); err != nil {
 		return
 	}
 
-	return matchedMode.Increment(targetVersion)
+	return detectedMode.Increment(targetVersion)
 }
