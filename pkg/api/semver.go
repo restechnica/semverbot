@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/restechnica/semverbot/internal/semver"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // SemverModeAPI an API to work with different modes.

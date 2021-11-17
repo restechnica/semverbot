@@ -6,9 +6,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/restechnica/semverbot/internal/semver"
 	"github.com/restechnica/semverbot/pkg/api"
 	"github.com/restechnica/semverbot/pkg/cli"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // NewReleaseVersionCommand creates a new release version command.
@@ -38,7 +38,7 @@ func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
 	var version = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
 
 	var mode = viper.GetString(cli.SemverModeConfigKey)
-	var modeDetectionMap = viper.GetStringMapStringSlice(cli.SemverDetectionConfigKey)
+	var modeDetectionMap = viper.GetStringMapStringSlice(cli.SemverMatchConfigKey)
 	var modeDetector = semver.NewModeDetector(modeDetectionMap)
 
 	var semverModeAPI = api.NewSemverModeAPI(modeDetector)

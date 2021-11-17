@@ -74,7 +74,7 @@ func LoadConfig() (err error) {
 // LoadDefaultConfig loads the default semverbot config.
 func LoadDefaultConfig() {
 	viper.SetDefault(cli.GitTagsPrefixConfigKey, "v")
-	viper.SetDefault(cli.SemverDetectionConfigKey, map[string][]string{})
+	viper.SetDefault(cli.SemverMatchConfigKey, map[string][]string{})
 	viper.SetDefault(cli.SemverModeConfigKey, "auto")
 }
 

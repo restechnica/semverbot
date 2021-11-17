@@ -2,12 +2,12 @@ package commands
 
 import (
 	"fmt"
-	"github.com/restechnica/semverbot/pkg/core"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/restechnica/semverbot/pkg/cli"
+	"github.com/restechnica/semverbot/pkg/core"
 )
 
 // NewPredictVersionCommand creates a new predict version command.
@@ -34,9 +34,9 @@ func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 // returns an error if the command fails.
 func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var options = &core.PredictVersionOptions{
-		DefaultVersion:  cli.DefaultVersion,
-		SemverDetection: viper.GetStringMapStringSlice(cli.SemverDetectionConfigKey),
-		SemverMode:      viper.GetString(cli.SemverModeConfigKey),
+		DefaultVersion: cli.DefaultVersion,
+		SemverMatchMap: viper.GetStringMapStringSlice(cli.SemverMatchConfigKey),
+		SemverMode:     viper.GetString(cli.SemverModeConfigKey),
 	}
 
 	var version string

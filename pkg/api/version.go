@@ -3,8 +3,8 @@ package api
 import (
 	"fmt"
 
-	"github.com/restechnica/semverbot/internal/semver"
 	"github.com/restechnica/semverbot/pkg/cli"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // VersionAPI an API to work with versions.
