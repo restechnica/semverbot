@@ -7,7 +7,7 @@ import (
 )
 
 // NewApp creates a new semverbot CLI app
-// returns a spf13/cobra command.
+// Returns a spf13/cobra command.
 func NewApp() *cobra.Command {
 	return commands.NewRootCommand()
 }

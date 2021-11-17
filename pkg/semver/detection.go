@@ -11,7 +11,7 @@ type ModeDetector struct {
 }
 
 // NewModeDetector creates a new ModeDetector with a detection configuration.
-// returns the new ModeDetector.
+// Returns the new ModeDetector.
 func NewModeDetector(semverMatchMap map[string][]string) ModeDetector {
 	return ModeDetector{SemverMatchMap: semverMatchMap}
 }

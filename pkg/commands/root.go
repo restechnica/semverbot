@@ -11,7 +11,7 @@ import (
 )
 
 // NewRootCommand creates a new root command.
-// returns the new spf13/cobra command.
+// Returns the new spf13/cobra command.
 func NewRootCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use:               "sbot",
@@ -32,7 +32,7 @@ func NewRootCommand() *cobra.Command {
 }
 
 // RootCommandPersistentPreRunE runs before the command and any subcommand runs.
-// returns an error if it failed.
+// Returns an error if it failed.
 func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error) {
 	LoadDefaultConfig()
 
@@ -52,7 +52,7 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 }
 
 // LoadConfig loads the semverbot configuration file.
-// returns an error if it fails.
+// Returns an error if it fails.
 func LoadConfig() (err error) {
 	if cli.ConfigFlag != "" {
 		viper.SetConfigFile(cli.ConfigFlag)
@@ -79,7 +79,7 @@ func LoadDefaultConfig() {
 }
 
 // LoadFlags loads root command flags.
-// returns an error if it fails.
+// Returns an error if it fails.
 func LoadFlags(cmd *cobra.Command) (err error) {
 	return err
 	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch")) -- example on how to load flags
@@ -87,7 +87,7 @@ func LoadFlags(cmd *cobra.Command) (err error) {
 
 // SetGitConfigIfConfigured Sets the git config only when the semverbot config exists and
 // the git config does not exist.
-// returns an error if it fails.
+// Returns an error if it fails.
 func SetGitConfigIfConfigured() (err error) {
 	var gitAPI = api.NewGitAPI()
 

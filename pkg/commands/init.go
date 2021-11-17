@@ -11,7 +11,7 @@ import (
 )
 
 // NewInitCommand creates a new init command.
-// returns a new init spf13/cobra command.
+// Returns a new init spf13/cobra command.
 func NewInitCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "init",
@@ -23,7 +23,7 @@ func NewInitCommand() *cobra.Command {
 }
 
 // InitCommandRunE runs the init command.
-// returns an error if the command failed.
+// Returns an error if the command failed.
 func InitCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var file *os.File
 

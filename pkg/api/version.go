@@ -13,14 +13,14 @@ type VersionAPI struct {
 }
 
 // NewVersionAPI creates a new VersionAPI.
-// returns the new VersionAPI.
+// Returns the new VersionAPI.
 func NewVersionAPI() VersionAPI {
 	return VersionAPI{NewGitAPI()}
 }
 
 // GetVersion gets the current version.
 // Git adds newlines to certain command output, which is why the version is trimmed.
-// returns the current version or an error if the GitAPI failed.
+// Returns the current version or an error if the GitAPI failed.
 func (api VersionAPI) GetVersion() (version string, err error) {
 	if version, err = api.GitAPI.GetLatestAnnotatedTag(); err != nil {
 		return version, err
@@ -30,7 +30,7 @@ func (api VersionAPI) GetVersion() (version string, err error) {
 
 // GetVersionOrDefault gets the current version.
 // Defaults to a provided default version if the GitAPI failed.
-// returns the current version.
+// Returns the current version.
 func (api VersionAPI) GetVersionOrDefault(defaultVersion string) (version string) {
 	var err error
 
@@ -42,14 +42,14 @@ func (api VersionAPI) GetVersionOrDefault(defaultVersion string) (version string
 }
 
 // PredictVersion predicts the next version with a provided semver mode.
-// returns the next version or an error if increment the current version failed.
+// Returns the next version or an error if increment the current version failed.
 func (api VersionAPI) PredictVersion(mode semver.Mode) (version string, err error) {
 	version = api.GetVersionOrDefault(cli.DefaultVersion)
 	return mode.Increment(version)
 }
 
 // PushVersion pushes a version with a provided version prefix.
-// returns an error if the the GitAPI failed.
+// Returns an error if the the GitAPI failed.
 func (api VersionAPI) PushVersion(prefix string) (err error) {
 	var version = api.GetVersionOrDefault(cli.DefaultVersion)
 	var prefixedVersion = fmt.Sprintf("%s%s", prefix, version)

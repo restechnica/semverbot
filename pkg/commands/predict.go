@@ -5,7 +5,7 @@ import (
 )
 
 // NewPredictCommand creates a new predict command.
-// returns the new spf13/cobra command.
+// Returns the new spf13/cobra command.
 func NewPredictCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use: "predict",
