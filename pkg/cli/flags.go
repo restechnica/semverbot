@@ -1,9 +1,9 @@
 package cli
 
 var (
-	// ConfigFlag a global flag which enables control over the semverbot config file location.
+	// ConfigFlag a flag which configures the config file location.
 	ConfigFlag string
 
-	// ModeFlag a flag which defines which mode to use to increment the current version.
+	// ModeFlag a flag which indicates the semver mode to increment the current version with.
 	ModeFlag string
 )

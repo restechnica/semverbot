@@ -1,4 +1,4 @@
-package cli
+package internal
 
 const (
 	// DefaultConfig the default config.
