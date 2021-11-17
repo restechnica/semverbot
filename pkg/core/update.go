@@ -6,6 +6,8 @@ import (
 	"github.com/restechnica/semverbot/pkg/api"
 )
 
+// UpdateVersion changes the current git repo into an unshallow repo and fetches all git tags.
+// Returns and error if anything went wrong.
 func UpdateVersion() (err error) {
 	var gitAPI = api.NewGitAPI()
 

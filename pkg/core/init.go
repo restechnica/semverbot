@@ -12,6 +12,9 @@ type InitOptions struct {
 	Config         string
 }
 
+// Init initializes a config file with defaults.
+// It will prompt for confirmation before overwriting existing files.
+// Returns an error if something went wrong with IO operations or the prompt.
 func Init(options *InitOptions) (err error) {
 	var file *os.File
 

@@ -11,6 +11,8 @@ type PredictVersionOptions struct {
 	SemverMode     string
 }
 
+// PredictVersion predicts a version based on the latest annotated git tag and a map of matched to specific strings.
+// Returns the predicted version or an error if anything went wrong with the increment.
 func PredictVersion(options *PredictVersionOptions) (prediction string, err error) {
 	var versionAPI = api.NewVersionAPI()
 	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)
