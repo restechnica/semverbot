@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/core"
 
 	"github.com/spf13/cobra"
@@ -20,5 +21,7 @@ func NewGetVersionCommand() *cobra.Command {
 
 // GetVersionCommandRun runs the command.
 func GetVersionCommandRun(cmd *cobra.Command, args []string) {
-	fmt.Println(core.GetVersion())
+	var options = &core.GetVersionOptions{DefaultVersion: cli.DefaultVersion}
+	var version = core.GetVersion(options)
+	fmt.Println(version)
 }
