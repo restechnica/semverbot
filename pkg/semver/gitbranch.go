@@ -3,7 +3,7 @@ package semver
 import (
 	"fmt"
 
-	"github.com/restechnica/semverbot/internal/commands"
+	"github.com/restechnica/semverbot/pkg/git"
 )
 
 // GitBranch mode name for GitBranchMode.
@@ -12,14 +12,14 @@ const GitBranch = "git-branch"
 // GitBranchMode implementation of the Mode interface.
 // It increments the semver level based on the naming of the source branch of a git merge.
 type GitBranchMode struct {
-	Commander    commands.Commander
+	GitAPI       git.API
 	ModeDetector ModeDetector
 }
 
 // NewGitBranchMode creates a new GitBranchMode.
 // Returns the new GitBranchMode.
 func NewGitBranchMode(detector ModeDetector) GitBranchMode {
-	return GitBranchMode{Commander: commands.ExecCommander{}, ModeDetector: detector}
+	return GitBranchMode{GitAPI: git.NewAPI(), ModeDetector: detector}
 }
 
 // Increment increments the semver level based on the naming of the source branch of a git merge.
@@ -29,8 +29,7 @@ func (mode GitBranchMode) Increment(targetVersion string) (nextVersion string, e
 	var branchName string
 	var matchedMode Mode
 
-	if branchName, err = mode.Commander.Output("git", "name-rev", "--name-only", "--refs=refs/heads/*",
-		"--refs=refs/remotes/*", "HEAD^2"); err != nil {
+	if branchName, err = mode.GitAPI.GetMergedBranchName(); err != nil {
 		return
 	}
 

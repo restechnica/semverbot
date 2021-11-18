@@ -1,7 +1,7 @@
 package semver
 
 import (
-	"github.com/restechnica/semverbot/internal/commands"
+	"github.com/restechnica/semverbot/pkg/git"
 )
 
 // GitCommit mode name for GitCommitMode.
@@ -10,14 +10,14 @@ const GitCommit = "git-commit"
 // GitCommitMode implementation of the Mode interface.
 // It increments the semver level based on the latest git commit messages.
 type GitCommitMode struct {
-	Commander    commands.Commander
+	GitAPI       git.API
 	ModeDetector ModeDetector
 }
 
 // NewGitCommitMode creates a new GitCommitMode.
 // Returns the new GitCommitMode.
 func NewGitCommitMode(detector ModeDetector) GitCommitMode {
-	return GitCommitMode{Commander: commands.ExecCommander{}, ModeDetector: detector}
+	return GitCommitMode{GitAPI: git.NewAPI(), ModeDetector: detector}
 }
 
 // Increment increments a given version based on the latest git commit message.
@@ -26,7 +26,7 @@ func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, e
 	var message string
 	var detectedMode Mode
 
-	if message, err = mode.Commander.Output("git", "show", "-s", "--format=%s"); err != nil {
+	if message, err = mode.GitAPI.GetLatestCommitMessage(); err != nil {
 		return
 	}
 

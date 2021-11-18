@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/restechnica/semverbot/internal/mocks"
+	"github.com/restechnica/semverbot/pkg/git"
 )
 
 var semverMatchMap = map[string][]string{
@@ -102,7 +102,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, nil)
 
 			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMatchMap))
-			gitCommitMode.Commander = cmder
+			gitCommitMode.GitAPI = git.API{Commander: cmder}
 			var got, err = gitCommitMode.Increment(test.Version)
 
 			assert.NoError(t, err)
@@ -131,7 +131,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, test.GitError)
 
 			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMatchMap))
-			gitCommitMode.Commander = cmder
+			gitCommitMode.GitAPI = git.API{Commander: cmder}
 			var _, err = gitCommitMode.Increment(test.Version)
 
 			assert.Error(t, err)
