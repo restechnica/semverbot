@@ -8,7 +8,7 @@ type GetVersionOptions struct {
 	DefaultVersion string
 }
 
-// GetVersion gets the current version based on the latest annotated git tag.
+// GetVersion gets the current version.
 // Returns the current version.
 func GetVersion(options *GetVersionOptions) string {
 	var versionAPI = versions.NewAPI()

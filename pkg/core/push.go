@@ -9,8 +9,8 @@ type PushVersionOptions struct {
 	GitTagsPrefix  string
 }
 
-// PushVersion pushes the latest annotated git tag to the git origin.
-// Returns an error if pushing the tag went wrong.
+// PushVersion pushes the current version.
+// Returns an error if the push went wrong.
 func PushVersion(options *PushVersionOptions) (err error) {
 	var versionAPI = versions.NewAPI()
 	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)

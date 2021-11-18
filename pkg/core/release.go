@@ -11,21 +11,17 @@ type ReleaseVersionOptions struct {
 	SemverMode     string
 }
 
-// ReleaseVersion releases a new version by incrementing the latest annotated git tag.
-// It creates an annotated git tag for the new version.
-// Returns an error if anything went wrong with incrementing or tagging.
-func ReleaseVersion(options *ReleaseVersionOptions) (err error) {
+// ReleaseVersion releases a new version.
+// Returns an error if anything went wrong with the prediction or releasing.
+func ReleaseVersion(options *ReleaseVersionOptions) error {
 	var versionAPI = versions.NewAPI()
 
-	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)
+	var currentVersion = versionAPI.GetVersionOrDefault(options.DefaultVersion)
+	var predictedVersion, err = versionAPI.PredictVersion(currentVersion, options.SemverMatchMap, options.SemverMode)
 
-	if version, err = versionAPI.PredictVersion(
-		version,
-		options.SemverMatchMap,
-		options.SemverMode,
-	); err != nil {
+	if err != nil {
 		return err
 	}
 
-	return versionAPI.ReleaseVersion(version)
+	return versionAPI.ReleaseVersion(predictedVersion)
 }

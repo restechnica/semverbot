@@ -1,25 +1,12 @@
 package core
 
 import (
-	"fmt"
-
-	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/versions"
 )
 
-// UpdateVersion changes the current git repo into an unshallow repo and fetches all git tags.
-// Returns and error if anything went wrong.
-func UpdateVersion() (err error) {
-	var gitAPI = git.NewAPI()
-
-	if err = gitAPI.FetchUnshallow(); err != nil {
-		fmt.Println("something went wrong while fetching from git, attempting to fetch tags anyway")
-	}
-
-	if err = gitAPI.FetchTags(); err != nil {
-		fmt.Println("something went wrong while updating the version")
-	} else {
-		fmt.Println("successfully fetched the latest git tags")
-	}
-
-	return err
+// UpdateVersion updates to the latest version.
+// Returns an error if updating the version went wrong.
+func UpdateVersion() error {
+	var versionAPI = versions.NewAPI()
+	return versionAPI.UpdateVersion()
 }
