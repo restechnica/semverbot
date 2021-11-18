@@ -2,6 +2,7 @@ package commands
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -19,7 +20,7 @@ func NewRootCommand() *cobra.Command {
 	}
 
 	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "",
-		`sbot config (default ".semverbot.toml")`)
+		fmt.Sprintf(`configures which config file to use (default "%s")`, cli.DefaultConfigFilePath))
 
 	command.AddCommand(NewGetCommand())
 	command.AddCommand(NewInitCommand())

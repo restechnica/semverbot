@@ -6,6 +6,6 @@ import (
 
 // main bootstraps the `sbot` CLI app.
 func main() {
-	var cli = commands.NewRootCommand()
-	_ = cli.Execute()
+	var cmd = commands.NewRootCommand()
+	_ = cmd.Execute()
 }
