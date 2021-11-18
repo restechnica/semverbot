@@ -2,9 +2,9 @@ package core
 
 import (
 	"fmt"
-	"github.com/restechnica/semverbot/pkg/version"
 
 	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/version"
 )
 
 type PushVersionOptions struct {
