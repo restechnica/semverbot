@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/restechnica/semverbot/pkg/api"
 	"github.com/restechnica/semverbot/pkg/cli"
+	"github.com/restechnica/semverbot/pkg/git"
 )
 
 // NewRootCommand creates a new root command.
@@ -89,7 +89,7 @@ func LoadFlags(cmd *cobra.Command) (err error) {
 // the git config does not exist.
 // Returns an error if it fails.
 func SetGitConfigIfConfigured() (err error) {
-	var gitAPI = api.NewGitAPI()
+	var gitAPI = git.NewAPI()
 
 	if viper.IsSet(cli.GitConfigEmailConfigKey) {
 		var email = viper.GetString(cli.GitConfigEmailConfigKey)

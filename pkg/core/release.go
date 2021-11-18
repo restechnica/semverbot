@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/restechnica/semverbot/pkg/api"
+	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
@@ -34,6 +35,6 @@ func ReleaseVersion(options *ReleaseVersionOptions) (err error) {
 
 	incrementedVersion = fmt.Sprintf("%s%s", options.GitTagsPrefix, incrementedVersion)
 
-	var gitAPI = api.NewGitAPI()
+	var gitAPI = git.NewAPI()
 	return gitAPI.CreateAnnotatedTag(incrementedVersion)
 }

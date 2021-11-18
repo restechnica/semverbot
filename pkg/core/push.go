@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/restechnica/semverbot/pkg/api"
+	"github.com/restechnica/semverbot/pkg/git"
 )
 
 type PushVersionOptions struct {
@@ -19,6 +20,6 @@ func PushVersion(options *PushVersionOptions) (err error) {
 
 	var prefixedVersion = fmt.Sprintf("%s%s", options.GitTagsPrefix, version)
 
-	var gitAPI = api.NewGitAPI()
+	var gitAPI = git.NewAPI()
 	return gitAPI.PushTag(prefixedVersion)
 }

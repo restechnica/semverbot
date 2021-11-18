@@ -1,18 +1,19 @@
 package api
 
 import (
+	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // VersionAPI an API to work with versions.
 type VersionAPI struct {
-	GitAPI GitAPI
+	GitAPI git.API
 }
 
 // NewVersionAPI creates a new VersionAPI.
 // Returns the new VersionAPI.
 func NewVersionAPI() VersionAPI {
-	return VersionAPI{NewGitAPI()}
+	return VersionAPI{git.NewAPI()}
 }
 
 // GetVersion gets the current version.
