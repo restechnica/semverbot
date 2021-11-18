@@ -1,9 +1,6 @@
 package api
 
 import (
-	"fmt"
-
-	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
@@ -41,17 +38,16 @@ func (api VersionAPI) GetVersionOrDefault(defaultVersion string) (version string
 	return version
 }
 
-// PredictVersion predicts the next version with a provided semver mode.
-// Returns the next version or an error if increment the current version failed.
-func (api VersionAPI) PredictVersion(mode semver.Mode) (version string, err error) {
-	version = api.GetVersionOrDefault(cli.DefaultVersion)
-	return mode.Increment(version)
-}
-
-// PushVersion pushes a version with a provided version prefix.
-// Returns an error if the the GitAPI failed.
-func (api VersionAPI) PushVersion(prefix string) (err error) {
-	var version = api.GetVersionOrDefault(cli.DefaultVersion)
-	var prefixedVersion = fmt.Sprintf("%s%s", prefix, version)
-	return api.GitAPI.PushTag(prefixedVersion)
-}
+//// PredictVersion predicts the next version with a provided semver mode.
+//// Returns the next version or an error if increment the current version failed.
+//func (api VersionAPI) PredictVersion(target string, mode semver.Mode) (version string, err error) {
+//	return mode.Increment(target)
+//}
+//
+//// PushVersion pushes a version with a provided version prefix.
+//// Returns an error if the the GitAPI failed.
+//func (api VersionAPI) PushVersion(prefix string) (err error) {
+//	var version = api.GetVersionOrDefault(cli.DefaultVersion)
+//	var prefixedVersion = fmt.Sprintf("%s%s", prefix, version)
+//	return api.GitAPI.PushTag(prefixedVersion)
+//}
