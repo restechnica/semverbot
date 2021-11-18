@@ -1,16 +1,16 @@
 package core
 
 import (
-	"github.com/restechnica/semverbot/pkg/api"
+	"github.com/restechnica/semverbot/pkg/versions"
 )
 
 type GetVersionOptions struct {
 	DefaultVersion string
 }
 
-// GetVersion gets the current version based on the latest annotated git tag.
+// GetVersion gets the current version.
 // Returns the current version.
 func GetVersion(options *GetVersionOptions) string {
-	var versionAPI = api.NewVersionAPI()
+	var versionAPI = versions.NewAPI()
 	return versionAPI.GetVersionOrDefault(options.DefaultVersion)
 }

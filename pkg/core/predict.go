@@ -1,8 +1,7 @@
 package core
 
 import (
-	"github.com/restechnica/semverbot/pkg/api"
-	"github.com/restechnica/semverbot/pkg/semver"
+	"github.com/restechnica/semverbot/pkg/versions"
 )
 
 type PredictVersionOptions struct {
@@ -11,17 +10,10 @@ type PredictVersionOptions struct {
 	SemverMode     string
 }
 
-// PredictVersion predicts a version based on the latest annotated git tag and a map of semver levels
-// matched to specific strings.
-// Returns the predicted version or an error if anything went wrong with the increment.
+// PredictVersion predicts the next version.
+// Returns the predicted version or an error if anything went wrong with the prediction.
 func PredictVersion(options *PredictVersionOptions) (prediction string, err error) {
-	var versionAPI = api.NewVersionAPI()
+	var versionAPI = versions.NewAPI()
 	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)
-
-	var modeDetector = semver.NewModeDetector(options.SemverMatchMap)
-
-	var semverModeAPI = api.NewSemverModeAPI(modeDetector)
-	var semverMode = semverModeAPI.SelectMode(options.SemverMode)
-
-	return semverMode.Increment(version)
+	return versionAPI.PredictVersion(version, options.SemverMatchMap, options.SemverMode)
 }
