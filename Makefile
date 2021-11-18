@@ -1,12 +1,15 @@
 # make sure targets do not conflict with file and folder names
 .PHONY: build clean test
 
+BIN = bin
+GOBUILD = go build
+
 # build the project
 build:
-	go build -o bin/sbot
-	GOOS=windows GOARCH=amd64 go build -o bin/sbot-windows-amd64
-	GOOS=linux GOARCH=amd64 go build -o bin/sbot-linux-amd64
-	GOOS=darwin GOARCH=amd64 go build -o bin/sbot-darwin-amd64
+	$(GOBUILD) -o $(BIN)/sbot
+	GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(BIN)/sbot-windows-amd64.exe
+	GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BIN)/sbot-linux-amd64
+	GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(BIN)/sbot-darwin-amd64
 
 # run quality assessment checks
 check:
