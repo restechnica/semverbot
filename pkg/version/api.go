@@ -1,25 +1,25 @@
-package api
+package version
 
 import (
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
-// VersionAPI an API to work with versions.
-type VersionAPI struct {
+// API an API to work with versions.
+type API struct {
 	GitAPI git.API
 }
 
-// NewVersionAPI creates a new VersionAPI.
-// Returns the new VersionAPI.
-func NewVersionAPI() VersionAPI {
-	return VersionAPI{git.NewAPI()}
+// NewAPI creates a new API.
+// Returns the new API.
+func NewAPI() API {
+	return API{git.NewAPI()}
 }
 
 // GetVersion gets the current version.
 // Git adds newlines to certain command output, which is why the version is trimmed.
 // Returns the current version or an error if the GitAPI failed.
-func (api VersionAPI) GetVersion() (version string, err error) {
+func (api API) GetVersion() (version string, err error) {
 	if version, err = api.GitAPI.GetLatestAnnotatedTag(); err != nil {
 		return version, err
 	}
@@ -29,7 +29,7 @@ func (api VersionAPI) GetVersion() (version string, err error) {
 // GetVersionOrDefault gets the current version.
 // Defaults to a provided default version if the GitAPI failed.
 // Returns the current version.
-func (api VersionAPI) GetVersionOrDefault(defaultVersion string) (version string) {
+func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 	var err error
 
 	if version, err = api.GetVersion(); err != nil {
@@ -41,13 +41,13 @@ func (api VersionAPI) GetVersionOrDefault(defaultVersion string) (version string
 
 //// PredictVersion predicts the next version with a provided semver mode.
 //// Returns the next version or an error if increment the current version failed.
-//func (api VersionAPI) PredictVersion(target string, mode semver.Mode) (version string, err error) {
+//func (api API) PredictVersion(target string, mode semver.Mode) (version string, err error) {
 //	return mode.Increment(target)
 //}
 //
 //// PushVersion pushes a version with a provided version prefix.
 //// Returns an error if the the GitAPI failed.
-//func (api VersionAPI) PushVersion(prefix string) (err error) {
+//func (api API) PushVersion(prefix string) (err error) {
 //	var version = api.GetVersionOrDefault(cli.DefaultVersion)
 //	var prefixedVersion = fmt.Sprintf("%s%s", prefix, version)
 //	return api.GitAPI.PushTag(prefixedVersion)
