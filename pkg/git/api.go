@@ -43,6 +43,12 @@ func (api API) GetLatestAnnotatedTag() (tag string, err error) {
 	return api.commander.Output("git", "describe", "--tags")
 }
 
+// GetLatestCommitMessage gets the latest git commit message.
+// Returns the git commit message or an error if the command failed.
+func (api API) GetLatestCommitMessage() (message string, err error) {
+	return api.commander.Output("git", "--no-pager", "show", "-s", "--format=%s")
+}
+
 // GetMergedBranchName gets the source branch name if the last commit is a merge.
 // Returns the branch name or an error if something went wrong with git.
 func (api API) GetMergedBranchName() (name string, err error) {

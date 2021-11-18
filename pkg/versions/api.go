@@ -1,4 +1,4 @@
-package version
+package versions
 
 import (
 	"github.com/restechnica/semverbot/pkg/git"
@@ -39,16 +39,22 @@ func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 	return version
 }
 
-//// PredictVersion predicts the next version with a provided semver mode.
-//// Returns the next version or an error if increment the current version failed.
-//func (api API) PredictVersion(target string, mode semver.Mode) (version string, err error) {
-//	return mode.Increment(target)
-//}
-//
-//// PushVersion pushes a version with a provided version prefix.
-//// Returns an error if the the GitAPI failed.
-//func (api API) PushVersion(prefix string) (err error) {
-//	var version = api.GetVersionOrDefault(cli.DefaultVersion)
-//	var prefixedVersion = fmt.Sprintf("%s%s", prefix, version)
-//	return api.GitAPI.PushTag(prefixedVersion)
-//}
+// PredictVersion predicts the next version with a provided semver mode.
+// Returns the next version or an error if incrementing the current version failed.
+func (api API) PredictVersion(version string, matchMap map[string][]string, mode string) (string, error) {
+	var modeDetector = semver.NewModeDetector(matchMap)
+	var semverModeAPI = semver.NewModeAPI(modeDetector)
+	var semverMode = semverModeAPI.SelectMode(mode)
+	return semverMode.Increment(version)
+}
+
+func (api API) ReleaseVersion(version string) (err error) {
+	return api.GitAPI.CreateAnnotatedTag(version)
+}
+
+// PushVersion pushes a version with a prefix.
+// Returns an error if the the GitAPI failed.
+func (api API) PushVersion(version string, prefix string) (err error) {
+	var prefixedVersion = AddPrefix(version, prefix)
+	return api.GitAPI.PushTag(prefixedVersion)
+}

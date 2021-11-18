@@ -1,11 +1,7 @@
 package core
 
 import (
-	"fmt"
-
-	"github.com/restechnica/semverbot/pkg/git"
-	"github.com/restechnica/semverbot/pkg/semver"
-	"github.com/restechnica/semverbot/pkg/version"
+	"github.com/restechnica/semverbot/pkg/versions"
 )
 
 type ReleaseVersionOptions struct {
@@ -19,22 +15,17 @@ type ReleaseVersionOptions struct {
 // It creates an annotated git tag for the new version.
 // Returns an error if anything went wrong with incrementing or tagging.
 func ReleaseVersion(options *ReleaseVersionOptions) (err error) {
-	var versionAPI = version.NewAPI()
+	var versionAPI = versions.NewAPI()
+
 	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)
 
-	var modeDetector = semver.NewModeDetector(options.SemverMatchMap)
-
-	var modeAPI = semver.NewModeAPI(modeDetector)
-	var semverMode = modeAPI.SelectMode(options.SemverMode)
-
-	var incrementedVersion string
-
-	if incrementedVersion, err = semverMode.Increment(version); err != nil {
+	if version, err = versionAPI.PredictVersion(
+		version,
+		options.SemverMatchMap,
+		options.SemverMode,
+	); err != nil {
 		return err
 	}
 
-	incrementedVersion = fmt.Sprintf("%s%s", options.GitTagsPrefix, incrementedVersion)
-
-	var gitAPI = git.NewAPI()
-	return gitAPI.CreateAnnotatedTag(incrementedVersion)
+	return versionAPI.ReleaseVersion(version)
 }
