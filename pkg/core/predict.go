@@ -13,11 +13,15 @@ type PredictVersionOptions struct {
 	SemverMap           modes.SemverMap
 }
 
-// PredictVersion predicts the next version.
-// Returns the predicted version or an error if anything went wrong with the prediction.
+// PredictVersion predicts a version based on a modes.Mode and a modes.SemverMap.
+// The modes.SemverMap values will be matched against git information to detect which semver level to increment.
+// Returns the next version or an error if the prediction failed.
 func PredictVersion(options *PredictVersionOptions) (prediction string, err error) {
 	var modeAPI = modes.NewAPI(options.SemverMap, options.GitBranchDelimiters, options.GitCommitDelimiters)
-	var versionAPI = versions.NewAPI(modeAPI)
+	var mode = modeAPI.SelectMode(options.Mode)
+
+	var versionAPI = versions.NewAPI()
 	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)
-	return versionAPI.PredictVersion(version, options.SemverMap, options.Mode)
+
+	return versionAPI.PredictVersion(version, mode)
 }

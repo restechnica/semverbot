@@ -17,7 +17,7 @@ type ReleaseVersionOptions struct {
 // ReleaseVersion releases a new version.
 // Returns an error if anything went wrong with the prediction or releasing.
 func ReleaseVersion(predictOptions *PredictVersionOptions, releaseOptions *ReleaseVersionOptions) error {
-	var versionAPI = versions.NewAPI(modes.API{})
+	var versionAPI = versions.NewAPI()
 	var predictedVersion, err = PredictVersion(predictOptions)
 
 	if err != nil {

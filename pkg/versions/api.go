@@ -10,17 +10,13 @@ import (
 
 // API an API to work with versions.
 type API struct {
-	GitAPI  git.API
-	ModeAPI modes.API
+	GitAPI git.API
 }
 
 // NewAPI creates a new version API.
 // Returns the new API.
-func NewAPI(modeAPI modes.API) API {
-	return API{
-		GitAPI:  git.NewAPI(),
-		ModeAPI: modeAPI,
-	}
+func NewAPI() API {
+	return API{GitAPI: git.NewAPI()}
 }
 
 // GetVersion gets the current version by getting the latest annotated git tag.
@@ -45,12 +41,10 @@ func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 	return version
 }
 
-// PredictVersion increments a version based on a semver mode and a map of semver levels with matching strings.
-// The matching strings will be matched against git information to detect which semver level to increment.
+// PredictVersion increments a version based on a modes.Mode.
 // Returns the next version or an error if the increment failed.
-func (api API) PredictVersion(version string, semverMap modes.SemverMap, mode string) (string, error) {
-	var semverMode = api.ModeAPI.SelectMode(mode)
-	return semverMode.Increment(version)
+func (api API) PredictVersion(version string, mode modes.Mode) (string, error) {
+	return mode.Increment(version)
 }
 
 // ReleaseVersion releases a version by creating an annotated git tag with a prefix.

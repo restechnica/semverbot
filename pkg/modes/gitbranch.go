@@ -68,7 +68,7 @@ func (mode GitBranchMode) DetectMode(branchName string) (detected Mode, err erro
 		}
 	}
 
-	return detected, fmt.Errorf(`failed to detect mode from git commit message "%s" with delimiters "%s"`,
+	return detected, fmt.Errorf(`failed to detect mode from git branch name "%s" with delimiters "%s"`,
 		branchName, mode.Delimiters)
 }
 
