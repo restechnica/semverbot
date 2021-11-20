@@ -31,12 +31,17 @@ func ReleaseVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 // ReleaseVersionCommandRunE runs the command.
 // Returns an error if the command fails.
 func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
-	var options = &core.ReleaseVersionOptions{
-		DefaultVersion: cli.DefaultVersion,
-		GitTagsPrefix:  viper.GetString(cli.GitTagsPrefixConfigKey),
-		Mode:           viper.GetString(cli.ModeConfigKey),
-		SemverMap:      viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
+	var predictOptions = &core.PredictVersionOptions{
+		DefaultVersion:      cli.DefaultVersion,
+		GitBranchDelimiters: viper.GetString(cli.ModesGitBranchDelimitersConfigKey),
+		GitCommitDelimiters: viper.GetString(cli.ModesGitCommitDelimitersConfigKey),
+		Mode:                viper.GetString(cli.ModeConfigKey),
+		SemverMap:           viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
 	}
 
-	return core.ReleaseVersion(options)
+	var releaseOptions = &core.ReleaseVersionOptions{
+		GitTagsPrefix: viper.GetString(cli.GitTagsPrefixConfigKey),
+	}
+
+	return core.ReleaseVersion(predictOptions, releaseOptions)
 }

@@ -75,9 +75,11 @@ func LoadConfig() (err error) {
 
 // LoadDefaultConfig loads the default semverbot config.
 func LoadDefaultConfig() {
-	viper.SetDefault(cli.GitTagsPrefixConfigKey, "v")
+	viper.SetDefault(cli.GitTagsPrefixConfigKey, cli.DefaultGitTagsPrefix)
+	viper.SetDefault(cli.ModeConfigKey, cli.DefaultMode)
+	viper.SetDefault(cli.ModesGitBranchDelimitersConfigKey, cli.DefaultGitBranchDelimiters)
+	viper.SetDefault(cli.ModesGitCommitDelimitersConfigKey, cli.DefaultGitCommitDelimiters)
 	viper.SetDefault(cli.SemverMapConfigKey, modes.SemverMap{})
-	viper.SetDefault(cli.ModeConfigKey, "auto")
 }
 
 // LoadFlags loads root command flags.

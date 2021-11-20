@@ -34,9 +34,11 @@ func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 // Returns an error if the command fails.
 func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var options = &core.PredictVersionOptions{
-		DefaultVersion: cli.DefaultVersion,
-		Mode:           viper.GetString(cli.ModeConfigKey),
-		SemverMap:      viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
+		DefaultVersion:      cli.DefaultVersion,
+		GitBranchDelimiters: viper.GetString(cli.ModesGitBranchDelimitersConfigKey),
+		GitCommitDelimiters: viper.GetString(cli.ModesGitCommitDelimitersConfigKey),
+		Mode:                viper.GetString(cli.ModeConfigKey),
+		SemverMap:           viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
 	}
 
 	var version string

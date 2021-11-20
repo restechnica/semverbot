@@ -11,10 +11,10 @@ type API struct {
 // NewAPI creates a new semver mode API with a mode detector to pass
 // it on to the different modes that require it.
 // Returns the new API.
-func NewAPI(semverMap SemverMap) API {
+func NewAPI(semverMap SemverMap, gitBranchDelimiters string, GitCommitDelimiters string) API {
 	return API{
-		GitBranchMode: NewGitBranchMode(semverMap),
-		GitCommitMode: NewGitCommitMode(semverMap),
+		GitBranchMode: NewGitBranchMode(gitBranchDelimiters, semverMap),
+		GitCommitMode: NewGitCommitMode(GitCommitDelimiters, semverMap),
 	}
 }
 

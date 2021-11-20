@@ -15,6 +15,12 @@ var (
 	// DefaultGitCommitDelimiters the default delimiters used by the git-commit mode.
 	DefaultGitCommitDelimiters = internal.DefaultGitCommitDelimiters
 
+	// DefaultGitTagsPrefix the default prefix prepended to git tags.
+	DefaultGitTagsPrefix = internal.DefaultGitTagsPrefix
+
+	// DefaultMode the default mode for incrementing versions.
+	DefaultMode = internal.DefaultMode
+
 	// DefaultVersion the default version when no other version can be found.
 	DefaultVersion = internal.DefaultVersion
 )
