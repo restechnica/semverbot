@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestTrim_Trim(t *testing.T) {
+func TestTrim(t *testing.T) {
 	type Test struct {
 		Name     string
 		Major    string

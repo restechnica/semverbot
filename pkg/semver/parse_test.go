@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestParse_Parse(t *testing.T) {
+func TestParse(t *testing.T) {
 	type Test struct {
 		Name     string
 		Major    string
