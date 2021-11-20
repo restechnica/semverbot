@@ -21,7 +21,7 @@ type GitCommitMode struct {
 // NewGitCommitMode creates a new GitCommitMode.
 // Returns the new GitCommitMode.
 func NewGitCommitMode(delimiters string, semverMap SemverMap) GitCommitMode {
-	return GitCommitMode{Delimiters: delimiters, GitAPI: git.NewCommandAPI(), SemverMap: semverMap}
+	return GitCommitMode{Delimiters: delimiters, GitAPI: git.NewCLI(), SemverMap: semverMap}
 }
 
 // Increment increments a given version based on the latest git commit message.

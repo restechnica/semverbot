@@ -93,7 +93,7 @@ func LoadFlags(cmd *cobra.Command) (err error) {
 // the git config does not exist.
 // Returns an error if it fails.
 func SetGitConfigIfConfigured() (err error) {
-	var gitAPI = git.NewCommandAPI()
+	var gitAPI = git.NewCLI()
 
 	if viper.IsSet(cli.GitConfigEmailConfigKey) {
 		var email = viper.GetString(cli.GitConfigEmailConfigKey)

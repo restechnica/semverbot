@@ -14,7 +14,7 @@ type API struct {
 // NewAPI creates a new version API.
 // Returns the new API.
 func NewAPI() API {
-	return API{GitAPI: git.NewCommandAPI()}
+	return API{GitAPI: git.NewCLI()}
 }
 
 // GetVersion gets the current version by getting the latest annotated git tag.

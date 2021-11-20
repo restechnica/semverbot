@@ -21,7 +21,7 @@ type GitBranchMode struct {
 // NewGitBranchMode creates a new GitBranchMode.
 // Returns the new GitBranchMode.
 func NewGitBranchMode(delimiters string, semverMap SemverMap) GitBranchMode {
-	return GitBranchMode{Delimiters: delimiters, GitAPI: git.NewCommandAPI(), SemverMap: semverMap}
+	return GitBranchMode{Delimiters: delimiters, GitAPI: git.NewCLI(), SemverMap: semverMap}
 }
 
 // Increment increments the semver level based on the naming of the source branch of a git merge.

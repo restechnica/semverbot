@@ -29,7 +29,7 @@ func TestAPI_GetVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got, err = versionAPI.GetVersion()
@@ -53,7 +53,7 @@ func TestAPI_GetVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var _, got = versionAPI.GetVersion()
@@ -78,7 +78,7 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got, err = versionAPI.GetVersion()
@@ -102,7 +102,7 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
@@ -131,7 +131,7 @@ func TestAPI_PredictVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got, err = versionAPI.PredictVersion(test.Version, test.Mode)
@@ -209,7 +209,7 @@ func TestAPI_PushVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got = versionAPI.PushVersion("0.0.1", "v")
@@ -263,7 +263,7 @@ func TestAPI_ReleaseVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got = versionAPI.ReleaseVersion("0.0.1", "v")
@@ -289,7 +289,7 @@ func TestAPI_UpdateVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
 
-			var gitAPI = git.CommandAPI{Commander: cmder}
+			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got = versionAPI.UpdateVersion()
