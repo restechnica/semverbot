@@ -5,12 +5,6 @@ import (
 	"testing"
 )
 
-/*
-func Contains(target string, value string, delimiters string) bool {
-	var slice = SplitByDelimiterString(target, delimiters)
-	return SliceContainsString(slice, value)
-}
-*/
 func TestContains(t *testing.T) {
 	type Test struct {
 		Delimiters   string
