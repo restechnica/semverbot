@@ -1,7 +1,8 @@
-package semver
+package modes
 
 import (
 	blangsemver "github.com/blang/semver/v4"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // Patch semver version level for patch
@@ -22,7 +23,7 @@ func NewPatchMode() PatchMode {
 func (mode PatchMode) Increment(targetVersion string) (nextVersion string, err error) {
 	var version blangsemver.Version
 
-	if version, err = Parse(targetVersion); err != nil {
+	if version, err = semver.Parse(targetVersion); err != nil {
 		return
 	}
 

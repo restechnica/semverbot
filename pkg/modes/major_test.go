@@ -1,4 +1,4 @@
-package semver
+package modes
 
 import (
 	"testing"
@@ -6,16 +6,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMinorMode_MinorConstant(t *testing.T) {
+func TestMajorMode_MajorConstant(t *testing.T) {
 	t.Run("CheckConstant", func(t *testing.T) {
-		var want = "minor"
-		var got = Minor
+		var want = "major"
+		var got = Major
 
 		assert.Equal(t, want, got, `want: "%s", got: "%s"`, want, got)
 	})
 }
 
-func TestMinorMode_Increment(t *testing.T) {
+func TestMajorMode_Increment(t *testing.T) {
 	type Test struct {
 		Name          string
 		TargetVersion string
@@ -23,16 +23,16 @@ func TestMinorMode_Increment(t *testing.T) {
 	}
 
 	var tests = []Test{
-		{Name: "HappyPath", TargetVersion: "0.1.0", Want: "0.2.0"},
-		{Name: "ResetPatch", TargetVersion: "0.2.3", Want: "0.3.0"},
-		{Name: "NoResetMajor", TargetVersion: "6.7.0", Want: "6.8.0"},
-		{Name: "DiscardPreBuild", TargetVersion: "0.6.0-pre+001", Want: "0.7.0"},
+		{Name: "HappyPath", TargetVersion: "1.0.0", Want: "2.0.0"},
+		{Name: "ResetPatch", TargetVersion: "7.0.4", Want: "8.0.0"},
+		{Name: "ResetMinor", TargetVersion: "6.8.0", Want: "7.0.0"},
+		{Name: "DiscardPreBuild", TargetVersion: "2.0.0-pre+001", Want: "3.0.0"},
 	}
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
 			var want = test.Want
-			var mode = NewMinorMode()
+			var mode = NewMajorMode()
 			var got, err = mode.Increment(test.TargetVersion)
 
 			assert.NoError(t, err)
@@ -52,7 +52,7 @@ func TestMinorMode_Increment(t *testing.T) {
 
 	for _, test := range errorTests {
 		t.Run(test.Name, func(t *testing.T) {
-			var mode = NewMinorMode()
+			var mode = NewMajorMode()
 			var _, got = mode.Increment(test.TargetVersion)
 			assert.Error(t, got)
 		})

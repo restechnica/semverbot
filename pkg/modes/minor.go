@@ -1,6 +1,9 @@
-package semver
+package modes
 
-import blangsemver "github.com/blang/semver/v4"
+import (
+	blangsemver "github.com/blang/semver/v4"
+	"github.com/restechnica/semverbot/pkg/semver"
+)
 
 // Minor semver version level for minor
 const Minor = "minor"
@@ -20,7 +23,7 @@ func NewMinorMode() MinorMode {
 func (minorMode MinorMode) Increment(targetVersion string) (nextVersion string, err error) {
 	var version blangsemver.Version
 
-	if version, err = Parse(targetVersion); err != nil {
+	if version, err = semver.Parse(targetVersion); err != nil {
 		return
 	}
 

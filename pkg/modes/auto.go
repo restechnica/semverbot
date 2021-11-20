@@ -1,4 +1,4 @@
-package semver
+package modes
 
 // Auto mode name for AutoMode.
 const Auto = "auto"

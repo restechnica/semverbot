@@ -1,24 +1,26 @@
-package semver
+package modes
 
-// ModeAPI an API to work with different modes.
-type ModeAPI struct {
+type SemverMap map[string][]string
+
+// API an API to work with different modes.
+type API struct {
 	GitBranchMode GitBranchMode
 	GitCommitMode GitCommitMode
 }
 
-// NewModeAPI creates a new semver mode API with a mode detector to pass
+// NewAPI creates a new semver mode API with a mode detector to pass
 // it on to the different modes that require it.
-// Returns the new ModeAPI.
-func NewModeAPI(detector ModeDetector) ModeAPI {
-	return ModeAPI{
-		GitBranchMode: NewGitBranchMode(detector),
-		GitCommitMode: NewGitCommitMode(detector),
+// Returns the new API.
+func NewAPI(semverMap SemverMap, gitBranchDelimiters string, GitCommitDelimiters string) API {
+	return API{
+		GitBranchMode: NewGitBranchMode(gitBranchDelimiters, semverMap),
+		GitCommitMode: NewGitCommitMode(GitCommitDelimiters, semverMap),
 	}
 }
 
 // SelectMode selects the mode corresponding to the mode string.
 // Returns the corresponding mode.
-func (api ModeAPI) SelectMode(mode string) Mode {
+func (api API) SelectMode(mode string) Mode {
 	switch mode {
 	case Auto:
 		return NewAutoMode([]Mode{api.GitBranchMode, api.GitCommitMode})

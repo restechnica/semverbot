@@ -1,3 +1,5 @@
+mode = "auto"
+
 [git]
 
 [git.config]
@@ -8,9 +10,6 @@ name = "semverbot"
 prefix = "v"
 
 [semver]
-mode = "auto"
-
-[semver.match]
-patch = ["fix/", "[fix]"]
-minor = ["feature/", "[feature]"]
-major = ["release/", "[release]"]
+patch = ["fix", "bug"]
+minor = ["feature"]
+major = ["release"]

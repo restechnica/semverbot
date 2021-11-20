@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/modes"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
@@ -15,7 +16,7 @@ type API struct {
 // NewAPI creates a new version API.
 // Returns the new API.
 func NewAPI() API {
-	return API{git.NewAPI()}
+	return API{GitAPI: git.NewAPI()}
 }
 
 // GetVersion gets the current version by getting the latest annotated git tag.
@@ -40,20 +41,17 @@ func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 	return version
 }
 
-// PredictVersion increments a version based on a semver mode and a map of semver levels with matching strings.
-// The matching strings will be matched against git information to detect which semver level to increment.
+// PredictVersion increments a version based on a modes.Mode.
 // Returns the next version or an error if the increment failed.
-func (api API) PredictVersion(version string, matchMap map[string][]string, mode string) (string, error) {
-	var modeDetector = semver.NewModeDetector(matchMap)
-	var semverModeAPI = semver.NewModeAPI(modeDetector)
-	var semverMode = semverModeAPI.SelectMode(mode)
-	return semverMode.Increment(version)
+func (api API) PredictVersion(version string, mode modes.Mode) (string, error) {
+	return mode.Increment(version)
 }
 
-// ReleaseVersion releases a version by creating an annotated git tag.
+// ReleaseVersion releases a version by creating an annotated git tag with a prefix.
 // Returns an error if the tag creation failed.
-func (api API) ReleaseVersion(version string) (err error) {
-	return api.GitAPI.CreateAnnotatedTag(version)
+func (api API) ReleaseVersion(version string, prefix string) (err error) {
+	var prefixedVersion = AddPrefix(version, prefix)
+	return api.GitAPI.CreateAnnotatedTag(prefixedVersion)
 }
 
 // PushVersion pushes a version by pushing a git tag with a prefix.
