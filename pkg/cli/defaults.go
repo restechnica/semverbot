@@ -1,11 +1,12 @@
 package cli
 
-import "github.com/restechnica/semverbot/internal"
+import (
+	"fmt"
+
+	"github.com/restechnica/semverbot/internal"
+)
 
 var (
-	// DefaultConfig the default config.
-	DefaultConfig = internal.DefaultConfig
-
 	// DefaultConfigFilePath the default relative filepath to the config file.
 	DefaultConfigFilePath = internal.DefaultConfigFilePath
 
@@ -24,3 +25,39 @@ var (
 	// DefaultVersion the default version when no other version can be found.
 	DefaultVersion = internal.DefaultVersion
 )
+
+func GetDefaultConfig() string {
+	const template = `mode = "%s"
+
+[git]
+
+[git.config]
+email = "semverbot@github.com"
+name = "semverbot"
+
+[git.tags]
+prefix = "%s"
+
+[semver]
+patch = ["fix", "bug"]
+minor = ["feature"]
+major = ["release"]
+
+[modes]
+
+[modes.git-branch]
+delimiters = "%s"
+
+[modes.git-commit]
+delimiters = "%s"
+
+`
+
+	return fmt.Sprintf(
+		template,
+		DefaultMode,
+		DefaultGitTagsPrefix,
+		DefaultGitBranchDelimiters,
+		DefaultGitCommitDelimiters,
+	)
+}
