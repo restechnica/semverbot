@@ -1,4 +1,4 @@
-package semver
+package modes
 
 // Mode interface which increments a specific semver level.
 type Mode interface {

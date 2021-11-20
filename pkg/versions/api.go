@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/modes"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
@@ -44,8 +45,8 @@ func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 // The matching strings will be matched against git information to detect which semver level to increment.
 // Returns the next version or an error if the increment failed.
 func (api API) PredictVersion(version string, matchMap map[string][]string, mode string) (string, error) {
-	var modeDetector = semver.NewModeDetector(matchMap)
-	var semverModeAPI = semver.NewModeAPI(modeDetector)
+	var modeDetector = modes.NewModeDetector(matchMap)
+	var semverModeAPI = modes.NewAPI(modeDetector)
 	var semverMode = semverModeAPI.SelectMode(mode)
 	return semverMode.Increment(version)
 }
