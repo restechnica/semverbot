@@ -9,6 +9,7 @@ import (
 
 	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/modes"
 )
 
 // NewRootCommand creates a new root command.
@@ -75,8 +76,8 @@ func LoadConfig() (err error) {
 // LoadDefaultConfig loads the default semverbot config.
 func LoadDefaultConfig() {
 	viper.SetDefault(cli.GitTagsPrefixConfigKey, "v")
-	viper.SetDefault(cli.SemverMatchConfigKey, map[string][]string{})
-	viper.SetDefault(cli.SemverModeConfigKey, "auto")
+	viper.SetDefault(cli.SemverMapConfigKey, modes.SemverMap{})
+	viper.SetDefault(cli.ModeConfigKey, "auto")
 }
 
 // LoadFlags loads root command flags.

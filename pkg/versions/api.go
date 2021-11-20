@@ -44,8 +44,8 @@ func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 // PredictVersion increments a version based on a semver mode and a map of semver levels with matching strings.
 // The matching strings will be matched against git information to detect which semver level to increment.
 // Returns the next version or an error if the increment failed.
-func (api API) PredictVersion(version string, matchMap map[string][]string, mode string) (string, error) {
-	var modeDetector = modes.NewModeDetector(matchMap)
+func (api API) PredictVersion(version string, semverMap modes.SemverMap, mode string) (string, error) {
+	var modeDetector = modes.NewModeDetector(semverMap)
 	var semverModeAPI = modes.NewAPI(modeDetector)
 	var semverMode = semverModeAPI.SelectMode(mode)
 	return semverMode.Increment(version)

@@ -7,8 +7,8 @@ import (
 type ReleaseVersionOptions struct {
 	DefaultVersion string
 	GitTagsPrefix  string
-	SemverMatchMap map[string][]string
-	SemverMode     string
+	Mode           string
+	SemverMap      map[string][]string
 }
 
 // ReleaseVersion releases a new version.
@@ -17,7 +17,7 @@ func ReleaseVersion(options *ReleaseVersionOptions) error {
 	var versionAPI = versions.NewAPI()
 
 	var currentVersion = versionAPI.GetVersionOrDefault(options.DefaultVersion)
-	var predictedVersion, err = versionAPI.PredictVersion(currentVersion, options.SemverMatchMap, options.SemverMode)
+	var predictedVersion, err = versionAPI.PredictVersion(currentVersion, options.SemverMap, options.Mode)
 
 	if err != nil {
 		return err

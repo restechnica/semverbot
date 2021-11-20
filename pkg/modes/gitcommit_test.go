@@ -11,7 +11,7 @@ import (
 	"github.com/restechnica/semverbot/pkg/git"
 )
 
-var semverMatchMap = map[string][]string{
+var semverMap = SemverMap{
 	Patch: {"[fix]", "fix/"},
 	Minor: {"[feature]", "feature/"},
 	Major: {"[release]", "release/"},
@@ -47,7 +47,7 @@ func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 //		t.Run(test.Name, func(t *testing.T) {
 //			var want = test.Want
 //
-//			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMatchMap))
+//			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMap))
 //			var got, err = gitCommitMode.ModeDetector.(test.Message)
 //
 //			assert.NoError(t, err)
@@ -68,7 +68,7 @@ func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 //		t.Run(test.Name, func(t *testing.T) {
 //			var want = fmt.Sprintf(`could not match a mode to the commit message "%s"`, test.Message)
 //
-//			var gitCommitMode = NewGitCommitMode(semverMatchMap)
+//			var gitCommitMode = NewGitCommitMode(semverMap)
 //			var _, err = gitCommitMode.GetMatchedMode(test.Message)
 //
 //			assert.Error(t, err)
@@ -101,7 +101,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, nil)
 
-			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMatchMap))
+			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMap))
 			gitCommitMode.GitAPI = git.API{Commander: cmder}
 			var got, err = gitCommitMode.Increment(test.Version)
 
@@ -130,7 +130,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, test.GitError)
 
-			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMatchMap))
+			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMap))
 			gitCommitMode.GitAPI = git.API{Commander: cmder}
 			var _, err = gitCommitMode.Increment(test.Version)
 

@@ -10,9 +10,9 @@ const (
 	// GitTagsPrefixConfigKey key for the git tags prefix config in the semverbot config file.
 	GitTagsPrefixConfigKey = "git.tags.prefix"
 
-	// SemverMatchConfigKey key for the semver match config in the semverbot config file.
-	SemverMatchConfigKey = "semver.match"
+	// ModeConfigKey key for the mode config in the semverbot config file.
+	ModeConfigKey = "mode"
 
-	// SemverModeConfigKey key for the semver mode config in the semverbot config file.
-	SemverModeConfigKey = "semver.mode"
+	// SemverMapConfigKey key for the semver map config in the semverbot config file.
+	SemverMapConfigKey = "semver"
 )

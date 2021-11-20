@@ -27,7 +27,7 @@ func NewPredictVersionCommand() *cobra.Command {
 // PredictVersionCommandPreRunE runs before the command runs.
 // Returns an error if it fails.
 func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error) {
-	return viper.BindPFlag(cli.SemverModeConfigKey, cmd.Flags().Lookup("mode"))
+	return viper.BindPFlag(cli.ModeConfigKey, cmd.Flags().Lookup("mode"))
 }
 
 // PredictVersionCommandRunE runs the command.
@@ -35,8 +35,8 @@ func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var options = &core.PredictVersionOptions{
 		DefaultVersion: cli.DefaultVersion,
-		SemverMatchMap: viper.GetStringMapStringSlice(cli.SemverMatchConfigKey),
-		SemverMode:     viper.GetString(cli.SemverModeConfigKey),
+		Mode:           viper.GetString(cli.ModeConfigKey),
+		SemverMap:      viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
 	}
 
 	var version string
