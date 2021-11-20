@@ -3,33 +3,6 @@ package internal
 import "github.com/restechnica/semverbot/pkg/modes"
 
 const (
-	// DefaultConfig the default config.
-	DefaultConfig = `mode = "auto"
-
-[git]
-
-[git.config]
-email = "semverbot@github.com"
-name = "semverbot"
-
-[git.tags]
-prefix = "v"
-
-[semver]
-patch = ["fix", "bug"]
-minor = ["feature"]
-major = ["release"]
-
-[modes]
-
-[modes.git-branch]
-delimiters = "/"
-
-[modes.git-commit]
-delimiters = "[]"
-
-`
-
 	// DefaultConfigFilePath the default relative filepath to the config file.
 	DefaultConfigFilePath = ".semverbot.toml"
 
