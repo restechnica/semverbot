@@ -1,0 +1,88 @@
+package util
+
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
+
+/*
+func Contains(target string, value string, delimiters string) bool {
+	var slice = SplitByDelimiterString(target, delimiters)
+	return SliceContainsString(slice, value)
+}
+*/
+func TestContains(t *testing.T) {
+	type Test struct {
+		Delimiters   string
+		Name         string
+		TargetString string
+		Value        string
+		Want         bool
+	}
+
+	var tests = []Test{
+		{Name: "EmptyDelimiters", Delimiters: "", TargetString: "some-value", Value: "value", Want: false},
+		{Name: "EmptyTargetString", Delimiters: "-", TargetString: "", Value: "value", Want: false},
+		{Name: "EmptyValue", Delimiters: "/", TargetString: "some/string", Value: "", Want: false},
+		{Name: "IncorrectDelimiters", Delimiters: "/", TargetString: "some-value", Value: "value", Want: false},
+		{Name: "OneDelimiterButWrongLocation", Delimiters: "/", TargetString: "some/feature [test]", Value: "feature", Want: false},
+		{Name: "OneDelimiterButCorrectLocation", Delimiters: "/", TargetString: "some/feature/ [test]", Value: "feature", Want: true},
+		{Name: "MultipleDelimiters", Delimiters: "/[]", TargetString: "some/feature [test]", Value: "test", Want: true},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			var got = Contains(test.TargetString, test.Value, test.Delimiters)
+			assert.Equal(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+		})
+	}
+}
+
+func TestSplitByDelimiterString(t *testing.T) {
+	type Test struct {
+		Delimiters   string
+		Name         string
+		TargetString string
+		Want         []string
+	}
+
+	var tests = []Test{
+		{Name: "EmptyDelimiters", Delimiters: "", TargetString: "some-string", Want: []string{"some-string"}},
+		{Name: "EmptyTargetString", Delimiters: "/", TargetString: "", Want: []string{}},
+		{Name: "IncorrectDelimiters", Delimiters: "/", TargetString: "some-string", Want: []string{"some-string"}},
+		{Name: "OneDelimiter", Delimiters: "/", TargetString: "some/feature [test]", Want: []string{"some", "feature [test]"}},
+		{Name: "MultipleDelimiters", Delimiters: "/[]", TargetString: "some/feature [test]", Want: []string{"some", "feature ", "test"}},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			var got = SplitByDelimiterString(test.TargetString, test.Delimiters)
+			assert.Equal(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+		})
+	}
+}
+
+func TestSliceContainsString(t *testing.T) {
+	type Test struct {
+		Name  string
+		Slice []string
+		Value string
+		Want  bool
+	}
+
+	var tests = []Test{
+		{Name: "EmptySlice", Slice: []string{}, Value: "test", Want: false},
+		{Name: "EmptyValue", Slice: []string{"test"}, Value: "", Want: false},
+		{Name: "OneSliceElementWithValue", Slice: []string{"test"}, Value: "test", Want: true},
+		{Name: "MultipleSliceElementsWithValue", Slice: []string{"one", "test", "two"}, Value: "test", Want: true},
+		{Name: "OneSliceElementWithoutValue", Slice: []string{"without"}, Value: "test", Want: false},
+		{Name: "MultipleElementWithoutValue", Slice: []string{"without", "with", "out"}, Value: "test", Want: false},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			var got = SliceContainsString(test.Slice, test.Value)
+			assert.Equal(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+		})
+	}
+}
