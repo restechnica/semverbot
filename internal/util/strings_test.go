@@ -15,13 +15,14 @@ func TestContains(t *testing.T) {
 	}
 
 	var tests = []Test{
-		{Name: "EmptyDelimiters", Delimiters: "", TargetString: "some-value", Value: "value", Want: false},
-		{Name: "EmptyTargetString", Delimiters: "-", TargetString: "", Value: "value", Want: false},
-		{Name: "EmptyValue", Delimiters: "/", TargetString: "some/string", Value: "", Want: false},
-		{Name: "IncorrectDelimiters", Delimiters: "/", TargetString: "some-value", Value: "value", Want: false},
-		{Name: "OneDelimiterButWrongLocation", Delimiters: "/", TargetString: "some/feature [test]", Value: "feature", Want: false},
-		{Name: "OneDelimiterButCorrectLocation", Delimiters: "/", TargetString: "some/feature/ [test]", Value: "feature", Want: true},
-		{Name: "MultipleDelimiters", Delimiters: "/[]", TargetString: "some/feature [test]", Value: "test", Want: true},
+		{Name: "EmptyDelimitersReturnsFalse", Delimiters: "", TargetString: "some-value", Value: "value", Want: false},
+		{Name: "EmptyTargetStringWithNonEmptyValueReturnsFalse", Delimiters: "-", TargetString: "", Value: "value", Want: false},
+		{Name: "EmptyTargetStringWithEmptyValueReturnsFalse", Delimiters: "-", TargetString: "", Value: "", Want: false},
+		{Name: "EmptyValueReturnsFalse", Delimiters: "/", TargetString: "some/string", Value: "", Want: false},
+		{Name: "IncorrectDelimitersReturnsFalse", Delimiters: "/", TargetString: "some-value", Value: "value", Want: false},
+		{Name: "OneDelimiterButWrongLocationReturnsFalse", Delimiters: "/", TargetString: "some/feature [test]", Value: "feature", Want: false},
+		{Name: "OneDelimiterButCorrectLocationReturnsTrue", Delimiters: "/", TargetString: "some/feature/ [test]", Value: "feature", Want: true},
+		{Name: "MultipleDelimitersReturnsTrue", Delimiters: "/[]", TargetString: "some/feature [test]", Value: "test", Want: true},
 	}
 
 	for _, test := range tests {
