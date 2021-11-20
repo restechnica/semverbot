@@ -2,7 +2,7 @@ package git
 
 import "github.com/restechnica/semverbot/internal/commands"
 
-// CLI an CLI to interact with the git CLI.
+// CLI a git.API to interact with the git CLI.
 type CLI struct {
 	Commander commands.Commander
 }
