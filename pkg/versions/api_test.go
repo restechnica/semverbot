@@ -2,13 +2,16 @@ package versions
 
 import (
 	"fmt"
-	"github.com/restechnica/semverbot/pkg/cli"
 	"testing"
 
-	"github.com/restechnica/semverbot/internal/mocks"
-	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/restechnica/semverbot/internal/fakes"
+	"github.com/restechnica/semverbot/internal/mocks"
+	"github.com/restechnica/semverbot/pkg/cli"
+	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/modes"
 )
 
 func TestAPI_GetVersion(t *testing.T) {
@@ -26,7 +29,7 @@ func TestAPI_GetVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
-			var gitAPI = git.API{Commander: cmder}
+			var gitAPI = git.CommandAPI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got, err = versionAPI.GetVersion()
@@ -50,10 +53,11 @@ func TestAPI_GetVersion(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
 
-			var gitAPI = git.API{Commander: cmder}
+			var gitAPI = git.CommandAPI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var _, got = versionAPI.GetVersion()
+
 			assert.Error(t, got)
 		})
 	}
@@ -74,7 +78,7 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
-			var gitAPI = git.API{Commander: cmder}
+			var gitAPI = git.CommandAPI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got, err = versionAPI.GetVersion()
@@ -90,7 +94,7 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 	}
 
 	var errorTests = []ErrorTest{
-		{Name: "ReturnDefaultVersionOnGitError", Error: fmt.Errorf("some-error")},
+		{Name: "ReturnDefaultVersionOnGitApiError", Error: fmt.Errorf("some-error")},
 	}
 
 	for _, test := range errorTests {
@@ -98,29 +102,201 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
 
-			var gitAPI = git.API{Commander: cmder}
+			var gitAPI = git.CommandAPI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
 
 			var got = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
+
 			assert.Equal(t, cli.DefaultVersion, got, `want: "%s, got: "%s"`, cli.DefaultVersion, got)
 		})
 	}
 }
 
 func TestAPI_PredictVersion(t *testing.T) {
+	type Test struct {
+		Mode    modes.Mode
+		Name    string
+		Version string
+		Want    string
+	}
 
+	var tests = []Test{
+		{Name: "ReturnPatchPrediction", Mode: modes.NewPatchMode(), Version: "0.0.0", Want: "0.0.1"},
+		{Name: "ReturnMinorPrediction", Mode: modes.NewMinorMode(), Version: "0.0.0", Want: "0.1.0"},
+		{Name: "ReturnMajorPrediction", Mode: modes.NewMajorMode(), Version: "0.0.0", Want: "1.0.0"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			var cmder = mocks.NewMockCommander()
+			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
+
+			var gitAPI = git.CommandAPI{Commander: cmder}
+			var versionAPI = API{GitAPI: gitAPI}
+
+			var got, err = versionAPI.PredictVersion(test.Version, test.Mode)
+
+			assert.NoError(t, err)
+			assert.Equal(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+		})
+	}
+
+	type ErrorTest struct {
+		Error   error
+		Name    string
+		Version string
+	}
+
+	var errorTests = []ErrorTest{
+		{Name: "ReturnErrorOnModeIncrementError", Error: fmt.Errorf("some-error"), Version: "invalid"},
+	}
+
+	for _, test := range errorTests {
+		t.Run(test.Name, func(t *testing.T) {
+			var versionAPI = API{}
+
+			var mode = mocks.NewMockMode()
+			mode.On("Increment", mock.Anything).Return(test.Version, test.Error)
+
+			var _, got = versionAPI.PredictVersion("0.0.0", mode)
+
+			assert.Error(t, got)
+		})
+	}
 }
 
 func TestAPI_PushVersion(t *testing.T) {
+	type Test struct {
+		Mode    modes.Mode
+		Name    string
+		Prefix  string
+		Version string
+		Want    string
+	}
 
+	var tests = []Test{
+		{Name: "PushWithPrefix", Mode: modes.NewPatchMode(), Prefix: "v", Version: "0.0.1", Want: "v0.0.1"},
+		{Name: "PushWithoutPrefix", Mode: modes.NewPatchMode(), Prefix: "", Version: "0.0.1", Want: "0.0.1"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			var gitAPI = fakes.NewFakeGitAPI()
+			var versionAPI = API{GitAPI: gitAPI}
+
+			var err = versionAPI.PushVersion(test.Version, test.Prefix)
+
+			var pushedTags = versionAPI.GitAPI.(*fakes.FakeGitAPI).PushedTags
+			var got = pushedTags[len(pushedTags)-1]
+
+			assert.NoError(t, err)
+			assert.Equal(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+		})
+	}
+
+	type ErrorTest struct {
+		Error   error
+		Name    string
+		Version string
+	}
+
+	var errorTests = []ErrorTest{
+		{Name: "ReturnErrorOnGitApiError", Error: fmt.Errorf("some-error"), Version: "invalid"},
+	}
+
+	for _, test := range errorTests {
+		t.Run(test.Name, func(t *testing.T) {
+			var cmder = mocks.NewMockCommander()
+			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
+
+			var gitAPI = git.CommandAPI{Commander: cmder}
+			var versionAPI = API{GitAPI: gitAPI}
+
+			var got = versionAPI.PushVersion("0.0.1", "v")
+
+			assert.Error(t, got)
+		})
+	}
 }
 
 func TestAPI_ReleaseVersion(t *testing.T) {
+	type Test struct {
+		Mode    modes.Mode
+		Name    string
+		Prefix  string
+		Version string
+		Want    string
+	}
 
+	var tests = []Test{
+		{Name: "PushWithPrefix", Mode: modes.NewPatchMode(), Prefix: "v", Version: "0.0.1", Want: "v0.0.1"},
+		{Name: "PushWithoutPrefix", Mode: modes.NewPatchMode(), Prefix: "", Version: "0.0.1", Want: "0.0.1"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			var gitAPI = fakes.NewFakeGitAPI()
+			var versionAPI = API{GitAPI: gitAPI}
+
+			var err = versionAPI.ReleaseVersion(test.Version, test.Prefix)
+
+			var localTags = versionAPI.GitAPI.(*fakes.FakeGitAPI).LocalTags
+			var got = localTags[len(localTags)-1]
+
+			assert.NoError(t, err)
+			assert.Equal(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+		})
+	}
+
+	type ErrorTest struct {
+		Error   error
+		Name    string
+		Version string
+	}
+
+	var errorTests = []ErrorTest{
+		{Name: "ReturnErrorOnGitApiError", Error: fmt.Errorf("some-error"), Version: "invalid"},
+	}
+
+	for _, test := range errorTests {
+		t.Run(test.Name, func(t *testing.T) {
+			var cmder = mocks.NewMockCommander()
+			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
+
+			var gitAPI = git.CommandAPI{Commander: cmder}
+			var versionAPI = API{GitAPI: gitAPI}
+
+			var got = versionAPI.ReleaseVersion("0.0.1", "v")
+
+			assert.Error(t, got)
+		})
+	}
 }
 
 func TestAPI_UpdateVersion(t *testing.T) {
+	type ErrorTest struct {
+		Error   error
+		Name    string
+		Version string
+	}
 
+	var errorTests = []ErrorTest{
+		{Name: "ReturnErrorOnGitApiError", Error: fmt.Errorf("some-error"), Version: "invalid"},
+	}
+
+	for _, test := range errorTests {
+		t.Run(test.Name, func(t *testing.T) {
+			var cmder = mocks.NewMockCommander()
+			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
+
+			var gitAPI = git.CommandAPI{Commander: cmder}
+			var versionAPI = API{GitAPI: gitAPI}
+
+			var got = versionAPI.UpdateVersion()
+
+			assert.Error(t, got)
+		})
+	}
 }
 
 func TestNewAPI(t *testing.T) {

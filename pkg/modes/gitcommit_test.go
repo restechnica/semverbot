@@ -102,7 +102,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, nil)
 
 			var gitCommitMode = NewGitCommitMode("[]", semverMap)
-			gitCommitMode.GitAPI = git.API{Commander: cmder}
+			gitCommitMode.GitAPI = git.CommandAPI{Commander: cmder}
 			var got, err = gitCommitMode.Increment(test.Version)
 
 			assert.NoError(t, err)
@@ -131,7 +131,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, test.GitError)
 
 			var gitCommitMode = NewGitCommitMode("[]", semverMap)
-			gitCommitMode.GitAPI = git.API{Commander: cmder}
+			gitCommitMode.GitAPI = git.CommandAPI{Commander: cmder}
 			var _, err = gitCommitMode.Increment(test.Version)
 
 			assert.Error(t, err)

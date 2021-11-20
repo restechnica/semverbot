@@ -23,7 +23,7 @@ func TestAutoMode_Increment(t *testing.T) {
 		const target = "0.0.0"
 		const want = "1.0.0"
 
-		var gitCommitMode = mocks.NewMockSemverMode()
+		var gitCommitMode = mocks.NewMockMode()
 		gitCommitMode.On("Increment", target).Return(want, nil)
 
 		var autoMode = NewAutoMode([]Mode{gitCommitMode})
@@ -37,7 +37,7 @@ func TestAutoMode_Increment(t *testing.T) {
 		const target = "0.0.0"
 		const want = "0.0.1"
 
-		var gitCommitMode = mocks.NewMockSemverMode()
+		var gitCommitMode = mocks.NewMockMode()
 		gitCommitMode.On("Increment", target).Return("", fmt.Errorf("some-error"))
 
 		var autoMode = NewAutoMode([]Mode{gitCommitMode})
@@ -59,7 +59,7 @@ func TestAutoMode_Increment(t *testing.T) {
 
 	for _, test := range errorTests {
 		t.Run(test.Name, func(t *testing.T) {
-			var gitCommitMode = mocks.NewMockSemverMode()
+			var gitCommitMode = mocks.NewMockMode()
 			gitCommitMode.On("Increment", test.Version).Return("", fmt.Errorf("some-error"))
 
 			var autoMode = NewAutoMode([]Mode{gitCommitMode})

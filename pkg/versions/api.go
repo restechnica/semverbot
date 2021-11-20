@@ -1,8 +1,6 @@
 package versions
 
 import (
-	"fmt"
-
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/modes"
 	"github.com/restechnica/semverbot/pkg/semver"
@@ -16,7 +14,7 @@ type API struct {
 // NewAPI creates a new version API.
 // Returns the new API.
 func NewAPI() API {
-	return API{GitAPI: git.NewAPI()}
+	return API{GitAPI: git.NewCommandAPI()}
 }
 
 // GetVersion gets the current version by getting the latest annotated git tag.
@@ -62,19 +60,9 @@ func (api API) PushVersion(version string, prefix string) (err error) {
 }
 
 // UpdateVersion updates the version by making the git repo unshallow and by fetching all git tags.
-// Returns and error if anything went wrong.
+// Returns and error if anything went wrong. Errors from making the git repo unshallow are ignored.
 func (api API) UpdateVersion() (err error) {
-	var gitAPI = git.NewAPI()
-
-	if err = gitAPI.FetchUnshallow(); err != nil {
-		fmt.Println("something went wrong while fetching from git, attempting to fetch tags anyway")
-	}
-
-	if err = gitAPI.FetchTags(); err != nil {
-		fmt.Println("something went wrong while updating the version")
-	} else {
-		fmt.Println("successfully fetched the latest git tags")
-	}
-
+	err = api.GitAPI.FetchUnshallow()
+	err = api.GitAPI.FetchTags()
 	return err
 }
