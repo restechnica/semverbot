@@ -85,7 +85,7 @@ func TestGitBranchMode_DetectMode(t *testing.T) {
 			Delimiters: "/",
 			Error:      fmt.Errorf(`failed to detect mode from git branch name "feature/some-feature" with delimiters "/"`),
 			SemverMap: SemverMap{
-				"mnr": []string{"feature"},
+				"mnr": {"feature"},
 			},
 		},
 	}
@@ -182,7 +182,7 @@ func TestGitBranchMode_Increment(t *testing.T) {
 
 	t.Run("ReturnErrorIfInvalidVersion", func(t *testing.T) {
 		var gitAPI = mocks.NewMockGitAPI()
-		gitAPI.On("GetMergedBranchName").Return("feat/some-feature", nil)
+		gitAPI.On("GetMergedBranchName").Return("feature/some-feat", nil)
 
 		var mode = NewGitBranchMode("/", semverMap)
 		mode.GitAPI = gitAPI
