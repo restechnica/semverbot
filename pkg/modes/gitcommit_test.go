@@ -2,8 +2,9 @@ package modes
 
 import (
 	"fmt"
-	"github.com/restechnica/semverbot/internal/mocks"
 	"testing"
+
+	"github.com/restechnica/semverbot/internal/mocks"
 
 	"github.com/stretchr/testify/assert"
 )
