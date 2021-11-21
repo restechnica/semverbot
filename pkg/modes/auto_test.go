@@ -54,7 +54,6 @@ func TestAutoMode_Increment(t *testing.T) {
 
 	var errorTests = []ErrorTest{
 		{Name: "ReturnErrorOnInvalidVersion", Version: "invalid"},
-		//{Name: "ReturnErrorOnInvalidCharacter", Version: "v1.0.0"}, // commented due to TolerantParse
 	}
 
 	for _, test := range errorTests {
