@@ -9,6 +9,15 @@ import (
 	"github.com/restechnica/semverbot/internal/mocks"
 )
 
+func TestGitBranchMode_GitBranchConstant(t *testing.T) {
+	t.Run("CheckConstant", func(t *testing.T) {
+		var want = "git-branch"
+		var got = GitBranch
+
+		assert.Equal(t, want, got, `want: "%s", got: "%s"`, want, got)
+	})
+}
+
 func TestGitBranchMode_DetectMode(t *testing.T) {
 	var semverMap = SemverMap{
 		Patch: {"fix", "bug"},
