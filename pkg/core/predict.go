@@ -17,7 +17,10 @@ type PredictVersionOptions struct {
 // The modes.SemverMap values will be matched against git information to detect which semver level to increment.
 // Returns the next version or an error if the prediction failed.
 func PredictVersion(options *PredictVersionOptions) (prediction string, err error) {
-	var modeAPI = modes.NewAPI(options.SemverMap, options.GitBranchDelimiters, options.GitCommitDelimiters)
+	var gitBranchMode = modes.NewGitBranchMode(options.GitBranchDelimiters, options.SemverMap)
+	var gitCommitMode = modes.NewGitCommitMode(options.GitCommitDelimiters, options.SemverMap)
+
+	var modeAPI = modes.NewAPI(gitBranchMode, gitCommitMode)
 	var mode = modeAPI.SelectMode(options.Mode)
 
 	var versionAPI = versions.NewAPI()

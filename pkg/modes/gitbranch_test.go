@@ -11,9 +11,9 @@ import (
 
 func TestGitBranchMode_DetectMode(t *testing.T) {
 	var semverMap = SemverMap{
-		"major": []string{"release"},
-		"minor": []string{"feature"},
-		"patch": []string{"fix", "bug"},
+		Patch: {"fix", "bug"},
+		Minor: {"feature"},
+		Major: {"release"},
 	}
 
 	type Test struct {
@@ -93,6 +93,12 @@ func TestGitBranchMode_DetectMode(t *testing.T) {
 }
 
 func TestGitBranchMode_Increment(t *testing.T) {
+	var semverMap = SemverMap{
+		Patch: {"fix", "bug"},
+		Minor: {"feature"},
+		Major: {"release"},
+	}
+
 	type Test struct {
 		BranchName string
 		Delimiters string

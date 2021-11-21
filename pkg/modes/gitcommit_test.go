@@ -11,12 +11,6 @@ import (
 	"github.com/restechnica/semverbot/pkg/git"
 )
 
-var semverMap = SemverMap{
-	Patch: {"fix"},
-	Minor: {"feature"},
-	Major: {"release"},
-}
-
 func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 	t.Run("CheckConstant", func(t *testing.T) {
 		var want = "git-commit"
@@ -78,6 +72,12 @@ func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 //}
 
 func TestGitCommitMode_Increment(t *testing.T) {
+	var semverMap = SemverMap{
+		Patch: {"fix"},
+		Minor: {"feature"},
+		Major: {"release"},
+	}
+
 	type Test struct {
 		Message string
 		Name    string
