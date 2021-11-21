@@ -59,6 +59,7 @@ func TestAPI_GetVersion(t *testing.T) {
 			var _, got = versionAPI.GetVersion()
 
 			assert.Error(t, got)
+			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
 		})
 	}
 }
@@ -161,6 +162,7 @@ func TestAPI_PredictVersion(t *testing.T) {
 			var _, got = versionAPI.PredictVersion("0.0.0", mode)
 
 			assert.Error(t, got)
+			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
 		})
 	}
 }
@@ -215,6 +217,7 @@ func TestAPI_PushVersion(t *testing.T) {
 			var got = versionAPI.PushVersion("0.0.1", "v")
 
 			assert.Error(t, got)
+			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
 		})
 	}
 }
@@ -269,6 +272,7 @@ func TestAPI_ReleaseVersion(t *testing.T) {
 			var got = versionAPI.ReleaseVersion("0.0.1", "v")
 
 			assert.Error(t, got)
+			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
 		})
 	}
 }
@@ -295,6 +299,7 @@ func TestAPI_UpdateVersion(t *testing.T) {
 			var got = versionAPI.UpdateVersion()
 
 			assert.Error(t, got)
+			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
 		})
 	}
 }
