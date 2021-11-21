@@ -1,9 +1,11 @@
 package commands
 
 import (
-	"github.com/restechnica/semverbot/pkg/core"
+	"fmt"
 
 	"github.com/spf13/cobra"
+
+	"github.com/restechnica/semverbot/pkg/core"
 )
 
 // NewUpdateVersionCommand creates a new update version command.
@@ -20,5 +22,11 @@ func NewUpdateVersionCommand() *cobra.Command {
 // UpdateVersionCommandRunE runs the commands.
 // Returns an error if it fails.
 func UpdateVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
-	return core.UpdateVersion()
+	if err = core.UpdateVersion(); err != nil {
+		return fmt.Errorf("something went wrong while updating the version")
+	}
+
+	fmt.Println("successfully fetched the latest git tags")
+
+	return err
 }

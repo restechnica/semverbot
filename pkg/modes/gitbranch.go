@@ -21,7 +21,7 @@ type GitBranchMode struct {
 // NewGitBranchMode creates a new GitBranchMode.
 // Returns the new GitBranchMode.
 func NewGitBranchMode(delimiters string, semverMap SemverMap) GitBranchMode {
-	return GitBranchMode{Delimiters: delimiters, GitAPI: git.NewAPI(), SemverMap: semverMap}
+	return GitBranchMode{Delimiters: delimiters, GitAPI: git.NewCLI(), SemverMap: semverMap}
 }
 
 // Increment increments the semver level based on the naming of the source branch of a git merge.
@@ -50,20 +50,18 @@ func (mode GitBranchMode) Increment(targetVersion string) (nextVersion string, e
 
 // DetectMode detects the mode (patch, minor, major) based on a git branch name.
 // Returns the detected mode.
-// Currently forces the level to be in a certain position, must change
 func (mode GitBranchMode) DetectMode(branchName string) (detected Mode, err error) {
 	for key, values := range mode.SemverMap {
 		for _, value := range values {
 			if mode.isMatch(branchName, value) {
 				switch key {
 				case Patch:
-					detected = NewPatchMode()
+					return NewPatchMode(), err
 				case Minor:
-					detected = NewMinorMode()
+					return NewMinorMode(), err
 				case Major:
-					detected = NewMajorMode()
+					return NewMajorMode(), err
 				}
-				return detected, err
 			}
 		}
 	}

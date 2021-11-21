@@ -4,18 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-
 	"github.com/restechnica/semverbot/internal/mocks"
-	"github.com/restechnica/semverbot/pkg/git"
-)
 
-var semverMap = SemverMap{
-	Patch: {"fix"},
-	Minor: {"feature"},
-	Major: {"release"},
-}
+	"github.com/stretchr/testify/assert"
+)
 
 func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 	t.Run("CheckConstant", func(t *testing.T) {
@@ -26,115 +18,177 @@ func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 	})
 }
 
-// TODO move to ModeDetector
-//func TestGitCommitMode_GetMatchedMode(t *testing.T) {
-//	type Test struct {
-//		Message string
-//		Name    string
-//		Want    Mode
-//	}
-//
-//	var tests = []Test{
-//		{Name: "GetPatchModeWithBrackets", Message: "[fix] some message", Want: NewPatchMode()},
-//		{Name: "GetPatchModeWithTrailingSlash", Message: "Merged: repo/fix/some-error", Want: NewPatchMode()},
-//		{Name: "GetMinorModeWithBrackets", Message: "some [feature] message", Want: NewMinorMode()},
-//		{Name: "GetMinorModeWithTrailingSlash", Message: "Merged: repo/feature/some-error", Want: NewMinorMode()},
-//		{Name: "GetMajorModeWithBrackets", Message: "some message [release]", Want: NewMajorMode()},
-//		{Name: "GetMajorModeWithTrailingSlash", Message: "Merged: repo/release/some-error", Want: NewMajorMode()},
-//	}
-//
-//	for _, test := range tests {
-//		t.Run(test.Name, func(t *testing.T) {
-//			var want = test.Want
-//
-//			var gitCommitMode = NewGitCommitMode(NewModeDetector(semverMap))
-//			var got, err = gitCommitMode.ModeDetector.(test.Message)
-//
-//			assert.NoError(t, err)
-//			assert.IsType(t, want, got, `want: "%s", got: "%s"`, want, got)
-//		})
-//	}
-//
-//	type ErrorTest struct {
-//		Message string
-//		Name    string
-//	}
-//
-//	var errorTests = []ErrorTest{
-//		{Name: "ReturnErrorOnUnmatchedMode", Message: "[fix some message"},
-//	}
-//
-//	for _, test := range errorTests {
-//		t.Run(test.Name, func(t *testing.T) {
-//			var want = fmt.Sprintf(`could not match a mode to the commit message "%s"`, test.Message)
-//
-//			var gitCommitMode = NewGitCommitMode(semverMap)
-//			var _, err = gitCommitMode.GetMatchedMode(test.Message)
-//
-//			assert.Error(t, err)
-//			assert.Equal(t, err.Error(), want, `want: "%s", got: "%s"`, want, err.Error())
-//		})
-//	}
-//}
+func TestGitCommitMode_DetectMode(t *testing.T) {
+	var semverMap = SemverMap{
+		Patch: {"fix", "bug"},
+		Minor: {"feature", "feat"},
+		Major: {"release"},
+	}
 
-func TestGitCommitMode_Increment(t *testing.T) {
 	type Test struct {
-		Message string
-		Name    string
-		Version string
-		Want    string
+		CommitMessage string
+		Delimiters    string
+		Name          string
+		SemverMap     SemverMap
+		Want          Mode
 	}
 
 	var tests = []Test{
-		{Name: "IncrementPatchWithBrackets", Message: "[fix] some message", Version: "0.0.0", Want: "0.0.1"},
-		//{Name: "IncrementPatchWithTrailingSlash", Message: "Merged: repo/fix/some-error", Version: "0.0.1", Want: "0.0.2"},
-		{Name: "IncrementMinorWithBrackets", Message: "some [feature] message", Version: "0.0.0", Want: "0.1.0"},
-		//{Name: "IncrementMinorWithTrailingSlash", Message: "Merged: repo/feature/some-error", Version: "0.1.0", Want: "0.2.0"},
-		{Name: "IncrementMajorWithBrackets", Message: "some message [release]", Version: "0.0.0", Want: "1.0.0"},
-		//{Name: "IncrementMajorWithTrailingSlash", Message: "Merged: repo/release/some-error", Version: "1.0.0", Want: "2.0.0"},
+		{Name: "DetectPatchMode", CommitMessage: "[bug] some fix", Delimiters: "[]", SemverMap: semverMap, Want: NewPatchMode()},
+		{Name: "DetectPatchMode", CommitMessage: "[fix] some bug", Delimiters: "[]", SemverMap: semverMap, Want: NewPatchMode()},
+		{Name: "DetectMinorMode", CommitMessage: "feat(subject): some changes", Delimiters: "():", SemverMap: semverMap, Want: NewMinorMode()},
+		{Name: "DetectMinorMode", CommitMessage: "[feature] some changes", Delimiters: "[]", SemverMap: semverMap, Want: NewMinorMode()},
+		{Name: "DetectMajorMode", CommitMessage: "release/some-bug", Delimiters: "/", SemverMap: semverMap, Want: NewMajorMode()},
 	}
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-			var want = test.Want
-
-			var cmder = mocks.NewMockCommander()
-			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, nil)
-
-			var gitCommitMode = NewGitCommitMode("[]", semverMap)
-			gitCommitMode.GitAPI = git.API{Commander: cmder}
-			var got, err = gitCommitMode.Increment(test.Version)
+			var mode = NewGitBranchMode(test.Delimiters, test.SemverMap)
+			var got, err = mode.DetectMode(test.CommitMessage)
 
 			assert.NoError(t, err)
-			assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+			assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
 		})
 	}
 
 	type ErrorTest struct {
-		GitError error
-		Message  string
-		Name     string
-		Version  string
+		CommitMessage string
+		Delimiters    string
+		Error         error
+		Name          string
+		SemverMap     SemverMap
 	}
 
 	var errorTests = []ErrorTest{
-		{Name: "ReturnErrorOnUnmatchedMode", Message: "[fix some message", Version: "0.0.0", GitError: nil},
-		{Name: "ReturnErrorOnInvalidVersion", Message: "[fix] some message", Version: "invalid", GitError: nil},
-		//{Name: "ReturnErrorOnInvalidCharacter", Message: "[fix] some message", Version: "v1.0.0", GitError: nil}, // commented out due to TolerantParse
-		{Name: "ReturnErrorOnGitError", Message: "[fix] some message", Version: "1.0.0",
-			GitError: fmt.Errorf("some-error")},
+		{
+			Name:          "DetectNothingWithEmptySemverMap",
+			CommitMessage: "[feature] some changes",
+			Delimiters:    "[]",
+			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters "[]"`),
+			SemverMap:     SemverMap{},
+		},
+		{
+			Name:          "DetectNothingWithEmptyDelimiters",
+			CommitMessage: "[feature] some changes",
+			Delimiters:    "",
+			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters ""`),
+			SemverMap:     semverMap,
+		},
+		{
+			Name:          "DetectNothingWithEmptyCommitMessage",
+			CommitMessage: "",
+			Delimiters:    "/",
+			Error:         fmt.Errorf(`failed to detect mode from git branch name "" with delimiters "/"`),
+			SemverMap:     semverMap,
+		},
+		{
+			Name:          "DetectNothingWithFaultySemverMap",
+			CommitMessage: "[feature] some changes",
+			Delimiters:    "[]",
+			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters "[]"`),
+			SemverMap: SemverMap{
+				"mnr": {"feature"},
+			},
+		},
 	}
 
 	for _, test := range errorTests {
 		t.Run(test.Name, func(t *testing.T) {
-			var cmder = mocks.NewMockCommander()
-			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Message, test.GitError)
+			var mode = NewGitBranchMode(test.Delimiters, test.SemverMap)
+			var _, got = mode.DetectMode(test.CommitMessage)
 
-			var gitCommitMode = NewGitCommitMode("[]", semverMap)
-			gitCommitMode.GitAPI = git.API{Commander: cmder}
-			var _, err = gitCommitMode.Increment(test.Version)
-
-			assert.Error(t, err)
+			assert.Error(t, got)
+			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
 		})
 	}
+}
+
+func TestGitCommitMode_Increment(t *testing.T) {
+	var semverMap = SemverMap{
+		Patch: {"fix", "bug"},
+		Minor: {"feature"},
+		Major: {"release"},
+	}
+
+	type Test struct {
+		CommitMessage string
+		Delimiters    string
+		Name          string
+		SemverMap     SemverMap
+		Version       string
+		Want          string
+	}
+
+	var tests = []Test{
+		{Name: "IncrementPatch", CommitMessage: "[fix] some-bug", Delimiters: "[]", SemverMap: semverMap, Version: "0.0.0", Want: "0.0.1"},
+		{Name: "IncrementPatch", CommitMessage: "[fi] some/bug", Delimiters: "/", SemverMap: semverMap, Version: "0.0.0", Want: "0.0.1"},
+		{Name: "IncrementMinor", CommitMessage: "[feature] some-feat", Delimiters: "[]", SemverMap: semverMap, Version: "0.0.1", Want: "0.1.0"},
+		{Name: "IncrementMajor", CommitMessage: "[release] some-release", Delimiters: "[]", SemverMap: semverMap, Version: "0.1.0", Want: "1.0.0"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			var gitAPI = mocks.NewMockGitAPI()
+			gitAPI.On("GetLatestCommitMessage").Return(test.CommitMessage, nil)
+
+			var mode = NewGitCommitMode(test.Delimiters, test.SemverMap)
+			mode.GitAPI = gitAPI
+
+			var got, err = mode.Increment(test.Version)
+
+			assert.NoError(t, err)
+			assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+		})
+	}
+
+	t.Run("ReturnErrorOnGitAPIError", func(t *testing.T) {
+		var want = fmt.Errorf("some-error")
+
+		var gitAPI = mocks.NewMockGitAPI()
+		gitAPI.On("GetLatestCommitMessage").Return("", want)
+
+		var mode = NewGitCommitMode("[]", semverMap)
+		mode.GitAPI = gitAPI
+
+		var _, got = mode.Increment("0.0.0")
+
+		assert.Error(t, got)
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+
+	t.Run("ReturnErrorIfNoMatchingMode", func(t *testing.T) {
+		var gitAPI = mocks.NewMockGitAPI()
+		gitAPI.On("GetLatestCommitMessage").Return("nomatch/some-feature", nil)
+
+		var mode = NewGitCommitMode("/", semverMap)
+		mode.GitAPI = gitAPI
+
+		var _, got = mode.Increment("0.0.0")
+
+		assert.Error(t, got)
+	})
+
+	t.Run("ReturnErrorIfInvalidVersion", func(t *testing.T) {
+		var gitAPI = mocks.NewMockGitAPI()
+		gitAPI.On("GetLatestCommitMessage").Return("[feature]some-feature", nil)
+
+		var mode = NewGitCommitMode("[]", semverMap)
+		mode.GitAPI = gitAPI
+
+		var _, got = mode.Increment("invalid")
+
+		assert.Error(t, got)
+	})
+}
+
+func TestNewGitCommitMode(t *testing.T) {
+	t.Run("ValidateState", func(t *testing.T) {
+		var delimiters = "[]"
+		var semverMap = SemverMap{}
+		var mode = NewGitCommitMode(delimiters, semverMap)
+
+		assert.NotNil(t, mode)
+		assert.NotEmpty(t, mode.Delimiters)
+		assert.NotNil(t, mode.SemverMap)
+	})
 }
