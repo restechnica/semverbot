@@ -246,11 +246,12 @@ chmod +x bin/sbot
 
 # preparation
 sbot update version
+echo "CURRENT_VERSION=$(sbot get version)" >> $GITHUB_ENV
 echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV
+echo "current version: $CURRENT_VERSION"
+echo "next version: $RELEASE_VERSION"
 
 # usage
-echo "current version: $(sbot get version)"
-echo "next version: $RELEASE_VERSION"
 sbot release version
 sbot push version
 ```
