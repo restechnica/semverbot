@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/restechnica/semverbot/pkg/modes"
+	"github.com/restechnica/semverbot/pkg/semver"
 	"github.com/restechnica/semverbot/pkg/versions"
 )
 
@@ -11,7 +11,7 @@ type ReleaseVersionOptions struct {
 	GitBranchDelimiters string
 	GitCommitDelimiters string
 	Mode                string
-	SemverMap           modes.SemverMap
+	SemverMap           semver.Map
 }
 
 // ReleaseVersion releases a new version.

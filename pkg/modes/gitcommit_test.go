@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/restechnica/semverbot/pkg/semver"
+
 	"github.com/restechnica/semverbot/internal/mocks"
 
 	"github.com/stretchr/testify/assert"
@@ -19,7 +21,7 @@ func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 }
 
 func TestGitCommitMode_DetectMode(t *testing.T) {
-	var semverMap = SemverMap{
+	var semverMap = semver.Map{
 		Patch: {"fix", "bug"},
 		Minor: {"feature", "feat"},
 		Major: {"release"},
@@ -29,7 +31,7 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 		CommitMessage string
 		Delimiters    string
 		Name          string
-		SemverMap     SemverMap
+		SemverMap     semver.Map
 		Want          Mode
 	}
 
@@ -56,7 +58,7 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 		Delimiters    string
 		Error         error
 		Name          string
-		SemverMap     SemverMap
+		SemverMap     semver.Map
 	}
 
 	var errorTests = []ErrorTest{
@@ -65,7 +67,7 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 			CommitMessage: "[feature] some changes",
 			Delimiters:    "[]",
 			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters "[]"`),
-			SemverMap:     SemverMap{},
+			SemverMap:     semver.Map{},
 		},
 		{
 			Name:          "DetectNothingWithEmptyDelimiters",
@@ -86,7 +88,7 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 			CommitMessage: "[feature] some changes",
 			Delimiters:    "[]",
 			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters "[]"`),
-			SemverMap: SemverMap{
+			SemverMap: semver.Map{
 				"mnr": {"feature"},
 			},
 		},
@@ -104,7 +106,7 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 }
 
 func TestGitCommitMode_Increment(t *testing.T) {
-	var semverMap = SemverMap{
+	var semverMap = semver.Map{
 		Patch: {"fix", "bug"},
 		Minor: {"feature"},
 		Major: {"release"},
@@ -114,7 +116,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 		CommitMessage string
 		Delimiters    string
 		Name          string
-		SemverMap     SemverMap
+		SemverMap     semver.Map
 		Version       string
 		Want          string
 	}
@@ -184,7 +186,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 func TestNewGitCommitMode(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
 		var delimiters = "[]"
-		var semverMap = SemverMap{}
+		var semverMap = semver.Map{}
 		var mode = NewGitCommitMode(delimiters, semverMap)
 
 		assert.NotNil(t, mode)

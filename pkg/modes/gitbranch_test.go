@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/restechnica/semverbot/internal/mocks"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 func TestGitBranchMode_GitBranchConstant(t *testing.T) {
@@ -19,7 +20,7 @@ func TestGitBranchMode_GitBranchConstant(t *testing.T) {
 }
 
 func TestGitBranchMode_DetectMode(t *testing.T) {
-	var semverMap = SemverMap{
+	var semverMap = semver.Map{
 		Patch: {"fix", "bug"},
 		Minor: {"feature"},
 		Major: {"release"},
@@ -29,7 +30,7 @@ func TestGitBranchMode_DetectMode(t *testing.T) {
 		BranchName string
 		Delimiters string
 		Name       string
-		SemverMap  SemverMap
+		SemverMap  semver.Map
 		Want       Mode
 	}
 
@@ -54,7 +55,7 @@ func TestGitBranchMode_DetectMode(t *testing.T) {
 		Delimiters string
 		Error      error
 		Name       string
-		SemverMap  SemverMap
+		SemverMap  semver.Map
 	}
 
 	var errorTests = []ErrorTest{
@@ -63,7 +64,7 @@ func TestGitBranchMode_DetectMode(t *testing.T) {
 			BranchName: "feature/some-feature",
 			Delimiters: "/",
 			Error:      fmt.Errorf(`failed to detect mode from git branch name "feature/some-feature" with delimiters "/"`),
-			SemverMap:  SemverMap{},
+			SemverMap:  semver.Map{},
 		},
 		{
 			Name:       "DetectNothingWithEmptyDelimiters",
@@ -84,7 +85,7 @@ func TestGitBranchMode_DetectMode(t *testing.T) {
 			BranchName: "feature/some-feature",
 			Delimiters: "/",
 			Error:      fmt.Errorf(`failed to detect mode from git branch name "feature/some-feature" with delimiters "/"`),
-			SemverMap: SemverMap{
+			SemverMap: semver.Map{
 				"mnr": {"feature"},
 			},
 		},
@@ -102,7 +103,7 @@ func TestGitBranchMode_DetectMode(t *testing.T) {
 }
 
 func TestGitBranchMode_Increment(t *testing.T) {
-	var semverMap = SemverMap{
+	var semverMap = semver.Map{
 		Patch: {"fix", "bug"},
 		Minor: {"feature"},
 		Major: {"release"},
@@ -112,7 +113,7 @@ func TestGitBranchMode_Increment(t *testing.T) {
 		BranchName string
 		Delimiters string
 		Name       string
-		SemverMap  SemverMap
+		SemverMap  semver.Map
 		Version    string
 		Want       string
 	}
@@ -196,7 +197,7 @@ func TestGitBranchMode_Increment(t *testing.T) {
 func TestNewGitBranchMode(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
 		var delimiters = "/"
-		var semverMap = SemverMap{}
+		var semverMap = semver.Map{}
 		var mode = NewGitBranchMode(delimiters, semverMap)
 
 		assert.NotNil(t, mode)
