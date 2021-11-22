@@ -197,7 +197,7 @@ See [Modes](#modes) for documentation about the supported modes.
 
 ### modes
 
-`sbot` works with different modes, which sometimes require configuration.
+`sbot` works with different modes, which might require configuration.
 
 ### modes.git-branch.delimiters
 
