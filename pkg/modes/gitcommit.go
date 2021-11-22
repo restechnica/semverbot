@@ -3,6 +3,8 @@ package modes
 import (
 	"fmt"
 
+	"github.com/restechnica/semverbot/pkg/semver"
+
 	"github.com/restechnica/semverbot/internal/util"
 	"github.com/restechnica/semverbot/pkg/git"
 )
@@ -15,12 +17,12 @@ const GitCommit = "git-commit"
 type GitCommitMode struct {
 	Delimiters string
 	GitAPI     git.API
-	SemverMap  SemverMap
+	SemverMap  semver.Map
 }
 
 // NewGitCommitMode creates a new GitCommitMode.
 // Returns the new GitCommitMode.
-func NewGitCommitMode(delimiters string, semverMap SemverMap) GitCommitMode {
+func NewGitCommitMode(delimiters string, semverMap semver.Map) GitCommitMode {
 	return GitCommitMode{Delimiters: delimiters, GitAPI: git.NewCLI(), SemverMap: semverMap}
 }
 

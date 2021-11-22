@@ -9,7 +9,7 @@ import (
 
 	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/git"
-	"github.com/restechnica/semverbot/pkg/modes"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // NewRootCommand creates a new root command.
@@ -79,7 +79,7 @@ func LoadDefaultConfig() {
 	viper.SetDefault(cli.ModeConfigKey, cli.DefaultMode)
 	viper.SetDefault(cli.ModesGitBranchDelimitersConfigKey, cli.DefaultGitBranchDelimiters)
 	viper.SetDefault(cli.ModesGitCommitDelimitersConfigKey, cli.DefaultGitCommitDelimiters)
-	viper.SetDefault(cli.SemverMapConfigKey, modes.SemverMap{})
+	viper.SetDefault(cli.SemverMapConfigKey, semver.Map{})
 }
 
 // LoadFlags loads root command flags.

@@ -5,6 +5,7 @@ import (
 
 	"github.com/restechnica/semverbot/internal/util"
 	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // GitBranch mode name for GitBranchMode.
@@ -15,12 +16,12 @@ const GitBranch = "git-branch"
 type GitBranchMode struct {
 	Delimiters string
 	GitAPI     git.API
-	SemverMap  SemverMap
+	SemverMap  semver.Map
 }
 
 // NewGitBranchMode creates a new GitBranchMode.
 // Returns the new GitBranchMode.
-func NewGitBranchMode(delimiters string, semverMap SemverMap) GitBranchMode {
+func NewGitBranchMode(delimiters string, semverMap semver.Map) GitBranchMode {
 	return GitBranchMode{Delimiters: delimiters, GitAPI: git.NewCLI(), SemverMap: semverMap}
 }
 

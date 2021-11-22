@@ -4,10 +4,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 func TestAPI_SelectMode(t *testing.T) {
-	var semverMap = SemverMap{
+	var semverMap = semver.Map{
 		Patch: {"fix", "bug"},
 		Minor: {"feature"},
 		Major: {"release"},
@@ -50,7 +52,7 @@ func TestNewAPI(t *testing.T) {
 		var gitBranchDelimiters = "/"
 		var gitCommitDelimiters = "[]"
 
-		var semverMap = SemverMap{}
+		var semverMap = semver.Map{}
 		var gitBranchMode = NewGitBranchMode(gitBranchDelimiters, semverMap)
 		var gitCommitMode = NewGitCommitMode(gitCommitDelimiters, semverMap)
 		var modeAPI = NewAPI(gitBranchMode, gitCommitMode)
