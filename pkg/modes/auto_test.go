@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 
 	"github.com/restechnica/semverbot/internal/mocks"
 )
@@ -19,52 +20,39 @@ func TestAutoMode_AutoConstant(t *testing.T) {
 }
 
 func TestAutoMode_Increment(t *testing.T) {
-	t.Run("IncrementWithGitCommitMode", func(t *testing.T) {
-		const target = "0.0.0"
-		const want = "1.0.0"
-
-		var gitCommitMode = mocks.NewMockMode()
-		gitCommitMode.On("Increment", target).Return(want, nil)
-
-		var autoMode = NewAutoMode([]Mode{gitCommitMode})
-		var got, err = autoMode.Increment(target)
-
-		assert.NoError(t, err)
-		assert.Equal(t, want, got, `want: "%s", got: "%s"`, want, got)
-	})
-
-	t.Run("IncrementWithPatchMode", func(t *testing.T) {
-		const target = "0.0.0"
-		const want = "0.0.1"
-
-		var gitCommitMode = mocks.NewMockMode()
-		gitCommitMode.On("Increment", target).Return("", fmt.Errorf("some-error"))
-
-		var autoMode = NewAutoMode([]Mode{gitCommitMode})
-		var got, err = autoMode.Increment(target)
-
-		assert.NoError(t, err)
-		assert.Equal(t, want, got, `want: "%s", got: "%s"`, want, got)
-	})
-
-	type ErrorTest struct {
+	type Test struct {
+		Modes   []Mode
 		Name    string
 		Version string
+		Want    string
 	}
 
-	var errorTests = []ErrorTest{
-		{Name: "ReturnErrorOnInvalidVersion", Version: "invalid"},
+	var mockMode = mocks.NewMockMode()
+	mockMode.On("Increment", mock.Anything).Return("", fmt.Errorf("some-error"))
+
+	var tests = []Test{
+		{Name: "IncrementMajor", Modes: []Mode{NewMajorMode()}, Version: "0.0.0", Want: "1.0.0"},
+		{Name: "IncrementMinor", Modes: []Mode{NewMinorMode()}, Version: "0.0.0", Want: "0.1.0"},
+		{Name: "IncrementPatch", Modes: []Mode{NewPatchMode()}, Version: "0.0.0", Want: "0.0.1"},
+		{Name: "DefaultToPatchIfModeSliceEmpty", Modes: []Mode{}, Version: "0.0.0", Want: "0.0.1"},
+		{Name: "IncrementWithSecondModeAfterFirstFailed", Modes: []Mode{mockMode, NewMinorMode()}, Version: "0.0.0", Want: "0.1.0"},
 	}
 
-	for _, test := range errorTests {
-		t.Run(test.Name, func(t *testing.T) {
-			var gitCommitMode = mocks.NewMockMode()
-			gitCommitMode.On("Increment", test.Version).Return("", fmt.Errorf("some-error"))
+	for _, test := range tests {
+		var mode = NewAutoMode(test.Modes)
+		var got, err = mode.Increment(test.Version)
 
-			var autoMode = NewAutoMode([]Mode{gitCommitMode})
-			var _, err = autoMode.Increment(test.Version)
-
-			assert.Error(t, err)
-		})
+		assert.NoError(t, err)
+		assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
 	}
+}
+
+func TestNewAutoMode(t *testing.T) {
+	t.Run("ValidateState", func(t *testing.T) {
+		var mockMode = mocks.NewMockMode()
+		var modes = []Mode{mockMode, mockMode, mockMode}
+		var mode = NewAutoMode(modes)
+		assert.NotNil(t, mode)
+		assert.NotEmpty(t, mode.Modes)
+	})
 }
