@@ -13,3 +13,11 @@ prefix = "v"
 patch = ["fix", "bug"]
 minor = ["feature"]
 major = ["release"]
+
+[modes]
+
+[modes.git-branch]
+delimiters = "/"
+
+[modes.git-commit]
+delimiters = "[]"

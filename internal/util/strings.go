@@ -2,7 +2,7 @@ package util
 
 import "strings"
 
-// Contains returns true if a string, split by delimiters, contains another string.
+// Contains returns true if a slice, created by splitting a target string by delimiters, contains a value.
 func Contains(target string, value string, delimiters string) bool {
 	var slice = SplitByDelimiterString(target, delimiters)
 	return SliceContainsString(slice, value)

@@ -1,4 +1,3 @@
-
 # Semverbot
 
 [![github.com release badge](https://img.shields.io/github/release/restechnica/semverbot.svg)](https://github.com/restechnica/anyreleaser/semverbot/)
@@ -7,39 +6,21 @@
 [![goreportcard.com badge](https://goreportcard.com/badge/github.com/restechnica/semverbot)](https://goreportcard.com/report/github.com/restechnica/semverbot)
 [![img.shields.io MPL2 license badge](https://img.shields.io/github/license/restechnica/semverbot)](./LICENSE)
 
-A CLI which automates semver versioning based on git information.
+A CLI which automates semver versioning.
 
-## Why Semverbot?
+## Table of Contents
 
-There are several reasons why you should consider using `sbot` for your semver versioning.
-
-### Automation and pipelines
-
-* `sbot` uses `git` under the hood, which is today's widely adopted version control system
-* `sbot` does **not** use a file to keep track of the version
-  * no pipeline loops
-  * no need to maintain the version in two places, e.g., both a package.json file and git tags
-* `sbot` is ready to be used in pipelines out of the box
-
-Note: it is still possible to use `sbot` and file-based versioning tools side-by-side
-
-### Convenience
-
-* `sbot` is designed to be used by both developers and pipelines
-* `sbot` is platform independent
-  * support for Windows, Linux and macOS
-  * no dependency on 'complex' `npm`, `pip` or other package management installations
-* `sbot` is fast
-* `sbot` heavily simplifies incrementing semver levels based on git information
-  * today's `git` projects already hold a lot of useful semver information, e.g., branch names like `feature/xxx` or commit messages like `[fix] xxx`
-  * no need to create and maintain custom code for semver level detection
-
-### Configurability
-
-* `sbot` supports a well-documented configuration file
-  * intuitively customize how patch, minor and major levels are detected
-* `sbot` supports some flags to override parts of the configuration file on the fly
-
+* [Requirements](#requirements)
+* [How to install](#how-to-install)
+  * [Github](#github)
+  * [Homebrew](#homebrew)
+* [Usage](#commands)
+* [Modes](#modes)
+* [How to configure](#how-to-configure)
+* [Configuration properties](#configuration-properties)
+* [Examples](#examples)
+* [Why Semverbot?](#why-semverbot)
+  
 ## Requirements
 
 `sbot` requires a `git` installation.
@@ -52,10 +33,9 @@ The tool is available for Windows, Linux and macOS.
 ### github
 
 The following example works for a GitHub Workflow, other CI/CD tooling will require a different path setup.
-The curl command remains the same.
 
 ```shell
-SEMVERBOT_VERSION=0.1.2
+SEMVERBOT_VERSION=1.0.0
 mkdir bin
 echo "$(pwd)/bin" >> $GITHUB_PATH
 curl -o bin/sbot -L https://github.com/restechnica/semverbot/releases/download/v$SEMVERBOT_VERSION/sbot-linux-amd64
@@ -71,7 +51,7 @@ brew tap restechnica/tap git@github.com:restechnica/homebrew-tap.git
 brew install restechnica/tap/semverbot
 ```
 
-## Commands
+## Usage
 
 Each command has a `-h, --help` flag available.
 
@@ -90,7 +70,7 @@ See [Modes](#modes) for more documentation on the supported modes.
 
 ### `sbot push version`
 
-Pushes the latest `git` tag. Equivalent to `git push origin {prefix}{version}`.
+Pushes the latest `git` tag to the remote repository. Equivalent to `git push origin {prefix}{version}`.
 
 ### `sbot release version [-m, --mode] <mode>`
 
@@ -99,7 +79,8 @@ Defaults to mode `auto`. See [Modes](#modes) for more documentation on the suppo
 
 ### `sbot update version`
 
-Fetches all tags with `git` to make sure the git repo has the latest tags available. Equivalent to `git fetch --unshallow`.
+Fetches all tags with `git` to make sure the git repo has the latest tags available.
+Equivalent to running `git fetch --unshallow` and `git fetch --tags`.
 This command is very useful in pipelines where shallow clones are often the default to save time and space.
 
 ## Modes
@@ -138,13 +119,16 @@ Increments the `patch` level.
 
 ## How to configure
 
-`sbot` supports a configuration file. It looks for a `.semverbot.toml` file in the current working directory by default. `.json` and `.yaml` formats are also supported, but `.toml` is highly recommended.
+`sbot` supports a configuration file. It looks for a `.semverbot.toml` file in the current working directory by default.
+`.json` and `.yaml` formats are not officially supported, but might work. Using `.toml` is highly recommended.
 
 ### Defaults
 
 `sbot init` generates the following configuration:
 
 ```toml
+mode = "auto"
+
 [git]
 
 [git.config]
@@ -155,15 +139,29 @@ name = "semverbot"
 prefix = "v"
 
 [semver]
-mode = "auto"
+patch = ["fix", "bug"]
+minor = ["feature"]
+major = ["release"]
 
-[semver.detection]
-patch = ["fix/", "[fix]"]
-minor = ["feature/", "[feature]"]
-major = ["release/", "[release]"]
+[modes]
+
+[modes.git-branch]
+delimiters = "/"
+
+[modes.git-commit]
+delimiters = "[]"
 ```
 
 ## Configuration properties
+
+### mode
+
+`sbot` supports multiple modes to detect which semver level it should increment. Each mode works with different criteria.
+A `mode` flag enables you to switch modes on the fly.
+
+See [Modes](#modes) for documentation about the supported modes.
+
+Defaults to `auto`.
 
 ### git
 
@@ -184,31 +182,45 @@ Without this config `sbot` might show unexpected behaviour.
 ### git.tags.prefix
 
 Different platforms and environments work with different (or without) version prefixes. This option enables you to set whatever prefix you would like to work with.
-The 'v' prefix, e.g. `v1.0.1` is used by default due to its popularity, e.g. some Golang tools completely depend on it.
+The `"v"` prefix, e.g. `v1.0.1` is used by default due to its popularity, e.g. some Golang tools completely depend on it.
 
 Note: `sbot` will always display the version without the prefix.
 
-### semver.detection
+### semver
 
-Some `sbot` semver modes require input to detect which semver level should be incremented.
-Each level will be assigned a collection of matching strings, which are to be matched against `git` information.
+This is where you configure what you think a semver level should be mapped to.
 
-See [Modes](#modes) for documentation about the supported modes.
-
-### semver.detection.[level]
-
-An array of strings which are to be matched against git information, like branch names and commit messages.
+A mapping of semver levels and words, which are matched against git information.
 Whenever a match happens, `sbot` will increment the corresponding level.
 
-### semver.mode
-`sbot` supports multiple modes to detect which semver level it should increment. Each mode works with different criteria.
-A `mode` flag enables you to switch modes on the fly.
-
 See [Modes](#modes) for documentation about the supported modes.
+
+### modes
+
+`sbot` works with different modes, which sometimes require configuration.
+
+### modes.git-branch.delimiters
+
+A string of delimiters which are used to split a git branch name.
+The matching words for each semver level in the semver map are matched against each of the resulting strings from the split.
+
+e.g. delimiters `"/"` will split `feature/some-feature` into `["feature", "some-feature"]`,
+and the `feature` and `some-feature` strings will be matched against semver map values.
+
+Defaults to `"/"` due to its popular use in branch names.
+
+### modes.git-commit.delimiters
+
+A string of delimiters which are used to split a git commit message.
+
+e.g. delimiters `"[]"` will split `[feature] some-feature` into `["feature", " some-feature"]`,
+and the `feature` and ` some-feature` strings will be matched against semver map values.
+
+Defaults to `"[]"` due to its popular use in branch names.
 
 ## Examples
 
-## Local
+### Local
 
 Make sure `sbot` is installed.
 
@@ -226,7 +238,7 @@ These commands are basically all you need to work with `sbot` locally.
 
 ```shell
 # installation
-SEMVERBOT_VERSION=0.1.2
+SEMVERBOT_VERSION=1.0.0
 mkdir bin
 echo "$(pwd)/bin" >> $GITHUB_PATH
 curl -o bin/sbot -L https://github.com/restechnica/semverbot/releases/download/v$SEMVERBOT_VERSION/sbot-linux-amd64
@@ -253,7 +265,7 @@ on:
     branches: [ main ]
 
 env:
-  SEMVERBOT_VERSION: "0.1.2"
+  SEMVERBOT_VERSION: "1.0.0"
 
 jobs:
   build:
@@ -272,16 +284,62 @@ jobs:
           curl -o bin/sbot -L https://github.com/restechnica/semverbot/releases/download/v$SEMVERBOT_VERSION/sbot-linux-amd64
           chmod +x bin/sbot
           
-      - name: prepare release
+      - name: update version
         run: |
           sbot update version
-          echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV    
-          
-      - name: release
-        run: |
-          echo "current version: $(sbot get version)"
+          echo "CURRENT_VERSION=$(sbot get version)" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV
+          echo "current version: $CURRENT_VERSION"
           echo "next version: $RELEASE_VERSION"
-
+          
+      ... build / publish ...
+          
+      - name: release version
+        run: |
           sbot release version
           sbot push version
 ```
+
+### Development workflow
+
+A typical development workflow when working with `sbot`:
+
+`[create branch 'feature/my-feature' from main/master]` > `[make changes]` > `[push changes]` > `[create pull request]` > `[approve pull request]` > `[merge pull request]` > `[trigger pipeline]` >
+`[calculate next version based on branch name]` > `[build application]` > `[publish artifact]` > `[semverbot release & push version]`
+
+## Why Semverbot?
+
+There are several reasons why you should consider using `sbot` for your semver versioning.
+
+`sbot` is originally made for large scale IT departments which maintain hundreds, if not thousands, of code repositories.
+Manual releases for each of those components and their subcomponents simply costs a lot of developer time.
+
+1. Standardize how your releases are tagged
+2. Automate the releasing process for potentially thousands of code repositories
+
+### Automation and pipelines
+
+`sbot` automates the process of tagging releases for you.
+* `sbot` uses `git` under the hood, which is today's widely adopted version control system
+* `sbot` does **not** use a file to keep track of the version
+  * no pipeline loops
+  * no need to maintain the version in two places, e.g., both a package.json file and git tags
+* `sbot` is ready to be used in pipelines out of the box
+
+Note: it is still possible to use `sbot` and file-based versioning tools side-by-side
+
+### Convenience
+
+* `sbot` is designed to be used by both developers and pipelines
+* `sbot` is platform independent
+  * support for Windows, Linux and macOS
+  * no dependency on 'complex' `npm`, `pip` or other package management installations
+* `sbot` heavily simplifies incrementing semver levels based on git information
+  * today's `git` projects already hold a lot of useful semver information, e.g., branch names like `feature/xxx` or commit messages like `[fix] xxx`
+  * no need to create and maintain custom code for semver level detection
+
+### Configurability
+
+* `sbot` supports a well-documented configuration file
+  * intuitively customize how patch, minor and major levels are detected
+* `sbot` supports several flags to override parts of the configuration file on the fly
