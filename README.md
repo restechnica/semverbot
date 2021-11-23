@@ -97,13 +97,13 @@ Attempts a series of modes in the following order:
 Detects which semver level to increment based on the **name** of the `git` branch from where a merge commit originated from.
 This only works when the old branch has not been deleted yet.
 
-The branch name is matched against the ['semver.detection' configuration](#semverdetectionlevel).
+The branch name is matched against the ['semver' configuration](#defaults).
 
 ### git-commit
 
 Detects which semver level to increment based the **message** of the latest `git` commit.
 
-The commit message is matched against the ['semver.detection' configuration](#semverdetectionlevel).
+The commit message is matched against the ['semver' configuration](#defaults).
 
 ### major
 
