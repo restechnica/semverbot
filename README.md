@@ -14,7 +14,7 @@ A CLI which automates semver versioning.
 * [How to install](#how-to-install)
   * [Github](#github)
   * [Homebrew](#homebrew)
-* [Usage](#commands)
+* [Usage](#usage)
 * [Modes](#modes)
 * [How to configure](#how-to-configure)
 * [Configuration properties](#configuration-properties)
