@@ -207,7 +207,7 @@ The matching words for each semver level in the semver map are matched against e
 e.g. delimiters `"/"` will split `feature/some-feature` into `["feature", "some-feature"]`,
 and the `feature` and `some-feature` strings will be matched against semver map values.
 
-Defaults to `"/"` due to its popular use in branch names.
+Defaults to `"/"` due to its popular use in git branch names.
 
 ### modes.git-commit.delimiters
 
@@ -216,7 +216,7 @@ A string of delimiters which are used to split a git commit message.
 e.g. delimiters `"[]"` will split `[feature] some-feature` into `["feature", " some-feature"]`,
 and the `feature` and ` some-feature` strings will be matched against semver map values.
 
-Defaults to `"[]"` due to its popular use in branch names.
+Defaults to `"[]"` due to its popular use in git commit messages.
 
 ## Examples
 
@@ -313,7 +313,7 @@ A typical development workflow when working with `sbot`:
 There are several reasons why you should consider using `sbot` for your semver versioning.
 
 `sbot` is originally made for large scale IT departments which maintain hundreds, if not thousands, of code repositories.
-Manual releases for each of those components and their subcomponents simply costs a lot of developer time.
+Manual releases for each of those components and their subcomponents cost a considerable amount of developer time.
 
 1. Standardize how your releases are tagged
 2. Automate the releasing process for potentially thousands of code repositories
