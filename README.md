@@ -56,7 +56,7 @@ brew install restechnica/tap/semverbot
 `sbot` is written in golang, which means you can use `go install`. Make sure the installation folder, which depends on your golang setup, is in your system PATH.
 
 ```shell
-go install github.com/restechnica/semverbot@v1.0.0
+go install github.com/restechnica/semverbot/cmd/sbot@v1.0.0
 ```
 
 ## Usage
