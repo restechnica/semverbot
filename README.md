@@ -32,7 +32,7 @@ The tool is available for Windows, Linux and macOS.
 
 ### github
 
-The following example works for a GitHub Workflow, other CI/CD tooling will require a different path setup.
+`sbot` is available through github. The following example works for a GitHub Workflow, other CI/CD tooling will require a different path setup.
 
 ```shell
 SEMVERBOT_VERSION=1.0.0
@@ -49,6 +49,14 @@ chmod +x bin/sbot
 ```shell
 brew tap restechnica/tap git@github.com:restechnica/homebrew-tap.git
 brew install restechnica/tap/semverbot
+```
+
+### golang
+
+`sbot` is written in golang, which means you can use `go install`. Make sure the installation folder, which depends on your golang setup, is in your system PATH.
+
+```shell
+go install github.com/restechnica/semverbot@v1.0.0
 ```
 
 ## Usage
