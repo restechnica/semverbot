@@ -254,10 +254,12 @@ chmod +x bin/sbot
 
 # preparation
 sbot update version
-echo "CURRENT_VERSION=$(sbot get version)" >> $GITHUB_ENV
-echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV
-echo "current version: $CURRENT_VERSION"
-echo "next version: $RELEASE_VERSION"
+current_version="$(sbot get version)"
+release_version="$(sbot predict version)"
+echo "CURRENT_VERSION=${current_version}" >> $GITHUB_ENV
+echo "RELEASE_VERSION=${release_version}" >> $GITHUB_ENV
+echo "current version: ${current_version}"
+echo "next version: ${release_version}"
 
 # usage
 sbot release version
@@ -296,10 +298,14 @@ jobs:
       - name: update version
         run: |
           sbot update version
-          echo "CURRENT_VERSION=$(sbot get version)" >> $GITHUB_ENV
-          echo "RELEASE_VERSION=$(sbot predict version)" >> $GITHUB_ENV
-          echo "current version: $CURRENT_VERSION"
-          echo "next version: $RELEASE_VERSION"
+          current_version="$(sbot get version)"
+          release_version="$(sbot predict version)"
+          
+          echo "CURRENT_VERSION=${current_version}" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=${release_version}" >> $GITHUB_ENV
+          
+          echo "current version: ${current_version}"
+          echo "next version: ${release_version}"
           
       ... build / publish ...
           
