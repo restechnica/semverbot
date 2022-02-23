@@ -1,10 +1,11 @@
 package versions
 
 import (
+	"strings"
+
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/modes"
 	"github.com/restechnica/semverbot/pkg/semver"
-	"strings"
 )
 
 // API an API to work with versions.
