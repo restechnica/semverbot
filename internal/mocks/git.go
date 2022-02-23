@@ -64,6 +64,13 @@ func (mock *MockGitAPI) GetMergedBranchName() (name string, err error) {
 	return args.String(0), args.Error(1)
 }
 
+// GetTags mocks getting all tags.
+// Returns a mocked string of tags or a mocked error.
+func (mock *MockGitAPI) GetTags() (tags string, err error) {
+	args := mock.Called()
+	return args.String(0), args.Error(1)
+}
+
 // PushTag pushes a fake tag.
 // Returns a mocked error.
 func (mock *MockGitAPI) PushTag(tag string) (err error) {

@@ -62,7 +62,7 @@ func (api CLI) GetMergedBranchName() (name string, err error) {
 	)
 }
 
-// GetTags gets a string of both lightweight and annotated tags.
+// GetTags gets all tags, both lightweight and annotated.
 // Returns a string of newline separated tags, sorted by version in descending order.
 func (api CLI) GetTags() (tags string, err error) {
 	return api.Commander.Output("git", "tags", "--sort=-version:refname")
