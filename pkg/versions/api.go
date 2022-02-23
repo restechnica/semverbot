@@ -4,6 +4,7 @@ import (
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/modes"
 	"github.com/restechnica/semverbot/pkg/semver"
+	"strings"
 )
 
 // API an API to work with versions.
@@ -17,13 +18,23 @@ func NewAPI() API {
 	return API{GitAPI: git.NewCLI()}
 }
 
-// GetVersion gets the current version by getting the latest annotated git tag.
+// GetVersion gets the latest valid semver version from the git tags.
 // The tag is trimmed because git adds newlines to the underlying command.
 // Returns the current version or an error if the GitAPI failed.
 func (api API) GetVersion() (currentVersion string, err error) {
-	if currentVersion, err = api.GitAPI.GetLatestAnnotatedTag(); err != nil {
+	var tags string
+
+	if tags, err = api.GitAPI.GetTags(); err != nil {
 		return currentVersion, err
 	}
+
+	// strip all newlines
+	var versions = strings.Fields(tags)
+
+	if currentVersion, err = semver.Find(versions); err != nil {
+		return currentVersion, err
+	}
+
 	return semver.Trim(currentVersion)
 }
 

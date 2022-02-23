@@ -39,19 +39,45 @@ func TestAPI_GetVersion(t *testing.T) {
 		})
 	}
 
-	type ErrorTest struct {
+	type GitErrorTest struct {
 		Error error
 		Name  string
 	}
 
-	var errorTests = []ErrorTest{
+	var gitErrorTests = []GitErrorTest{
 		{Name: "ReturnErrorOnGitError", Error: fmt.Errorf("some-error")},
 	}
 
-	for _, test := range errorTests {
+	for _, test := range gitErrorTests {
 		t.Run(test.Name, func(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
 			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
+
+			var gitAPI = git.CLI{Commander: cmder}
+			var versionAPI = API{GitAPI: gitAPI}
+
+			var _, got = versionAPI.GetVersion()
+
+			assert.Error(t, got)
+			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
+		})
+	}
+
+	type SemverErrorTest struct {
+		Error    error
+		Name     string
+		Versions string
+	}
+
+	var semverErrorTests = []SemverErrorTest{
+		{Name: "ReturnErrorOnInvalidVersions", Versions: "invalid1 invalid2", Error: fmt.Errorf("could not find a valid semver version")},
+		{Name: "ReturnErrorOnNoVersions", Versions: "", Error: fmt.Errorf("could not find a valid semver version")},
+	}
+
+	for _, test := range semverErrorTests {
+		t.Run(test.Name, func(t *testing.T) {
+			var cmder = mocks.NewMockCommander()
+			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Versions, nil)
 
 			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}
