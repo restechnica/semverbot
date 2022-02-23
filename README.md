@@ -65,7 +65,7 @@ Each command has a `-h, --help` flag available.
 
 ### `sbot get version`
 
-Gets the current version, which is the latest `git` annotated tag without any prefix.
+Gets the current version, which is the latest `git` semver tag without any prefix. Non-semver tags are ignored.
 
 ### `sbot init`
 

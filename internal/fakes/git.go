@@ -64,9 +64,13 @@ func (fake *FakeGitAPI) GetMergedBranchName() (name string, err error) {
 	return name, err
 }
 
+// GetTags does nothing
+func (fake *FakeGitAPI) GetTags() (tags string, err error) {
+	return tags, err
+}
+
 // PushTag pushes a fake tag.
 func (fake *FakeGitAPI) PushTag(tag string) (err error) {
-
 	fake.PushedTags = append(fake.PushedTags, tag)
 	return err
 }
