@@ -54,11 +54,8 @@ func (api CLI) GetLatestCommitMessage() (message string, err error) {
 func (api CLI) GetMergedBranchName() (name string, err error) {
 	return api.Commander.Output(
 		"git",
-		"name-rev",
-		"--name-only",
-		"--refs=refs/heads/*",
-		"--refs=refs/remotes/*",
-		"HEAD^2",
+		"rev-parse",
+		"--abbrev-ref HEAD",
 	)
 }
 
