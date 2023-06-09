@@ -6,4 +6,7 @@ var (
 
 	// ModeFlag a flag which indicates the semver mode to increment the current version with.
 	ModeFlag string
+
+	// VerboseFlag a flag which increases log level verbosity if true
+	VerboseFlag bool
 )
