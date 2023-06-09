@@ -1,16 +1,18 @@
 package git
 
-import "github.com/restechnica/semverbot/internal/commands"
+import (
+	cmder "github.com/restechnica/go-cmder/pkg"
+)
 
 // CLI a git.API to interact with the git CLI.
 type CLI struct {
-	Commander commands.Commander
+	Commander cmder.Commander
 }
 
 // NewCLI creates a new CLI with a commander to run git commands.
 // Returns the new CLI.
 func NewCLI() CLI {
-	return CLI{Commander: commands.NewExecCommander()}
+	return CLI{Commander: cmder.NewExecCommander()}
 }
 
 // CreateAnnotatedTag creates an annotated git tag.
