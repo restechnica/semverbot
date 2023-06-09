@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/restechnica/semverbot/pkg/cli"
-	"github.com/restechnica/semverbot/pkg/cli/commands/v1"
+	v1 "github.com/restechnica/semverbot/pkg/cli/commands/v1"
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
