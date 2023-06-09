@@ -3,7 +3,12 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -13,6 +18,10 @@ import (
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
+func init() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: "15:04:05"})
+}
+
 // NewRootCommand creates a new root command.
 // Returns the new spf13/cobra command.
 func NewRootCommand() *cobra.Command {
@@ -21,8 +30,12 @@ func NewRootCommand() *cobra.Command {
 		PersistentPreRunE: RootCommandPersistentPreRunE,
 	}
 
+	// This flag defaults to an empty string because otherwise we lose support for calling sbot from a
+	// sub folder and automatically searching for the config file.
 	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "",
 		fmt.Sprintf(`configures which config file to use (default "%s")`, cli.DefaultConfigFilePath))
+
+	command.PersistentFlags().BoolVarP(&cli.VerboseFlag, "verbose", "v", false, "increase log level verbosity")
 
 	command.AddCommand(v1.NewV1Command())
 	command.AddCommand(v1.NewGetCommand())
@@ -38,6 +51,11 @@ func NewRootCommand() *cobra.Command {
 // RootCommandPersistentPreRunE runs before the command and any subcommand runs.
 // Returns an error if it failed.
 func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error) {
+	// silence usage and errors because errors at this point are unrelated to CLI usage errors
+	cmd.SilenceErrors = true
+	cmd.SilenceUsage = true
+
+	ConfigureLogging()
 	LoadDefaultConfig()
 
 	if err = LoadConfig(); err != nil {
@@ -55,27 +73,47 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 	return err
 }
 
-// LoadConfig loads the semverbot configuration file.
+func ConfigureLogging() {
+	SetLogLevel()
+}
+
+func SetLogLevel() {
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+
+	if cli.VerboseFlag {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	}
+}
+
+// LoadConfig loads the SemverBot configuration file.
 // Returns an error if it fails.
 func LoadConfig() (err error) {
 	if cli.ConfigFlag != "" {
 		viper.SetConfigFile(cli.ConfigFlag)
 	} else {
-		viper.AddConfigPath(".")
-		viper.SetConfigName(".semverbot")
-		viper.SetConfigType("toml")
+		viper.AddConfigPath(filepath.Dir(cli.DefaultConfigFilePath))
+		viper.SetConfigName(strings.TrimSuffix(filepath.Base(cli.DefaultConfigFilePath), filepath.Ext(cli.DefaultConfigFilePath)))
+		viper.SetConfigType(strings.Split(filepath.Ext(cli.DefaultConfigFilePath), ".")[1])
+		cli.ConfigFlag = cli.DefaultConfigFilePath
 	}
+
+	log.Debug().Str("path", cli.ConfigFlag).Msg("loading config...")
 
 	if err = viper.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
+			log.Debug().Msg("config file not found, skipping")
 			err = nil
 		}
+
+		log.Debug().Err(err).Msg("")
+		return err
 	}
 
+	log.Debug().Msg("loading done! ")
 	return err
 }
 
-// LoadDefaultConfig loads the default semverbot config.
+// LoadDefaultConfig loads the default SemverBot config.
 func LoadDefaultConfig() {
 	viper.SetDefault(cli.GitTagsPrefixConfigKey, cli.DefaultGitTagsPrefix)
 	viper.SetDefault(cli.ModeConfigKey, cli.DefaultMode)
