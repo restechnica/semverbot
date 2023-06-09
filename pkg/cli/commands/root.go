@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/restechnica/semverbot/pkg/cli"
+	v1 "github.com/restechnica/semverbot/pkg/cli/commands/v1"
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
@@ -23,12 +24,13 @@ func NewRootCommand() *cobra.Command {
 	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "",
 		fmt.Sprintf(`configures which config file to use (default "%s")`, cli.DefaultConfigFilePath))
 
-	command.AddCommand(NewGetCommand())
-	command.AddCommand(NewInitCommand())
-	command.AddCommand(NewPredictCommand())
-	command.AddCommand(NewPushCommand())
-	command.AddCommand(NewReleaseCommand())
-	command.AddCommand(NewUpdateCommand())
+	command.AddCommand(v1.NewV1Command())
+	command.AddCommand(v1.NewGetCommand())
+	command.AddCommand(v1.NewInitCommand())
+	command.AddCommand(v1.NewPredictCommand())
+	command.AddCommand(v1.NewPushCommand())
+	command.AddCommand(v1.NewReleaseCommand())
+	command.AddCommand(v1.NewUpdateCommand())
 
 	return command
 }

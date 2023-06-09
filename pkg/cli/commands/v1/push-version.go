@@ -1,4 +1,4 @@
-package commands
+package v1
 
 import (
 	"github.com/restechnica/semverbot/pkg/core"

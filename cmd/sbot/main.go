@@ -1,11 +1,8 @@
 package main
 
-import (
-	"github.com/restechnica/semverbot/pkg/cli/commands"
-)
+import "github.com/restechnica/semverbot/pkg/cli/exec"
 
 // main bootstraps the `sbot` CLI.
 func main() {
-	var cmd = commands.NewRootCommand()
-	_ = cmd.Execute()
+	_ = exec.Run()
 }
