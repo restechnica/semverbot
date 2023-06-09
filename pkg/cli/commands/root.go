@@ -31,6 +31,7 @@ func NewRootCommand() *cobra.Command {
 	command.AddCommand(v1.NewPushCommand())
 	command.AddCommand(v1.NewReleaseCommand())
 	command.AddCommand(v1.NewUpdateCommand())
+	command.AddCommand(NewVersionCommand())
 
 	return command
 }
