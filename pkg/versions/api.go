@@ -46,9 +46,15 @@ func (api API) GetVersion() (currentVersion string, err error) {
 func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 	var err error
 
+	log.Info().Msg("getting version...")
+
 	if version, err = api.GetVersion(); err != nil {
+		log.Debug().Err(err).Msg("")
+		log.Warn().Msg("falling back to default version")
 		version = defaultVersion
 	}
+
+	log.Info().Msg(version)
 
 	return version
 }
@@ -56,12 +62,14 @@ func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 // PredictVersion increments a version based on a modes.Mode.
 // Returns the next version or an error if the increment failed.
 func (api API) PredictVersion(version string, mode modes.Mode) (string, error) {
+	log.Info().Msg("predicting version...")
 	return mode.Increment(version)
 }
 
 // ReleaseVersion releases a version by creating an annotated git tag with a prefix.
 // Returns an error if the tag creation failed.
 func (api API) ReleaseVersion(version string, prefix string) (err error) {
+	log.Info().Msg("releasing version...")
 	var prefixedVersion = AddPrefix(version, prefix)
 	return api.GitAPI.CreateAnnotatedTag(prefixedVersion)
 }
@@ -69,6 +77,7 @@ func (api API) ReleaseVersion(version string, prefix string) (err error) {
 // PushVersion pushes a version by pushing a git tag with a prefix.
 // Returns an error if pushing the tag failed.
 func (api API) PushVersion(version string, prefix string) (err error) {
+	log.Info().Msg("pushing version...")
 	var prefixedVersion = AddPrefix(version, prefix)
 	return api.GitAPI.PushTag(prefixedVersion)
 }

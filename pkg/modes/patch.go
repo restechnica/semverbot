@@ -2,6 +2,7 @@ package modes
 
 import (
 	blangsemver "github.com/blang/semver/v4"
+
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 

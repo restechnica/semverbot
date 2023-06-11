@@ -3,10 +3,9 @@ package modes
 import (
 	"fmt"
 
-	"github.com/restechnica/semverbot/pkg/semver"
-
 	"github.com/restechnica/semverbot/internal/util"
 	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // GitCommit mode name for GitCommitMode.
@@ -62,7 +61,7 @@ func (mode GitCommitMode) DetectMode(commitMessage string) (detected Mode, err e
 		}
 	}
 
-	return detected, fmt.Errorf(`failed to detect mode from git commit message "%s" with delimiters "%s"`,
+	return detected, fmt.Errorf(`failed to detect mode from git commit message '%s' with delimiters '%s'`,
 		commitMessage, mode.Delimiters)
 }
 

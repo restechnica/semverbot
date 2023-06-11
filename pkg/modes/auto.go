@@ -1,5 +1,7 @@
 package modes
 
+import "github.com/rs/zerolog/log"
+
 // Auto mode name for AutoMode.
 const Auto = "auto"
 
@@ -22,9 +24,14 @@ func NewAutoMode(modes []Mode) AutoMode {
 func (autoMode AutoMode) Increment(targetVersion string) (nextVersion string, err error) {
 	for _, mode := range autoMode.Modes {
 		if nextVersion, err = mode.Increment(targetVersion); err == nil {
+			log.Debug().Err(err).Msgf("tried %s", mode)
 			return nextVersion, err
 		}
+
+		log.Debug().Err(err).Msgf("tried %s", mode)
 	}
+
+	log.Warn().Msg("falling back to patch mode")
 
 	return PatchMode{}.Increment(targetVersion)
 }
