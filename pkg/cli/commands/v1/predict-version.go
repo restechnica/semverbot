@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -33,6 +34,8 @@ func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 // PredictVersionCommandRunE runs the command.
 // Returns an error if the command fails.
 func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
+	log.Debug().Str("command", "predict version").Msg("starting run...")
+
 	var options = &core.PredictVersionOptions{
 		DefaultVersion:      cli.DefaultVersion,
 		GitBranchDelimiters: viper.GetString(cli.ModesGitBranchDelimitersConfigKey),
@@ -40,6 +43,11 @@ func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 		Mode:                viper.GetString(cli.ModeConfigKey),
 		SemverMap:           viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
 	}
+
+	log.Debug().
+		Str("default", options.DefaultVersion).
+		Str("mode", options.Mode).
+		Msg("options:")
 
 	var version string
 

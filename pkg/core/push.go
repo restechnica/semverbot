@@ -1,8 +1,6 @@
 package core
 
-import (
-	"github.com/restechnica/semverbot/pkg/versions"
-)
+import "github.com/restechnica/semverbot/pkg/versions"
 
 type PushVersionOptions struct {
 	DefaultVersion string
