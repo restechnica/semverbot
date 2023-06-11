@@ -30,6 +30,6 @@ jobs:
 
       - name: release
         run: |
-          ./bin/sbot update version --verbose
-          ./bin/sbot release version --verbose
-          ./bin/sbot push version --verbose
+          ./bin/sbot update version --debug
+          ./bin/sbot release version --debug
+          ./bin/sbot push version --debug
