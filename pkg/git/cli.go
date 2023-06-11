@@ -83,11 +83,12 @@ func (api CLI) SetConfig(key string, value string) (err error) {
 }
 
 // SetConfigIfNotSet sets a git config key and value if the config does not exist.
-// Returns an error if the command failed.
-func (api CLI) SetConfigIfNotSet(key string, value string) (err error) {
-	if _, err = api.GetConfig(key); err != nil {
+// Returns the actual value and an error if the command failed.
+func (api CLI) SetConfigIfNotSet(key string, value string) (actual string, err error) {
+	if actual, err = api.GetConfig(key); err != nil {
 		err = api.SetConfig(key, value)
+		actual = value
 	}
 
-	return err
+	return actual, err
 }

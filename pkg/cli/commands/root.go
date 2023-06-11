@@ -52,19 +52,28 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 	cmd.SilenceUsage = true
 
 	ConfigureLogging()
+
+	log.Debug().Str("command", "root").Msg("starting pre-run...")
+
+	log.Debug().Msg("loading default config...")
+
 	LoadDefaultConfig()
 
 	if err = LoadConfig(); err != nil {
 		return err
 	}
 
-	if err = LoadFlags(cmd); err != nil {
+	if err = LoadFlagsIntoConfig(cmd); err != nil {
 		return err
 	}
+
+	log.Debug().Msg("configuring git...")
 
 	if err = SetGitConfigIfConfigured(); err != nil {
 		return err
 	}
+
+	log.Debug().Str("command", "root").Msg("pre-run done")
 
 	return err
 }
@@ -92,15 +101,13 @@ func LoadConfig() (err error) {
 
 	if err = viper.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
-			log.Debug().Msg("config file not found, skipping")
+			log.Debug().Msg("skipped, config file not found")
 			err = nil
 		}
 
 		log.Debug().Err(err).Msg("")
-		return err
 	}
 
-	log.Debug().Msg("loading done! ")
 	return err
 }
 
@@ -113,34 +120,42 @@ func LoadDefaultConfig() {
 	viper.SetDefault(cli.SemverMapConfigKey, semver.Map{})
 }
 
-// LoadFlags loads root command flags.
+// LoadFlagsIntoConfig loads root command flags.
 // Returns an error if it fails.
-func LoadFlags(cmd *cobra.Command) (err error) {
+func LoadFlagsIntoConfig(cmd *cobra.Command) (err error) {
 	return err
 	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch")) -- example on how to load flags
 }
 
-// SetGitConfigIfConfigured Sets the git config only when the semverbot config exists and
-// the git config does not exist.
+// SetGitConfigIfConfigured Sets the git config only when the SemverBot config exists and the git config does not exist.
 // Returns an error if it fails.
 func SetGitConfigIfConfigured() (err error) {
 	var gitAPI = git.NewCLI()
+	var value string
 
 	if viper.IsSet(cli.GitConfigEmailConfigKey) {
 		var email = viper.GetString(cli.GitConfigEmailConfigKey)
+		value = email
 
-		if err = gitAPI.SetConfigIfNotSet("user.email", email); err != nil {
+		if value, err = gitAPI.SetConfigIfNotSet("user.email", email); err != nil {
 			return err
 		}
+
 	}
+
+	log.Debug().Str("user.email", strings.Trim(value, "\n")).Msg("")
 
 	if viper.IsSet(cli.GitConfigNameConfigKey) {
 		var name = viper.GetString(cli.GitConfigNameConfigKey)
+		value = name
 
-		if err = gitAPI.SetConfigIfNotSet("user.name", name); err != nil {
+		if value, err = gitAPI.SetConfigIfNotSet("user.name", name); err != nil {
 			return err
 		}
+
 	}
+
+	log.Debug().Str("user.name", strings.Trim(value, "\n")).Msg("")
 
 	return err
 }

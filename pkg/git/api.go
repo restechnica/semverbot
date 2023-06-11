@@ -12,5 +12,5 @@ type API interface {
 	GetTags() (tags string, err error)
 	PushTag(tag string) (err error)
 	SetConfig(key string, value string) (err error)
-	SetConfigIfNotSet(key string, value string) (err error)
+	SetConfigIfNotSet(key string, value string) (actual string, err error)
 }
