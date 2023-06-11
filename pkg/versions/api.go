@@ -81,7 +81,7 @@ func (api API) UpdateVersion() (err error) {
 	log.Info().Msg("fetching unshallow repository...")
 
 	if output, err = api.GitAPI.FetchUnshallow(); err != nil {
-		log.Error().Err(err).Msg("")
+		log.Debug().Err(err).Msg("")
 		log.Warn().Msg("ignoring failed unshallow fetch for now, repository might already be complete")
 	} else {
 		log.Debug().Msg(strings.Trim(output, "\n"))
