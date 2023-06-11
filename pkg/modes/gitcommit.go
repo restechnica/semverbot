@@ -70,3 +70,8 @@ func (mode GitCommitMode) DetectMode(commitMessage string) (detected Mode, err e
 func (mode GitCommitMode) isMatch(commitMessage string, value string) bool {
 	return util.Contains(commitMessage, value, mode.Delimiters)
 }
+
+// String returns a string representation of an instance.
+func (mode GitCommitMode) String() string {
+	return GitCommit
+}

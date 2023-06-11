@@ -75,3 +75,8 @@ func (mode GitBranchMode) DetectMode(branchName string) (detected Mode, err erro
 func (mode GitBranchMode) isMatch(branchName string, value string) bool {
 	return util.Contains(branchName, value, mode.Delimiters)
 }
+
+// String returns a string representation of an instance.
+func (mode GitBranchMode) String() string {
+	return GitBranch
+}

@@ -32,3 +32,8 @@ func (mode PatchMode) Increment(targetVersion string) (nextVersion string, err e
 
 	return version.FinalizeVersion(), err
 }
+
+// String returns a string representation of an instance.
+func (mode PatchMode) String() string {
+	return Patch
+}

@@ -28,3 +28,8 @@ func (autoMode AutoMode) Increment(targetVersion string) (nextVersion string, er
 
 	return PatchMode{}.Increment(targetVersion)
 }
+
+// String returns a string representation of an instance.
+func (autoMode AutoMode) String() string {
+	return Auto
+}
