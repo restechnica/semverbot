@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
 	"github.com/restechnica/semverbot/pkg/cli"
@@ -24,10 +25,14 @@ func NewInitCommand() *cobra.Command {
 // InitCommandRunE runs the init command.
 // Returns an error if the command failed.
 func InitCommandRunE(cmd *cobra.Command, args []string) (err error) {
+	log.Debug().Str("command", "init").Msg("starting run...")
+
 	var options = &core.InitOptions{
 		Config:         cli.GetDefaultConfig(),
-		ConfigFilePath: cli.DefaultConfigFilePath,
+		ConfigFilePath: cli.ConfigFlag,
 	}
+
+	log.Debug().Str("config", options.ConfigFilePath).Msg("options:")
 
 	return core.Init(options)
 }
