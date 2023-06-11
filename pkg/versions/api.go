@@ -3,6 +3,8 @@ package versions
 import (
 	"strings"
 
+	"github.com/rs/zerolog/log"
+
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/modes"
 	"github.com/restechnica/semverbot/pkg/semver"
@@ -74,7 +76,22 @@ func (api API) PushVersion(version string, prefix string) (err error) {
 // UpdateVersion updates the version by making the git repo unshallow and by fetching all git tags.
 // Returns and error if anything went wrong. Errors from making the git repo unshallow are ignored.
 func (api API) UpdateVersion() (err error) {
-	err = api.GitAPI.FetchUnshallow()
-	err = api.GitAPI.FetchTags()
+	var output string
+
+	log.Info().Msg("fetching unshallow repository...")
+
+	if output, err = api.GitAPI.FetchUnshallow(); err != nil {
+		log.Error().Err(err).Msg("")
+		log.Warn().Msg("ignoring failed unshallow fetch for now, repository might already be complete")
+	} else {
+		log.Debug().Msg(strings.Trim(output, "\n"))
+	}
+
+	log.Info().Msg("fetching tags...")
+
+	if output, err = api.GitAPI.FetchTags(); err == nil {
+		log.Debug().Msg(strings.Trim(output, "\n"))
+	}
+
 	return err
 }
