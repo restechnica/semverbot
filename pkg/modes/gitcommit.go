@@ -44,6 +44,7 @@ func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, e
 
 // DetectMode detects the mode (patch, minor, major) based on a git commit message.
 // Returns the detected mode.
+// TODO is duplicate code with GitBranchMode
 func (mode GitCommitMode) DetectMode(commitMessage string) (detected Mode, err error) {
 	for level, values := range mode.SemverMap {
 		for _, value := range values {
