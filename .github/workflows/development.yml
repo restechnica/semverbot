@@ -30,5 +30,4 @@ jobs:
 
       - name: get version
         run: |
-          ./bin/sbot update version
-          echo "current version: $(./bin/sbot get version)"
+          ./bin/sbot update version --verbose
