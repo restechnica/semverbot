@@ -194,6 +194,16 @@ func TestGitBranchMode_Increment(t *testing.T) {
 	})
 }
 
+func TestGitBranchMode_String(t *testing.T) {
+	t.Run("ShouldEqualConstant", func(t *testing.T) {
+		var mode = NewGitBranchMode("", semver.Map{})
+		var got = mode.String()
+		var want = GitBranch
+
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+}
+
 func TestNewGitBranchMode(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
 		var delimiters = "/"

@@ -43,6 +43,16 @@ func TestMinorMode_MinorConstant(t *testing.T) {
 	})
 }
 
+func TestMinorMode_String(t *testing.T) {
+	t.Run("ShouldEqualConstant", func(t *testing.T) {
+		var mode = NewMinorMode()
+		var got = mode.String()
+		var want = Minor
+
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+}
+
 func TestNewMinorMode(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
 		var mode = NewMinorMode()

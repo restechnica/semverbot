@@ -183,6 +183,16 @@ func TestGitCommitMode_Increment(t *testing.T) {
 	})
 }
 
+func TestGitCommitMode_String(t *testing.T) {
+	t.Run("ShouldEqualConstant", func(t *testing.T) {
+		var mode = NewGitCommitMode("", semver.Map{})
+		var got = mode.String()
+		var want = GitCommit
+
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+}
+
 func TestNewGitCommitMode(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
 		var delimiters = "[]"
