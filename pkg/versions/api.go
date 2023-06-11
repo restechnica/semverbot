@@ -85,6 +85,8 @@ func (api API) PushVersion(version string, prefix string) (err error) {
 // UpdateVersion updates the version by making the git repo unshallow and by fetching all git tags.
 // Returns and error if anything went wrong. Errors from making the git repo unshallow are ignored.
 func (api API) UpdateVersion() (err error) {
+	log.Info().Msg("updating version...")
+
 	var output string
 
 	log.Info().Msg("fetching unshallow repository...")
