@@ -61,7 +61,7 @@ go install github.com/restechnica/semverbot/cmd/sbot@v1.0.0
 
 ## Usage
 
-Each command has a `-h, --help` flag available.
+Each command has a `-h, --help` flag available. Support for `-v, --verbose` and `-d, --debug` has been added as well.
 
 ### `sbot get version`
 
