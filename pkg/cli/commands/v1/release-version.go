@@ -32,7 +32,7 @@ func ReleaseVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 // ReleaseVersionCommandRunE runs the command.
 // Returns an error if the command fails.
 func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
-	log.Debug().Str("command", "release version").Msg("starting run...")
+	log.Debug().Str("command", "v1.release-version").Msg("starting run...")
 
 	var predictOptions = &core.PredictVersionOptions{
 		DefaultVersion:      cli.DefaultVersion,

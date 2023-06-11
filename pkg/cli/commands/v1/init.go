@@ -25,7 +25,7 @@ func NewInitCommand() *cobra.Command {
 // InitCommandRunE runs the init command.
 // Returns an error if the command failed.
 func InitCommandRunE(cmd *cobra.Command, args []string) (err error) {
-	log.Debug().Str("command", "init").Msg("starting run...")
+	log.Debug().Str("command", "v1.init").Msg("starting run...")
 
 	var options = &core.InitOptions{
 		Config:         cli.GetDefaultConfig(),

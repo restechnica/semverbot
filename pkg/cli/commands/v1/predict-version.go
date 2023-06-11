@@ -34,7 +34,7 @@ func PredictVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 // PredictVersionCommandRunE runs the command.
 // Returns an error if the command fails.
 func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
-	log.Debug().Str("command", "predict version").Msg("starting run...")
+	log.Debug().Str("command", "v1.predict-version").Msg("starting run...")
 
 	var options = &core.PredictVersionOptions{
 		DefaultVersion:      cli.DefaultVersion,

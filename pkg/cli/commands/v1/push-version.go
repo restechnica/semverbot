@@ -23,7 +23,7 @@ func NewPushVersionCommand() *cobra.Command {
 // PushVersionCommandRunE runs the command.
 // Returns an error if the command fails.
 func PushVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
-	log.Debug().Str("command", "push version").Msg("starting run...")
+	log.Debug().Str("command", "v1.push-version").Msg("starting run...")
 
 	var options = &core.PushVersionOptions{
 		DefaultVersion: cli.DefaultVersion,

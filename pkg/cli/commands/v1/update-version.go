@@ -22,7 +22,7 @@ func NewUpdateVersionCommand() *cobra.Command {
 // UpdateVersionCommandRunE runs the commands.
 // Returns an error if it fails.
 func UpdateVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
-	log.Debug().Str("command", "update version").Msg("starting run...")
+	log.Debug().Str("command", "v1.update-version").Msg("starting run...")
 
 	if err = core.UpdateVersion(); err != nil {
 		err = cli.NewCommandError(err)
