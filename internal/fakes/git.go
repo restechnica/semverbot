@@ -26,13 +26,13 @@ func (fake *FakeGitAPI) CreateAnnotatedTag(tag string) (err error) {
 }
 
 // FetchTags does nothing.
-func (fake *FakeGitAPI) FetchTags() (err error) {
-	return err
+func (fake *FakeGitAPI) FetchTags() (output string, err error) {
+	return output, err
 }
 
 // FetchUnshallow does nothing.
-func (fake *FakeGitAPI) FetchUnshallow() (err error) {
-	return err
+func (fake *FakeGitAPI) FetchUnshallow() (output string, err error) {
+	return output, err
 }
 
 // GetConfig returns a fake config.

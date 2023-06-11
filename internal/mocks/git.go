@@ -24,16 +24,16 @@ func (mock *MockGitAPI) CreateAnnotatedTag(tag string) (err error) {
 
 // FetchTags mocks fetching tags.
 // Returns a mocked error.
-func (mock *MockGitAPI) FetchTags() (err error) {
+func (mock *MockGitAPI) FetchTags() (output string, err error) {
 	args := mock.Called()
-	return args.Error(0)
+	return args.String(0), args.Error(1)
 }
 
 // FetchUnshallow mocks changing to an unshallow repo.
 // Returns a mocked error.
-func (mock *MockGitAPI) FetchUnshallow() (err error) {
+func (mock *MockGitAPI) FetchUnshallow() (output string, err error) {
 	args := mock.Called()
-	return args.Error(0)
+	return args.String(0), args.Error(0)
 }
 
 // GetConfig mocks getting a config.
