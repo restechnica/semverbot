@@ -32,7 +32,11 @@ func InitCommandRunE(cmd *cobra.Command, args []string) (err error) {
 		ConfigFilePath: cli.ConfigFlag,
 	}
 
-	log.Debug().Str("config", options.ConfigFilePath).Msg("options:")
+	log.Debug().Str("config", options.ConfigFilePath).Msg("options")
 
-	return core.Init(options)
+	if err = core.Init(options); err != nil {
+		err = cli.NewCommandError(err)
+	}
+
+	return err
 }

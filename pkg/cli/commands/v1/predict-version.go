@@ -47,11 +47,13 @@ func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	log.Debug().
 		Str("default", options.DefaultVersion).
 		Str("mode", options.Mode).
-		Msg("options:")
+		Msg("options")
 
 	var version string
 
-	if version, err = core.PredictVersion(options); err == nil {
+	if version, err = core.PredictVersion(options); err != nil {
+		err = cli.NewCommandError(err)
+	} else {
 		fmt.Println(version)
 	}
 

@@ -26,7 +26,7 @@ func GetVersionCommandRun(cmd *cobra.Command, args []string) {
 	log.Debug().Str("command", "get version").Msg("starting run...")
 
 	var options = &core.GetVersionOptions{DefaultVersion: cli.DefaultVersion}
-	log.Debug().Str("default", options.DefaultVersion).Msg("options:")
+	log.Debug().Str("default", options.DefaultVersion).Msg("options")
 
 	var version = core.GetVersion(options)
 	fmt.Println(version)

@@ -1,11 +1,10 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/rs/zerolog/log"
-
 	"github.com/spf13/cobra"
 
+	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/core"
 )
 
@@ -26,10 +25,8 @@ func UpdateVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	log.Debug().Str("command", "update version").Msg("starting run...")
 
 	if err = core.UpdateVersion(); err != nil {
-		return fmt.Errorf("something went wrong while updating the version")
+		err = cli.NewCommandError(err)
 	}
-
-	fmt.Println("successfully fetched the latest git tags")
 
 	return err
 }

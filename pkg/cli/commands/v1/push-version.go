@@ -33,7 +33,11 @@ func PushVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	log.Debug().
 		Str("default", options.DefaultVersion).
 		Str("prefix", options.GitTagsPrefix).
-		Msg("options:")
+		Msg("options")
 
-	return core.PushVersion(options)
+	if err = core.PushVersion(options); err != nil {
+		err = cli.NewCommandError(err)
+	}
+
+	return err
 }
