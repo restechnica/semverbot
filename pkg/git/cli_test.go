@@ -30,10 +30,10 @@ func TestCLI_FetchTags(t *testing.T) {
 		var want = fmt.Errorf("some-error")
 
 		var cmder = mocks.NewMockCommander()
-		cmder.On("Run", mock.Anything, mock.Anything).Return(want)
+		cmder.On("Output", mock.Anything, mock.Anything).Return("", want)
 
 		var gitCLI = CLI{Commander: cmder}
-		var got = gitCLI.FetchTags()
+		var _, got = gitCLI.FetchTags()
 
 		assert.Error(t, got)
 		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
@@ -45,10 +45,10 @@ func TestCLI_FetchUnshallow(t *testing.T) {
 		var want = fmt.Errorf("some-error")
 
 		var cmder = mocks.NewMockCommander()
-		cmder.On("Run", mock.Anything, mock.Anything).Return(want)
+		cmder.On("Output", mock.Anything, mock.Anything).Return("", want)
 
 		var gitCLI = CLI{Commander: cmder}
-		var got = gitCLI.FetchUnshallow()
+		var _, got = gitCLI.FetchUnshallow()
 
 		assert.Error(t, got)
 		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
@@ -109,6 +109,21 @@ func TestCLI_GetMergedBranchName(t *testing.T) {
 
 		var gitCLI = CLI{Commander: cmder}
 		var _, got = gitCLI.GetMergedBranchName()
+
+		assert.Error(t, got)
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+}
+
+func TestCLI_GetTags(t *testing.T) {
+	t.Run("ReturnErrorOnCommanderError", func(t *testing.T) {
+		var want = fmt.Errorf("some-error")
+
+		var cmder = mocks.NewMockCommander()
+		cmder.On("Output", mock.Anything, mock.Anything).Return("value", want)
+
+		var gitCLI = CLI{Commander: cmder}
+		var _, got = gitCLI.GetTags()
 
 		assert.Error(t, got)
 		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
