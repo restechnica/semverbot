@@ -73,7 +73,7 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 		return err
 	}
 
-	log.Debug().Str("command", "root").Msg("pre-run done")
+	log.Debug().Msg("pre-run done")
 
 	return err
 }
@@ -101,8 +101,8 @@ func LoadConfig() (err error) {
 
 	if err = viper.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
-			log.Debug().Msg("skipped, config file not found")
-			err = nil
+			log.Debug().Msg("config file not found")
+			return nil
 		}
 
 		log.Debug().Err(err).Msg("")
