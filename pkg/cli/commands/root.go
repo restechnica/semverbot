@@ -31,7 +31,8 @@ func NewRootCommand() *cobra.Command {
 
 	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", cli.DefaultConfigFilePath, "configures which config file to use")
 
-	command.PersistentFlags().BoolVarP(&cli.VerboseFlag, "verbose", "v", false, "increase log level verbosity")
+	command.PersistentFlags().BoolVarP(&cli.VerboseFlag, "verbose", "v", false, "increase log level verbosity to Info")
+	command.PersistentFlags().BoolVarP(&cli.DebugFlag, "debug", "d", false, "increase log level verbosity to Debug")
 
 	command.AddCommand(v1.NewV1Command())
 	command.AddCommand(v1.NewGetCommand())
@@ -73,8 +74,6 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 		return err
 	}
 
-	log.Debug().Msg("pre-run done")
-
 	return err
 }
 
@@ -83,9 +82,13 @@ func ConfigureLogging() {
 }
 
 func SetLogLevel() {
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	zerolog.SetGlobalLevel(zerolog.ErrorLevel)
 
 	if cli.VerboseFlag {
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	}
+
+	if cli.DebugFlag {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 }
@@ -101,11 +104,9 @@ func LoadConfig() (err error) {
 
 	if err = viper.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
-			log.Debug().Msg("config file not found")
+			log.Warn().Msg("config file not found")
 			return nil
 		}
-
-		log.Debug().Err(err).Msg("")
 	}
 
 	return err
