@@ -87,7 +87,7 @@ func (mock *MockGitAPI) SetConfig(key string, value string) (err error) {
 
 // SetConfigIfNotSet mocks setting a config if not set.
 // Returns a mocked error.
-func (mock *MockGitAPI) SetConfigIfNotSet(key string, value string) (err error) {
+func (mock *MockGitAPI) SetConfigIfNotSet(key string, value string) (actual string, err error) {
 	args := mock.Called(key, value)
-	return args.Error(0)
+	return args.String(0), args.Error(1)
 }

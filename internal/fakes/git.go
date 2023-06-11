@@ -82,10 +82,11 @@ func (fake *FakeGitAPI) SetConfig(key string, value string) (err error) {
 }
 
 // SetConfigIfNotSet sets a fake config if it does not exist.
-func (fake *FakeGitAPI) SetConfigIfNotSet(key string, value string) (err error) {
-	if _, err = fake.GetConfig(key); err != nil {
+func (fake *FakeGitAPI) SetConfigIfNotSet(key string, value string) (actual string, err error) {
+	if actual, err = fake.GetConfig(key); err != nil {
 		err = fake.SetConfig(key, value)
+		actual = value
 	}
 
-	return err
+	return actual, err
 }
