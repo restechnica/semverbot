@@ -2,7 +2,6 @@ package commands
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -30,10 +29,7 @@ func NewRootCommand() *cobra.Command {
 		PersistentPreRunE: RootCommandPersistentPreRunE,
 	}
 
-	// This flag defaults to an empty string because otherwise we lose support for calling sbot from a
-	// sub folder and automatically searching for the config file.
-	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", "",
-		fmt.Sprintf(`configures which config file to use (default "%s")`, cli.DefaultConfigFilePath))
+	command.PersistentFlags().StringVarP(&cli.ConfigFlag, "config", "c", cli.DefaultConfigFilePath, "configures which config file to use")
 
 	command.PersistentFlags().BoolVarP(&cli.VerboseFlag, "verbose", "v", false, "increase log level verbosity")
 
@@ -88,14 +84,9 @@ func SetLogLevel() {
 // LoadConfig loads the SemverBot configuration file.
 // Returns an error if it fails.
 func LoadConfig() (err error) {
-	if cli.ConfigFlag != "" {
-		viper.SetConfigFile(cli.ConfigFlag)
-	} else {
-		viper.AddConfigPath(filepath.Dir(cli.DefaultConfigFilePath))
-		viper.SetConfigName(strings.TrimSuffix(filepath.Base(cli.DefaultConfigFilePath), filepath.Ext(cli.DefaultConfigFilePath)))
-		viper.SetConfigType(strings.Split(filepath.Ext(cli.DefaultConfigFilePath), ".")[1])
-		cli.ConfigFlag = cli.DefaultConfigFilePath
-	}
+	viper.AddConfigPath(filepath.Dir(cli.ConfigFlag))
+	viper.SetConfigName(strings.TrimSuffix(filepath.Base(cli.ConfigFlag), filepath.Ext(cli.ConfigFlag)))
+	viper.SetConfigType(strings.Split(filepath.Ext(cli.ConfigFlag), ".")[1])
 
 	log.Debug().Str("path", cli.ConfigFlag).Msg("loading config...")
 
