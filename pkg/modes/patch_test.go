@@ -43,6 +43,16 @@ func TestPatchMode_PatchConstant(t *testing.T) {
 	})
 }
 
+func TestPatchMode_String(t *testing.T) {
+	t.Run("ShouldEqualConstant", func(t *testing.T) {
+		var mode = NewPatchMode()
+		var got = mode.String()
+		var want = Patch
+
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+}
+
 func TestNewPatchMode(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
 		var mode = NewPatchMode()

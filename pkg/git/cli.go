@@ -22,15 +22,15 @@ func (api CLI) CreateAnnotatedTag(tag string) (err error) {
 }
 
 // FetchTags fetches all tags from the remote origin.
-// Returns an error if the command fails.
-func (api CLI) FetchTags() (err error) {
-	return api.Commander.Run("git", "fetch", "--tags")
+// Returns the output and an error if the command fails.
+func (api CLI) FetchTags() (output string, err error) {
+	return api.Commander.Output("git", "fetch", "--tags", "--verbose")
 }
 
 // FetchUnshallow convert a shallow repository to a complete one.
 // Returns an error if the command fails.
-func (api CLI) FetchUnshallow() (err error) {
-	return api.Commander.Run("git", "fetch", "--unshallow")
+func (api CLI) FetchUnshallow() (output string, err error) {
+	return api.Commander.Output("git", "fetch", "--unshallow")
 }
 
 // GetConfig gets the git config for a specific key.
@@ -83,11 +83,12 @@ func (api CLI) SetConfig(key string, value string) (err error) {
 }
 
 // SetConfigIfNotSet sets a git config key and value if the config does not exist.
-// Returns an error if the command failed.
-func (api CLI) SetConfigIfNotSet(key string, value string) (err error) {
-	if _, err = api.GetConfig(key); err != nil {
+// Returns the actual value and an error if the command failed.
+func (api CLI) SetConfigIfNotSet(key string, value string) (actual string, err error) {
+	if actual, err = api.GetConfig(key); err != nil {
 		err = api.SetConfig(key, value)
+		actual = value
 	}
 
-	return err
+	return actual, err
 }

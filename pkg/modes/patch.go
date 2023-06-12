@@ -2,6 +2,7 @@ package modes
 
 import (
 	blangsemver "github.com/blang/semver/v4"
+
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
@@ -31,4 +32,9 @@ func (mode PatchMode) Increment(targetVersion string) (nextVersion string, err e
 	_ = version.IncrementPatch()
 
 	return version.FinalizeVersion(), err
+}
+
+// String returns a string representation of an instance.
+func (mode PatchMode) String() string {
+	return Patch
 }

@@ -1,12 +1,12 @@
 package v1
 
 import (
-	"github.com/restechnica/semverbot/pkg/core"
-
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/restechnica/semverbot/pkg/cli"
+	"github.com/restechnica/semverbot/pkg/core"
 )
 
 // NewPushVersionCommand creates a new push version command.
@@ -23,10 +23,21 @@ func NewPushVersionCommand() *cobra.Command {
 // PushVersionCommandRunE runs the command.
 // Returns an error if the command fails.
 func PushVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
+	log.Debug().Str("command", "v1.push-version").Msg("starting run...")
+
 	var options = &core.PushVersionOptions{
 		DefaultVersion: cli.DefaultVersion,
 		GitTagsPrefix:  viper.GetString(cli.GitTagsPrefixConfigKey),
 	}
 
-	return core.PushVersion(options)
+	log.Debug().
+		Str("default", options.DefaultVersion).
+		Str("prefix", options.GitTagsPrefix).
+		Msg("options")
+
+	if err = core.PushVersion(options); err != nil {
+		err = cli.NewCommandError(err)
+	}
+
+	return err
 }

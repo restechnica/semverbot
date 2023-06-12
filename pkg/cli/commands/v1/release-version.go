@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -30,7 +31,9 @@ func ReleaseVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 
 // ReleaseVersionCommandRunE runs the command.
 // Returns an error if the command fails.
-func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
+func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
+	log.Debug().Str("command", "v1.release-version").Msg("starting run...")
+
 	var predictOptions = &core.PredictVersionOptions{
 		DefaultVersion:      cli.DefaultVersion,
 		GitBranchDelimiters: viper.GetString(cli.ModesGitBranchDelimitersConfigKey),
@@ -43,5 +46,15 @@ func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) error {
 		GitTagsPrefix: viper.GetString(cli.GitTagsPrefixConfigKey),
 	}
 
-	return core.ReleaseVersion(predictOptions, releaseOptions)
+	log.Debug().
+		Str("default", predictOptions.DefaultVersion).
+		Str("mode", predictOptions.Mode).
+		Str("prefix", releaseOptions.GitTagsPrefix).
+		Msg("options")
+
+	if err = core.ReleaseVersion(predictOptions, releaseOptions); err != nil {
+		err = cli.NewCommandError(err)
+	}
+
+	return err
 }

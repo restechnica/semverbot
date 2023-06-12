@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
@@ -13,6 +14,10 @@ import (
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/modes"
 )
+
+func init() {
+	zerolog.SetGlobalLevel(zerolog.Disabled)
+}
 
 func TestAPI_GetVersion(t *testing.T) {
 	type Test struct {
@@ -304,6 +309,15 @@ func TestAPI_ReleaseVersion(t *testing.T) {
 }
 
 func TestAPI_UpdateVersion(t *testing.T) {
+	t.Run("HappyPath", func(t *testing.T) {
+		var gitAPI = fakes.NewFakeGitAPI()
+		var versionAPI = API{GitAPI: gitAPI}
+
+		var err = versionAPI.UpdateVersion()
+
+		assert.NoError(t, err)
+	})
+
 	type ErrorTest struct {
 		Error   error
 		Name    string
@@ -317,7 +331,7 @@ func TestAPI_UpdateVersion(t *testing.T) {
 	for _, test := range errorTests {
 		t.Run(test.Name, func(t *testing.T) {
 			var cmder = mocks.NewMockCommander()
-			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
+			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
 
 			var gitAPI = git.CLI{Commander: cmder}
 			var versionAPI = API{GitAPI: gitAPI}

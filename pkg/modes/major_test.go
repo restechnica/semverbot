@@ -45,6 +45,16 @@ func TestMajorMode_MajorConstant(t *testing.T) {
 	})
 }
 
+func TestMajorMode_String(t *testing.T) {
+	t.Run("ShouldEqualConstant", func(t *testing.T) {
+		var mode = NewMajorMode()
+		var got = mode.String()
+		var want = Major
+
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+}
+
 func TestNewMajorMode(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
 		var mode = NewMajorMode()

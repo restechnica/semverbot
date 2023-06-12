@@ -67,11 +67,16 @@ func (mode GitBranchMode) DetectMode(branchName string) (detected Mode, err erro
 		}
 	}
 
-	return detected, fmt.Errorf(`failed to detect mode from git branch name "%s" with delimiters "%s"`,
+	return detected, fmt.Errorf(`failed to detect mode from git branch name '%s' with delimiters '%s'`,
 		branchName, mode.Delimiters)
 }
 
 // isMatch returns true if a string is part of branch name, after splitting the branch name with delimiters
 func (mode GitBranchMode) isMatch(branchName string, value string) bool {
 	return util.Contains(branchName, value, mode.Delimiters)
+}
+
+// String returns a string representation of an instance.
+func (mode GitBranchMode) String() string {
+	return GitBranch
 }

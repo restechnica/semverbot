@@ -16,7 +16,7 @@ func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 		var want = "git-commit"
 		var got = GitCommit
 
-		assert.Equal(t, want, got, `want: "%s", got: "%s"`, want, got)
+		assert.Equal(t, want, got, `want: '%s', got: '%s'`, want, got)
 	})
 }
 
@@ -49,7 +49,7 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 			var got, err = mode.DetectMode(test.CommitMessage)
 
 			assert.NoError(t, err)
-			assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+			assert.IsType(t, test.Want, got, `want: '%s, got: '%s'`, test.Want, got)
 		})
 	}
 
@@ -66,28 +66,28 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 			Name:          "DetectNothingWithEmptySemverMap",
 			CommitMessage: "[feature] some changes",
 			Delimiters:    "[]",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters "[]"`),
+			Error:         fmt.Errorf(`failed to detect mode from git branch name '[feature] some changes' with delimiters '[]'`),
 			SemverMap:     semver.Map{},
 		},
 		{
 			Name:          "DetectNothingWithEmptyDelimiters",
 			CommitMessage: "[feature] some changes",
 			Delimiters:    "",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters ""`),
+			Error:         fmt.Errorf(`failed to detect mode from git branch name '[feature] some changes' with delimiters ''`),
 			SemverMap:     semverMap,
 		},
 		{
 			Name:          "DetectNothingWithEmptyCommitMessage",
 			CommitMessage: "",
 			Delimiters:    "/",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name "" with delimiters "/"`),
+			Error:         fmt.Errorf(`failed to detect mode from git branch name '' with delimiters '/'`),
 			SemverMap:     semverMap,
 		},
 		{
 			Name:          "DetectNothingWithFaultySemverMap",
 			CommitMessage: "[feature] some changes",
 			Delimiters:    "[]",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name "[feature] some changes" with delimiters "[]"`),
+			Error:         fmt.Errorf(`failed to detect mode from git branch name '[feature] some changes' with delimiters '[]'`),
 			SemverMap: semver.Map{
 				"mnr": {"feature"},
 			},
@@ -100,7 +100,7 @@ func TestGitCommitMode_DetectMode(t *testing.T) {
 			var _, got = mode.DetectMode(test.CommitMessage)
 
 			assert.Error(t, got)
-			assert.Equal(t, test.Error, got, `want: "%s, got: "%s"`, test.Error, got)
+			assert.Equal(t, test.Error, got, `want: '%s, got: '%s'`, test.Error, got)
 		})
 	}
 }
@@ -122,7 +122,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 	}
 
 	var tests = []Test{
-		{Name: "IncrementPatch", CommitMessage: "[fix] some-bug", Delimiters: "[]", SemverMap: semverMap, Version: "0.0.0", Want: "0.0.1"},
+		{Name: "IncrementPatch", CommitMessage: "fix] some-bug", Delimiters: "[]", SemverMap: semverMap, Version: "0.0.0", Want: "0.0.1"},
 		{Name: "IncrementPatch", CommitMessage: "[fi] some/bug", Delimiters: "/", SemverMap: semverMap, Version: "0.0.0", Want: "0.0.1"},
 		{Name: "IncrementMinor", CommitMessage: "[feature] some-feat", Delimiters: "[]", SemverMap: semverMap, Version: "0.0.1", Want: "0.1.0"},
 		{Name: "IncrementMajor", CommitMessage: "[release] some-release", Delimiters: "[]", SemverMap: semverMap, Version: "0.1.0", Want: "1.0.0"},
@@ -139,7 +139,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 			var got, err = mode.Increment(test.Version)
 
 			assert.NoError(t, err)
-			assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
+			assert.IsType(t, test.Want, got, `want: '%s, got: '%s'`, test.Want, got)
 		})
 	}
 
@@ -155,7 +155,7 @@ func TestGitCommitMode_Increment(t *testing.T) {
 		var _, got = mode.Increment("0.0.0")
 
 		assert.Error(t, got)
-		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+		assert.Equal(t, want, got, `want: '%s, got: '%s'`, want, got)
 	})
 
 	t.Run("ReturnErrorIfNoMatchingMode", func(t *testing.T) {
@@ -180,6 +180,16 @@ func TestGitCommitMode_Increment(t *testing.T) {
 		var _, got = mode.Increment("invalid")
 
 		assert.Error(t, got)
+	})
+}
+
+func TestGitCommitMode_String(t *testing.T) {
+	t.Run("ShouldEqualConstant", func(t *testing.T) {
+		var mode = NewGitCommitMode("", semver.Map{})
+		var got = mode.String()
+		var want = GitCommit
+
+		assert.Equal(t, want, got, `want: '%s, got: '%s'`, want, got)
 	})
 }
 

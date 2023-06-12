@@ -2,6 +2,7 @@ package modes
 
 import (
 	blangsemver "github.com/blang/semver/v4"
+
 	"github.com/restechnica/semverbot/pkg/semver"
 )
 
@@ -20,7 +21,7 @@ func NewMinorMode() MinorMode {
 
 // Increment increments a given version using the MinorMode.
 // Returns the incremented version.
-func (minorMode MinorMode) Increment(targetVersion string) (nextVersion string, err error) {
+func (mode MinorMode) Increment(targetVersion string) (nextVersion string, err error) {
 	var version blangsemver.Version
 
 	if version, err = semver.Parse(targetVersion); err != nil {
@@ -31,4 +32,9 @@ func (minorMode MinorMode) Increment(targetVersion string) (nextVersion string, 
 	_ = version.IncrementMinor()
 
 	return version.FinalizeVersion(), err
+}
+
+// String returns a string representation of an instance.
+func (mode MinorMode) String() string {
+	return Minor
 }

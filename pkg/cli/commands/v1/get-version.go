@@ -3,9 +3,11 @@ package v1
 import (
 	"fmt"
 
+	"github.com/rs/zerolog/log"
+	"github.com/spf13/cobra"
+
 	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/core"
-	"github.com/spf13/cobra"
 )
 
 // NewGetVersionCommand creates a new get version command.
@@ -21,7 +23,11 @@ func NewGetVersionCommand() *cobra.Command {
 
 // GetVersionCommandRun runs the command.
 func GetVersionCommandRun(cmd *cobra.Command, args []string) {
+	log.Debug().Str("command", "v1.get-version").Msg("starting run...")
+
 	var options = &core.GetVersionOptions{DefaultVersion: cli.DefaultVersion}
+	log.Debug().Str("default", options.DefaultVersion).Msg("options")
+
 	var version = core.GetVersion(options)
 	fmt.Println(version)
 }

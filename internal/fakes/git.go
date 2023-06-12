@@ -26,13 +26,13 @@ func (fake *FakeGitAPI) CreateAnnotatedTag(tag string) (err error) {
 }
 
 // FetchTags does nothing.
-func (fake *FakeGitAPI) FetchTags() (err error) {
-	return err
+func (fake *FakeGitAPI) FetchTags() (output string, err error) {
+	return output, err
 }
 
 // FetchUnshallow does nothing.
-func (fake *FakeGitAPI) FetchUnshallow() (err error) {
-	return err
+func (fake *FakeGitAPI) FetchUnshallow() (output string, err error) {
+	return output, err
 }
 
 // GetConfig returns a fake config.
@@ -82,10 +82,11 @@ func (fake *FakeGitAPI) SetConfig(key string, value string) (err error) {
 }
 
 // SetConfigIfNotSet sets a fake config if it does not exist.
-func (fake *FakeGitAPI) SetConfigIfNotSet(key string, value string) (err error) {
-	if _, err = fake.GetConfig(key); err != nil {
+func (fake *FakeGitAPI) SetConfigIfNotSet(key string, value string) (actual string, err error) {
+	if actual, err = fake.GetConfig(key); err != nil {
 		err = fake.SetConfig(key, value)
+		actual = value
 	}
 
-	return err
+	return actual, err
 }

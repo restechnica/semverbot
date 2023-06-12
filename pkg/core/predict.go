@@ -21,11 +21,11 @@ func PredictVersion(options *PredictVersionOptions) (prediction string, err erro
 	var gitBranchMode = modes.NewGitBranchMode(options.GitBranchDelimiters, options.SemverMap)
 	var gitCommitMode = modes.NewGitCommitMode(options.GitCommitDelimiters, options.SemverMap)
 
-	var modeAPI = modes.NewAPI(gitBranchMode, gitCommitMode)
-	var mode = modeAPI.SelectMode(options.Mode)
-
 	var versionAPI = versions.NewAPI()
 	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)
+
+	var modeAPI = modes.NewAPI(gitBranchMode, gitCommitMode)
+	var mode = modeAPI.SelectMode(options.Mode)
 
 	return versionAPI.PredictVersion(version, mode)
 }
