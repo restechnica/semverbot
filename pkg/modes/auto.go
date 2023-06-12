@@ -24,7 +24,6 @@ func NewAutoMode(modes []Mode) AutoMode {
 func (autoMode AutoMode) Increment(targetVersion string) (nextVersion string, err error) {
 	for _, mode := range autoMode.Modes {
 		if nextVersion, err = mode.Increment(targetVersion); err == nil {
-			log.Debug().Err(err).Msgf("tried %s", mode)
 			return nextVersion, err
 		}
 
