@@ -16,7 +16,7 @@ func TestFind(t *testing.T) {
 	var tests = []Test{
 		{Name: "FindVersionIfValid", Versions: []string{"v1.0.1", "v0.1.1", "v0.1.0"}, WantIndex: 0},
 		{Name: "SkipVersionIfInvalid", Versions: []string{"invalid1", "invalid2", "v0.1.0"}, WantIndex: 2},
-		{Name: "FindBiggestVersionWhenDifferentOrder", Versions: []string{"v1.3.1", "v0.2.0", "v2.3.0"}, WantIndex: 2},
+		{Name: "FindVersionWhenDifferentOrder", Versions: []string{"v1.3.1", "v0.2.0", "v2.3.0"}, WantIndex: 2},
 		{Name: "FindVersionWhenMultiplePrefixes", Versions: []string{"v1.3.1", "v0.2.0", "2.3.0"}, WantIndex: 2},
 	}
 
