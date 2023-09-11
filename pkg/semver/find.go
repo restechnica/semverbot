@@ -33,7 +33,8 @@ func Find(versions []string) (found string, err error) {
 	// necessary because blangsemver's Version.String() strips any prefix
 	for _, version := range versions {
 		if strings.Contains(version, targetVersion.String()) {
-			return version, nil
+			found = version
+			break
 		}
 	}
 
