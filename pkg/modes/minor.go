@@ -21,10 +21,10 @@ func NewMinorMode() MinorMode {
 
 // Increment increments a given version using the MinorMode.
 // Returns the incremented version.
-func (mode MinorMode) Increment(targetVersion string) (nextVersion string, err error) {
+func (mode MinorMode) Increment(prefix string, targetVersion string) (nextVersion string, err error) {
 	var version blangsemver.Version
 
-	if version, err = semver.Parse(targetVersion); err != nil {
+	if version, err = semver.Parse(prefix, targetVersion); err != nil {
 		return
 	}
 

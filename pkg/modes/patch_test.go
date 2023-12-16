@@ -9,20 +9,21 @@ import (
 func TestPatchMode_Increment(t *testing.T) {
 	type Test struct {
 		Name    string
+		Prefix  string
 		Version string
 		Want    string
 	}
 
 	var tests = []Test{
-		{Name: "IncrementPatch", Version: "0.0.0", Want: "0.0.1"},
-		{Name: "DiscardPrefix", Version: "v0.0.1", Want: "0.0.2"},
-		{Name: "DiscardPrebuild", Version: "0.0.2-pre+001", Want: "0.0.3"},
-		{Name: "NoResets", Version: "3.2.0", Want: "3.2.1"},
+		{Name: "IncrementPatch", Prefix: "v", Version: "0.0.0", Want: "0.0.1"},
+		{Name: "DiscardPrefix", Prefix: "v", Version: "v0.0.1", Want: "0.0.2"},
+		{Name: "DiscardPrebuild", Prefix: "v", Version: "0.0.2-pre+001", Want: "0.0.3"},
+		{Name: "NoResets", Prefix: "v", Version: "3.2.0", Want: "3.2.1"},
 	}
 
 	for _, test := range tests {
 		var mode = NewPatchMode()
-		var got, err = mode.Increment(test.Version)
+		var got, err = mode.Increment(test.Prefix, test.Version)
 
 		assert.NoError(t, err)
 		assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
@@ -30,7 +31,7 @@ func TestPatchMode_Increment(t *testing.T) {
 
 	t.Run("ReturnErrorOnInvalidVersion", func(t *testing.T) {
 		var mode = NewPatchMode()
-		var _, got = mode.Increment("invalid")
+		var _, got = mode.Increment("v", "invalid")
 		assert.Error(t, got)
 	})
 }

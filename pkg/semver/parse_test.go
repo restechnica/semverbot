@@ -32,7 +32,7 @@ func TestParse(t *testing.T) {
 			var version = fmt.Sprintf(`%s%s.%s.%s%s`, test.Prefix, test.Major, test.Minor, test.Patch,
 				test.Prebuild)
 
-			var got, err = Parse(version)
+			var got, err = Parse(test.Prefix, version)
 
 			assert.Equal(t, test.Major, fmt.Sprint(got.Major), `want: "%s", got: "%d"`, test.Major, got.Major)
 			assert.Equal(t, test.Minor, fmt.Sprint(got.Minor), `want: "%s", got: "%s"`, test.Minor, got.Minor)

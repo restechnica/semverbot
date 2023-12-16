@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -25,7 +26,9 @@ func NewGetVersionCommand() *cobra.Command {
 func GetVersionCommandRun(cmd *cobra.Command, args []string) {
 	log.Debug().Str("command", "v1.get-version").Msg("starting run...")
 
-	var options = &core.GetVersionOptions{DefaultVersion: cli.DefaultVersion}
+	var options = &core.GetVersionOptions{
+		GitTagPrefix:   viper.GetString(cli.GitTagsPrefixConfigKey),
+		DefaultVersion: cli.DefaultVersion}
 	log.Debug().Str("default", options.DefaultVersion).Msg("options")
 
 	var version = core.GetVersion(options)

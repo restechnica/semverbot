@@ -24,7 +24,7 @@ func TestMajorMode_Increment(t *testing.T) {
 
 	for _, test := range tests {
 		var mode = NewMajorMode()
-		var got, err = mode.Increment(test.Version)
+		var got, err = mode.Increment("v", test.Version)
 
 		assert.NoError(t, err)
 		assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
@@ -32,7 +32,7 @@ func TestMajorMode_Increment(t *testing.T) {
 
 	t.Run("ReturnErrorOnInvalidVersion", func(t *testing.T) {
 		var mode = NewMajorMode()
-		var _, got = mode.Increment("invalid")
+		var _, got = mode.Increment("v", "invalid")
 		assert.Error(t, got)
 	})
 }

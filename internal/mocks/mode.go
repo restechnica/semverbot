@@ -15,7 +15,7 @@ func NewMockMode() *MockMode {
 
 // Increment mock increments a version.
 // Returns an incremented mock version.
-func (mock *MockMode) Increment(targetVersion string) (nextVersion string, err error) {
+func (mock *MockMode) Increment(_ string, targetVersion string) (nextVersion string, err error) {
 	args := mock.Called(targetVersion)
 	return args.String(0), args.Error(1)
 }

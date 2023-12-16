@@ -16,13 +16,22 @@ type ReleaseVersionOptions struct {
 
 // ReleaseVersion releases a new version.
 // Returns an error if anything went wrong with the prediction or releasing.
-func ReleaseVersion(predictOptions *PredictVersionOptions, releaseOptions *ReleaseVersionOptions) error {
-	var versionAPI = versions.NewAPI()
-	var predictedVersion, err = PredictVersion(predictOptions)
+func ReleaseVersion(releaseOptions *ReleaseVersionOptions) error {
+	predictOptions := PredictVersionOptions{
+		DefaultVersion:      releaseOptions.DefaultVersion,
+		GitBranchDelimiters: releaseOptions.GitBranchDelimiters,
+		GitCommitDelimiters: releaseOptions.GitCommitDelimiters,
+		GitTagPrefix:        releaseOptions.GitTagsPrefix,
+		Mode:                releaseOptions.Mode,
+		SemverMap:           releaseOptions.SemverMap,
+	}
+
+	var versionAPI = versions.NewAPI(predictOptions.GitTagPrefix)
+	var predictedVersion, err = PredictVersion(&predictOptions)
 
 	if err != nil {
 		return err
 	}
 
-	return versionAPI.ReleaseVersion(predictedVersion, releaseOptions.GitTagsPrefix)
+	return versionAPI.ReleaseVersion(predictedVersion)
 }

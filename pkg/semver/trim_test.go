@@ -35,7 +35,7 @@ func TestTrim(t *testing.T) {
 			var want = strings.ReplaceAll(version, test.Prefix, "")
 			want = strings.ReplaceAll(want, test.Prebuild, "")
 
-			var got, err = Trim(version)
+			var got, err = Trim(test.Prefix, version)
 
 			assert.Equal(t, want, got, `want: "%s", got: "%s"`, want, got)
 
@@ -62,7 +62,7 @@ func TestTrim(t *testing.T) {
 
 	for _, test := range errorTests {
 		t.Run(test.Name, func(t *testing.T) {
-			var _, got = Trim(test.Version)
+			var _, got = Trim("v", test.Version)
 			assert.Error(t, got)
 		})
 	}
