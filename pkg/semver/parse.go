@@ -1,8 +1,9 @@
 package semver
 
 import (
-	blangsemver "github.com/blang/semver/v4"
 	"strings"
+
+	blangsemver "github.com/blang/semver/v4"
 )
 
 // Parse parses a version string into a semver version struct.

@@ -2,10 +2,10 @@ package v1
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/restechnica/semverbot/pkg/cli"
 	"github.com/restechnica/semverbot/pkg/core"

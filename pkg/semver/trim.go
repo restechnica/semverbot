@@ -1,8 +1,9 @@
 package semver
 
 import (
-	blangsemver "github.com/blang/semver/v4"
 	"strings"
+
+	blangsemver "github.com/blang/semver/v4"
 )
 
 // Trim trims a semver version string of anything but major.minor.patch information.
