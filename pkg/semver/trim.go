@@ -1,14 +1,19 @@
 package semver
 
-import blangsemver "github.com/blang/semver/v4"
+import (
+	blangsemver "github.com/blang/semver/v4"
+	"strings"
+)
 
 // Trim trims a semver version string of anything but major.minor.patch information.
 // Returns the trimmed semver version.
-func Trim(version string) (string, error) {
+func Trim(prefix string, version string) (string, error) {
 	var semverVersion blangsemver.Version
 	var err error
 
-	if semverVersion, err = Parse(version); err != nil {
+	var mappedVersion = strings.Replace(version, prefix, prefix, 1)
+
+	if semverVersion, err = Parse(prefix, mappedVersion); err != nil {
 		return version, err
 	}
 

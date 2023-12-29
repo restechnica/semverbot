@@ -10,12 +10,12 @@ import (
 // Find finds the biggest valid semver version in a slice of strings.
 // The initial order of the versions does not matter.
 // Returns the biggest valid semver version if found, otherwise an error stating no valid semver version has been found.
-func Find(versions []string) (found string, err error) {
+func Find(prefix string, versions []string) (found string, err error) {
 	var parsedVersions blangsemver.Versions
 	var parsedVersion blangsemver.Version
 
 	for _, version := range versions {
-		if parsedVersion, err = Parse(version); err != nil {
+		if parsedVersion, err = Parse(prefix, version); err != nil {
 			continue
 		}
 

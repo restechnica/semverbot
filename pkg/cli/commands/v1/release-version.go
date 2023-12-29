@@ -34,25 +34,19 @@ func ReleaseVersionCommandPreRunE(cmd *cobra.Command, args []string) (err error)
 func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	log.Debug().Str("command", "v1.release-version").Msg("starting run...")
 
-	var predictOptions = &core.PredictVersionOptions{
-		DefaultVersion:      cli.DefaultVersion,
-		GitBranchDelimiters: viper.GetString(cli.ModesGitBranchDelimitersConfigKey),
-		GitCommitDelimiters: viper.GetString(cli.ModesGitCommitDelimitersConfigKey),
-		Mode:                viper.GetString(cli.ModeConfigKey),
-		SemverMap:           viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
-	}
-
 	var releaseOptions = &core.ReleaseVersionOptions{
-		GitTagsPrefix: viper.GetString(cli.GitTagsPrefixConfigKey),
+		DefaultVersion: cli.DefaultVersion,
+		Mode:           viper.GetString(cli.ModeConfigKey),
+		GitTagsPrefix:  viper.GetString(cli.GitTagsPrefixConfigKey),
 	}
 
 	log.Debug().
-		Str("default", predictOptions.DefaultVersion).
-		Str("mode", predictOptions.Mode).
+		Str("default", releaseOptions.DefaultVersion).
+		Str("mode", releaseOptions.Mode).
 		Str("prefix", releaseOptions.GitTagsPrefix).
 		Msg("options")
 
-	if err = core.ReleaseVersion(predictOptions, releaseOptions); err != nil {
+	if err = core.ReleaseVersion(releaseOptions); err != nil {
 		err = cli.NewCommandError(err)
 	}
 
