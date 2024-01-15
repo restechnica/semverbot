@@ -3,10 +3,9 @@ package modes
 import (
 	"fmt"
 
-	"github.com/restechnica/semverbot/pkg/semver"
-
 	"github.com/restechnica/semverbot/internal/util"
 	"github.com/restechnica/semverbot/pkg/git"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 // GitCommit mode name for GitCommitMode.
@@ -28,7 +27,7 @@ func NewGitCommitMode(delimiters string, semverMap semver.Map) GitCommitMode {
 
 // Increment increments a given version based on the latest git commit message.
 // Returns the incremented version or an error if it failed to detect the mode based on the git commit.
-func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, err error) {
+func (mode GitCommitMode) Increment(prefix string, targetVersion string) (nextVersion string, err error) {
 	var message string
 	var detectedMode Mode
 
@@ -40,11 +39,12 @@ func (mode GitCommitMode) Increment(targetVersion string) (nextVersion string, e
 		return
 	}
 
-	return detectedMode.Increment(targetVersion)
+	return detectedMode.Increment(prefix, targetVersion)
 }
 
 // DetectMode detects the mode (patch, minor, major) based on a git commit message.
 // Returns the detected mode.
+// TODO is duplicate code with GitBranchMode
 func (mode GitCommitMode) DetectMode(commitMessage string) (detected Mode, err error) {
 	for level, values := range mode.SemverMap {
 		for _, value := range values {
@@ -62,11 +62,16 @@ func (mode GitCommitMode) DetectMode(commitMessage string) (detected Mode, err e
 		}
 	}
 
-	return detected, fmt.Errorf(`failed to detect mode from git commit message "%s" with delimiters "%s"`,
+	return detected, fmt.Errorf(`failed to detect mode from git commit message '%s' with delimiters '%s'`,
 		commitMessage, mode.Delimiters)
 }
 
 // isMatch returns true if a string is part of commit message, after splitting the git commit message with delimiters
 func (mode GitCommitMode) isMatch(commitMessage string, value string) bool {
 	return util.Contains(commitMessage, value, mode.Delimiters)
+}
+
+// String returns a string representation of an instance.
+func (mode GitCommitMode) String() string {
+	return GitCommit
 }

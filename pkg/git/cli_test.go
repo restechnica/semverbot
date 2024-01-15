@@ -30,10 +30,10 @@ func TestCLI_FetchTags(t *testing.T) {
 		var want = fmt.Errorf("some-error")
 
 		var cmder = mocks.NewMockCommander()
-		cmder.On("Run", mock.Anything, mock.Anything).Return(want)
+		cmder.On("Output", mock.Anything, mock.Anything).Return("", want)
 
 		var gitCLI = CLI{Commander: cmder}
-		var got = gitCLI.FetchTags()
+		var _, got = gitCLI.FetchTags()
 
 		assert.Error(t, got)
 		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
@@ -45,10 +45,10 @@ func TestCLI_FetchUnshallow(t *testing.T) {
 		var want = fmt.Errorf("some-error")
 
 		var cmder = mocks.NewMockCommander()
-		cmder.On("Run", mock.Anything, mock.Anything).Return(want)
+		cmder.On("Output", mock.Anything, mock.Anything).Return("", want)
 
 		var gitCLI = CLI{Commander: cmder}
-		var got = gitCLI.FetchUnshallow()
+		var _, got = gitCLI.FetchUnshallow()
 
 		assert.Error(t, got)
 		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
@@ -115,6 +115,21 @@ func TestCLI_GetMergedBranchName(t *testing.T) {
 	})
 }
 
+func TestCLI_GetTags(t *testing.T) {
+	t.Run("ReturnErrorOnCommanderError", func(t *testing.T) {
+		var want = fmt.Errorf("some-error")
+
+		var cmder = mocks.NewMockCommander()
+		cmder.On("Output", mock.Anything, mock.Anything).Return("value", want)
+
+		var gitCLI = CLI{Commander: cmder}
+		var _, got = gitCLI.GetTags()
+
+		assert.Error(t, got)
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
+	})
+}
+
 func TestCLI_PushTag(t *testing.T) {
 	t.Run("ReturnErrorOnCommanderError", func(t *testing.T) {
 		var want = fmt.Errorf("some-error")
@@ -147,30 +162,41 @@ func TestCLI_SetConfig(t *testing.T) {
 
 func TestCLI_SetConfigIfNotSet(t *testing.T) {
 	t.Run("DoNotSetConfigIfConfigExists", func(t *testing.T) {
+		var want = "initial"
+
 		var cmder = mocks.NewMockCommander()
-		cmder.On("Output", mock.Anything, mock.Anything).Return("value", nil)
+		cmder.On("Output", mock.Anything, mock.Anything).Return(want, nil)
 
 		var gitCLI = CLI{Commander: cmder}
-		var got = gitCLI.SetConfigIfNotSet("key", "value")
+		var got, err = gitCLI.SetConfigIfNotSet("key", "value")
 
 		cmder.AssertCalled(t, "Output", mock.Anything, mock.Anything)
 		cmder.AssertNotCalled(t, "Run", mock.Anything, mock.Anything)
-		assert.NoError(t, got)
-		assert.Equal(t, nil, got, `want: "%s, got: "%s"`, nil, got)
+
+		assert.NoError(t, err)
+		assert.Equal(t, nil, err, `want: "%s, got: "%s"`, nil, err)
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
 	})
 
 	t.Run("SetConfigIfConfigDoesNotExist", func(t *testing.T) {
+		var initial = "initial"
+		var want = "value"
+
 		var cmder = mocks.NewMockCommander()
-		cmder.On("Output", mock.Anything, mock.Anything).Return("value", fmt.Errorf("some-error"))
+		cmder.On("Output", mock.Anything, mock.Anything).Return(initial, fmt.Errorf("some-error"))
 		cmder.On("Run", mock.Anything, mock.Anything).Return(nil)
 
 		var gitCLI = CLI{Commander: cmder}
-		var got = gitCLI.SetConfigIfNotSet("key", "value")
+		var got, err = gitCLI.SetConfigIfNotSet("key", want)
 
 		cmder.AssertCalled(t, "Output", mock.Anything, mock.Anything)
 		cmder.AssertCalled(t, "Run", mock.Anything, mock.Anything)
-		assert.NoError(t, got)
-		assert.Equal(t, nil, got, `want: "%s, got: "%s"`, nil, got)
+
+		assert.NoError(t, err)
+		assert.Equal(t, nil, err, `want: "%s, got: "%s"`, nil, err)
+		assert.Equal(t, nil, err, `want: "%s, got: "%s"`, nil, err)
+
+		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)
 	})
 
 	t.Run("ReturnErrorOnSetConfigError", func(t *testing.T) {
@@ -181,7 +207,7 @@ func TestCLI_SetConfigIfNotSet(t *testing.T) {
 		cmder.On("Run", mock.Anything, mock.Anything).Return(fmt.Errorf("some-error"))
 
 		var gitCLI = CLI{Commander: cmder}
-		var got = gitCLI.SetConfigIfNotSet("key", "value")
+		var _, got = gitCLI.SetConfigIfNotSet("key", "value")
 
 		assert.Error(t, got)
 		assert.Equal(t, want, got, `want: "%s, got: "%s"`, want, got)

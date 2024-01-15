@@ -14,7 +14,7 @@ jobs:
       - name: set-up-go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.17
+          go-version: 1.20.5
 
       - name: provision
         run: make provision
@@ -30,10 +30,6 @@ jobs:
 
       - name: release
         run: |
-          ./bin/sbot update version
-
-          echo "current version: $(./bin/sbot get version)"
-          echo "next version: $(./bin/sbot predict version)"
-
-          ./bin/sbot release version
-          ./bin/sbot push version
+          ./bin/sbot update version --debug
+          ./bin/sbot release version --debug
+          ./bin/sbot push version --debug

@@ -28,7 +28,7 @@ func NewGitBranchMode(delimiters string, semverMap semver.Map) GitBranchMode {
 // Increment increments the semver level based on the naming of the source branch of a git merge.
 // Returns the incremented version or an error if the last git commit is not a merge or if no mode was detected
 // based on the branch name.
-func (mode GitBranchMode) Increment(targetVersion string) (nextVersion string, err error) {
+func (mode GitBranchMode) Increment(prefix string, targetVersion string) (nextVersion string, err error) {
 	var branchName string
 	var matchedMode Mode
 
@@ -46,7 +46,7 @@ func (mode GitBranchMode) Increment(targetVersion string) (nextVersion string, e
 		return nextVersion, err
 	}
 
-	return matchedMode.Increment(targetVersion)
+	return matchedMode.Increment(prefix, targetVersion)
 }
 
 // DetectMode detects the mode (patch, minor, major) based on a git branch name.
@@ -67,11 +67,16 @@ func (mode GitBranchMode) DetectMode(branchName string) (detected Mode, err erro
 		}
 	}
 
-	return detected, fmt.Errorf(`failed to detect mode from git branch name "%s" with delimiters "%s"`,
+	return detected, fmt.Errorf(`failed to detect mode from git branch name '%s' with delimiters '%s'`,
 		branchName, mode.Delimiters)
 }
 
 // isMatch returns true if a string is part of branch name, after splitting the branch name with delimiters
 func (mode GitBranchMode) isMatch(branchName string, value string) bool {
 	return util.Contains(branchName, value, mode.Delimiters)
+}
+
+// String returns a string representation of an instance.
+func (mode GitBranchMode) String() string {
+	return GitBranch
 }

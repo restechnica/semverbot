@@ -1,5 +1,7 @@
 package modes
 
+import "github.com/rs/zerolog/log"
+
 // API an API to work with different modes.
 type API struct {
 	GitBranchMode GitBranchMode
@@ -32,6 +34,7 @@ func (api API) SelectMode(mode string) Mode {
 	case Major:
 		return NewMajorMode()
 	default:
+		log.Warn().Msg("mode invalid, falling back to patch mode")
 		return NewPatchMode()
 	}
 }

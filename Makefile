@@ -4,6 +4,9 @@
 BIN = bin
 GOBUILD = go build
 
+simple-build:
+	$(GOBUILD) -o $(BIN)/sbot
+
 # build the project
 build:
 	$(GOBUILD) -o $(BIN)/sbot

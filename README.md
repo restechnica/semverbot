@@ -1,4 +1,4 @@
-# Semverbot
+# SemverBot
 
 [![github.com release badge](https://img.shields.io/github/release/restechnica/semverbot.svg)](https://github.com/restechnica/semverbot/)
 [![github.com workflow badge](https://github.com/restechnica/semverbot/workflows/main/badge.svg)](https://github.com/restechnica/semverbot/actions?query=workflow%3Amain)
@@ -19,7 +19,7 @@ A CLI which automates semver versioning.
 * [How to configure](#how-to-configure)
 * [Configuration properties](#configuration-properties)
 * [Examples](#examples)
-* [Why Semverbot?](#why-semverbot)
+* [Why SemverBot?](#why-semverbot)
   
 ## Requirements
 
@@ -61,7 +61,7 @@ go install github.com/restechnica/semverbot/cmd/sbot@v1.0.0
 
 ## Usage
 
-Each command has a `-h, --help` flag available.
+Each command has a `-h, --help` flag available. Support for `-v, --verbose` and `-d, --debug` has been added as well.
 
 ### `sbot get version`
 
@@ -322,7 +322,7 @@ A typical development workflow when working with `sbot`:
 `[create branch 'feature/my-feature' from main/master]` > `[make changes]` > `[push changes]` > `[create pull request]` > `[approve pull request]` > `[merge pull request]` > `[trigger pipeline]` >
 `[calculate next version based on branch name]` > `[build application]` > `[publish artifact]` > `[semverbot release & push version]`
 
-## Why Semverbot?
+## Why SemverBot?
 
 There are several reasons why you should consider using `sbot` for your semver versioning.
 
