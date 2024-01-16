@@ -48,5 +48,5 @@ jobs:
       - name: build
         run: |
           make build
-          mv bin/sbot-linux-amd64 bin/sbot
+          cp bin/sbot-linux-amd64 bin/sbot
           sbot version
