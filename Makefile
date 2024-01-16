@@ -5,17 +5,11 @@ BIN = bin
 GOBUILD = go build
 
 simple-build:
-	$(GOBUILD) -o $(BIN)/sbot
+	@nu run.nu build
 
 # build the project
 build:
-	$(GOBUILD) -o $(BIN)/sbot
-	GOOS=windows GOARCH=amd64 $(GOBUILD) -o $(BIN)/sbot-windows-amd64.exe
-	GOOS=windows GOARCH=arm64 $(GOBUILD) -o $(BIN)/sbot-windows-arm64.exe
-	GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(BIN)/sbot-linux-amd64
-	GOOS=linux GOARCH=arm64 $(GOBUILD) -o $(BIN)/sbot-linux-arm64
-	GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(BIN)/sbot-darwin-amd64
-	GOOS=darwin GOARCH=arm64 $(GOBUILD) -o $(BIN)/sbot-darwin-arm64
+	@nu run.nu build-all
 
 # run quality assessment checks
 check:
