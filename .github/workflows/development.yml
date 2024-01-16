@@ -31,7 +31,7 @@ jobs:
         run: make check
 
       - name: build
-        run: make simple-build
+        run: make build
 
       - name: test
         run: make test
