@@ -18,6 +18,7 @@ func NewV1Command() *cobra.Command {
 	command.AddCommand(NewPushCommand())
 	command.AddCommand(NewReleaseCommand())
 	command.AddCommand(NewUpdateCommand())
+	command.AddCommand(NewVersionCommand())
 
 	return command
 }
