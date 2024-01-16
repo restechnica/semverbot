@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 
-	"github.com/restechnica/semverbot/internal"
+	"github.com/restechnica/semverbot/internal/ldflags"
 	"github.com/restechnica/semverbot/pkg/cli"
 )
 
@@ -50,7 +50,7 @@ func VersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 
 	fmt.Printf(
 		"sbot-cli %s %s %s/%s\n",
-		internal.Version,
+		ldflags.Version,
 		info.GoVersion,
 		os,
 		arch,

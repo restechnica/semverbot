@@ -2,7 +2,9 @@
 
 const output_path = "bin"
 
-def build [$architectures: list, $operating_systems: list] {
+def build [$architectures: list<string>, $operating_systems: list<string>] {
+    const go_import_path = "github.com/restechnica/semverbot"
+
     $architectures | each { |arch|
         $operating_systems | each { |os|
             $env.GOOS = $os
@@ -14,9 +16,14 @@ def build [$architectures: list, $operating_systems: list] {
                 $binary_path = $"($binary_path).exe"
             }
 
-            go build -o $binary_path
+            let version = (git describe)
 
-            ^echo $"built ($binary_path)"
+            let ldflags = [
+                $"-X ($go_import_path)/internal/ldflags.Version=($version)"
+            ] | str join ' '
+
+            go build -o $binary_path -ldflags $ldflags
+            echo $"built ($binary_path)"
         }
     }
 }
