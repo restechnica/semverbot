@@ -2,7 +2,7 @@
 
 const output_path = "bin"
 
-def build [$architectures: list<string>, $operating_systems: list<string>] {
+def build [architectures: list<string>, operating_systems: list<string>] {
     const go_import_path = "github.com/restechnica/semverbot"
 
     $architectures | each { |arch|
@@ -16,7 +16,8 @@ def build [$architectures: list<string>, $operating_systems: list<string>] {
                 $binary_path = $"($binary_path).exe"
             }
 
-            let version = (git describe)
+
+            let version =  $env.RELEASE_VERSION? | default "dev"
 
             let ldflags = [
                 $"-X ($go_import_path)/internal/ldflags.Version=($version)"
@@ -29,6 +30,8 @@ def build [$architectures: list<string>, $operating_systems: list<string>] {
 }
 
 def build-all [] {
+    echo "building all binaries..."
+
     let architectures = ["amd64", "arm64"]
     let operating_systems = ["windows", "linux", "darwin"]
 
@@ -41,13 +44,16 @@ def build-local [] {
 }
 
 def "main build-all" [] {
-    echo "building all binaries..."
     build-all
 }
 
-def "main build" [] {
+def "main build-local" [] {
     build-local
-    build-all
+}
+
+def "main build" [] {
+    main build-local
+    main build-all
 }
 
 def main [] {}

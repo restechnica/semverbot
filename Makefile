@@ -1,11 +1,8 @@
 # make sure targets do not conflict with file and folder names
 .PHONY: build clean test
 
-BIN = bin
-GOBUILD = go build
-
-simple-build:
-	@nu run.nu build
+build-prerelease:
+	@nu run.nu build-local
 
 # build the project
 build:
