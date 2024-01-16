@@ -6,7 +6,7 @@ on:
 
 env:
   NUSHELL_VERSION: 0.88.0
-  
+
 jobs:
   build:
     name: pipeline
@@ -24,20 +24,35 @@ jobs:
         with:
           version: ${{ env.NUSHELL_VERSION }}
 
+      - name: set up path
+        run: |
+          mkdir bin
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+
       - name: provision
         run: make provision
 
       - name: check
         run: make check
 
-      - name: build
-        run: make build
-
       - name: test
         run: make test
 
+      - name: build prerelease
+        run: |
+          make build-prerelease
+          sbot update version --debug
+          release_version="$(sbot predict version --debug)"
+          echo "RELEASE_VERSION=${release_version}" >> $GITHUB_ENV
+
+      - name: build
+        run: |
+          make build
+          mv bin/sbot-linux-amd64 bin/sbot
+          sbot version
+
       - name: release
         run: |
-          ./bin/sbot update version --debug
-          ./bin/sbot release version --debug
-          ./bin/sbot push version --debug
+          sbot update version --debug
+          sbot release version --debug
+          sbot push version --debug

@@ -35,6 +35,9 @@ jobs:
       - name: check
         run: make check
 
+      - name: test
+        run: make test
+
       - name: build prerelease
         run: |
           make build-prerelease
@@ -43,7 +46,7 @@ jobs:
           echo "RELEASE_VERSION=${release_version}" >> $GITHUB_ENV
 
       - name: build
-        run: make build
-
-      - name: test
-        run: make test
+        run: |
+          make build
+          mv bin/sbot-linux-amd64 bin/sbot
+          sbot version
