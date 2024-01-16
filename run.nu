@@ -47,6 +47,7 @@ def "main build-all" [] {
 
 def "main build" [] {
     build-local
+    build-all
 }
 
 def main [] {}
