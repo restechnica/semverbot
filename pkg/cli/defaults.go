@@ -7,6 +7,9 @@ import (
 )
 
 var (
+	// DefaultAdditionalConfigFilePaths additional default relative filepaths to the config file.
+	DefaultAdditionalConfigFilePaths = []string{".sbot.toml", ".semverbot/config.toml", ".sbot/config.toml"}
+
 	// DefaultConfigFilePath the default relative filepath to the config file.
 	DefaultConfigFilePath = internal.DefaultConfigFilePath
 
@@ -50,7 +53,6 @@ delimiters = "%s"
 
 [modes.git-commit]
 delimiters = "%s"
-
 `
 
 	return fmt.Sprintf(

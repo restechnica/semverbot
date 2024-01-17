@@ -127,7 +127,14 @@ Increments the `patch` level.
 
 ## How to configure
 
-`sbot` supports a configuration file. It looks for a `.semverbot.toml` file in the current working directory by default.
+`sbot` supports a configuration file. It looks in the current working directory by default.
+
+Supported default paths:
+- `.semverbot.toml`
+- `.sbot.toml`
+- `.semverbot/config.toml`
+- `.sbot/config.toml`
+
 `.json` and `.yaml` formats are not officially supported, but might work. Using `.toml` is highly recommended.
 
 ### Defaults
@@ -157,7 +164,7 @@ major = ["release"]
 delimiters = "/"
 
 [modes.git-commit]
-delimiters = "[]"
+delimiters = "[]/"
 ```
 
 ## Configuration properties
@@ -224,7 +231,9 @@ A string of delimiters which are used to split a git commit message.
 e.g. delimiters `"[]"` will split `[feature] some-feature` into `["feature", " some-feature"]`,
 and the `feature` and ` some-feature` strings will be matched against semver map values.
 
-Defaults to `"[]"` due to its popular use in git commit messages.
+Defaults to `"[]/"` due to their popular use in git commit messages. The "/" character is often used in pull request
+commit messages on GitHub, GitLab and Bitbucket. If somehow the branch name recognition
+fails, the merge commit message is used as backup.
 
 ## Examples
 
@@ -284,7 +293,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        - 
+        
       - name: set up path
         run: |
           mkdir bin
@@ -307,7 +316,7 @@ jobs:
           echo "current version: ${current_version}"
           echo "next version: ${release_version}"
           
-      ... build / publish ...
+      # ... build / publish ...
           
       - name: release version
         run: |

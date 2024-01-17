@@ -10,7 +10,7 @@ const (
 	DefaultGitBranchDelimiters = "/"
 
 	// DefaultGitCommitDelimiters the default delimiters used by the git-commit mode.
-	DefaultGitCommitDelimiters = "[]"
+	DefaultGitCommitDelimiters = "[]/"
 
 	// DefaultGitTagsPrefix the default prefix prepended to git tags.
 	DefaultGitTagsPrefix = "v"

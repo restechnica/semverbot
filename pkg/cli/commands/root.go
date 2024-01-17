@@ -3,7 +3,6 @@ package commands
 import (
 	"errors"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/rs/zerolog"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/restechnica/semverbot/pkg/cli"
 	v1 "github.com/restechnica/semverbot/pkg/cli/commands/v1"
+	"github.com/restechnica/semverbot/pkg/ext/viperx"
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
@@ -49,19 +49,18 @@ func NewRootCommand() *cobra.Command {
 // RootCommandPersistentPreRunE runs before the command and any subcommand runs.
 // Returns an error if it failed.
 func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error) {
-	// silence usage and errors because errors at this point are unrelated to CLI usage errors
-	cmd.SilenceErrors = true
+	// silence usage output on error because errors at this point are unrelated to CLI usage
 	cmd.SilenceUsage = true
 
 	ConfigureLogging()
 
 	log.Debug().Str("command", "root").Msg("starting pre-run...")
 
-	log.Debug().Msg("loading default config...")
+	log.Debug().Msg("loading default config values...")
 
-	LoadDefaultConfig()
+	LoadDefaultConfigValues()
 
-	if err = LoadConfig(); err != nil {
+	if err = LoadConfigFile(cmd); err != nil {
 		return err
 	}
 
@@ -74,6 +73,9 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 	if err = SetGitConfigIfConfigured(); err != nil {
 		return err
 	}
+
+	// silence errors which at this point are unrelated to CLI (cobra/viper) errors
+	cmd.SilenceErrors = false
 
 	return err
 }
@@ -94,27 +96,44 @@ func SetLogLevel() {
 	}
 }
 
-// LoadConfig loads the SemverBot configuration file.
-// Returns an error if it fails.
-func LoadConfig() (err error) {
-	viper.AddConfigPath(filepath.Dir(cli.ConfigFlag))
-	viper.SetConfigName(strings.TrimSuffix(filepath.Base(cli.ConfigFlag), filepath.Ext(cli.ConfigFlag)))
-	viper.SetConfigType(strings.Split(filepath.Ext(cli.ConfigFlag), ".")[1])
+// LoadConfigFile loads the SemverBot configuration file.
+// If the config flag was used, it will try to load only that path.
+// If the config flag was not used, multiple default config file paths will be tried.
+// Returns no error if config files are not found, returns an error if it fails otherwise.
+func LoadConfigFile(cmd *cobra.Command) (err error) {
+	configFlag := cmd.Flag("config")
 
-	log.Debug().Str("path", cli.ConfigFlag).Msg("loading config...")
-
-	if err = viper.ReadInConfig(); err != nil {
-		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
-			log.Warn().Msg("config file not found")
-			return nil
+	if configFlag.Changed {
+		if err = viperx.LoadConfig(cli.ConfigFlag); err != nil {
+			if errors.As(err, &viper.ConfigFileNotFoundError{}) {
+				log.Warn().Msgf("config file %s not found", cli.ConfigFlag)
+				return nil
+			}
 		}
+
+		return err
+	}
+
+	paths := append([]string{cli.DefaultConfigFilePath}, cli.DefaultAdditionalConfigFilePaths...)
+
+	for _, path := range paths {
+		if err = viperx.LoadConfig(path); err == nil {
+			return err
+		}
+
+		if !errors.As(err, &viper.ConfigFileNotFoundError{}) {
+			return err
+		}
+
+		err = nil
+		log.Warn().Msgf("config file %s not found", path)
 	}
 
 	return err
 }
 
-// LoadDefaultConfig loads the default SemverBot config.
-func LoadDefaultConfig() {
+// LoadDefaultConfigValues loads the default SemverBot config.
+func LoadDefaultConfigValues() {
 	viper.SetDefault(cli.GitTagsPrefixConfigKey, cli.DefaultGitTagsPrefix)
 	viper.SetDefault(cli.ModeConfigKey, cli.DefaultMode)
 	viper.SetDefault(cli.ModesGitBranchDelimitersConfigKey, cli.DefaultGitBranchDelimiters)
