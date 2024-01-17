@@ -157,7 +157,7 @@ major = ["release"]
 delimiters = "/"
 
 [modes.git-commit]
-delimiters = "[]"
+delimiters = "[]/"
 ```
 
 ## Configuration properties
@@ -224,7 +224,9 @@ A string of delimiters which are used to split a git commit message.
 e.g. delimiters `"[]"` will split `[feature] some-feature` into `["feature", " some-feature"]`,
 and the `feature` and ` some-feature` strings will be matched against semver map values.
 
-Defaults to `"[]"` due to its popular use in git commit messages.
+Defaults to `"[]/"` due to their popular use in git commit messages. The "/" character is often used in pull request
+commit messages on GitHub, GitLab and Bitbucket. If somehow the branch name recognition
+fails, the merge commit message is used as backup.
 
 ## Examples
 
