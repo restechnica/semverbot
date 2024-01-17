@@ -97,23 +97,26 @@ func SetLogLevel() {
 }
 
 // LoadConfigFile loads the SemverBot configuration file.
-// If the config flag was used, it will only try to load that path.
+// If the config flag was used, it will try to load only that path.
 // If the config flag was not used, multiple default config file paths will be tried.
 // Returns no error if config files are not found, returns an error if it fails otherwise.
 func LoadConfigFile(cmd *cobra.Command) (err error) {
 	configFlag := cmd.Flag("config")
 
-	if err = viperx.LoadConfig(cli.ConfigFlag); err != nil {
-		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
-			log.Warn().Msgf("config file %s not found", cli.ConfigFlag)
+	if configFlag.Changed {
+		if err = viperx.LoadConfig(cli.ConfigFlag); err != nil {
+			if errors.As(err, &viper.ConfigFileNotFoundError{}) {
+				log.Warn().Msgf("config file %s not found", cli.ConfigFlag)
+				return nil
+			}
 		}
 
-		if configFlag.Changed {
-			return nil
-		}
+		return err
 	}
 
-	for _, path := range cli.DefaultAdditionalConfigFilePaths {
+	paths := append([]string{cli.DefaultConfigFilePath}, cli.DefaultAdditionalConfigFilePaths...)
+
+	for _, path := range paths {
 		if err = viperx.LoadConfig(path); err == nil {
 			return err
 		}
@@ -122,6 +125,7 @@ func LoadConfigFile(cmd *cobra.Command) (err error) {
 			return err
 		}
 
+		err = nil
 		log.Warn().Msgf("config file %s not found", path)
 	}
 
