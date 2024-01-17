@@ -2,7 +2,7 @@
 .PHONY: build clean test
 
 build-prerelease:
-	@nu run.nu build-local
+	@nu run.nu build
 
 # build the project
 build:

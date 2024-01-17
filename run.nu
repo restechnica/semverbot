@@ -2,8 +2,11 @@
 
 const output_path = "bin"
 
-def build [architectures: list<string>, operating_systems: list<string>] {
-    const go_import_path = "github.com/restechnica/semverbot"
+def build-all [build_options: list<string>] {
+    print "building all binaries..."
+
+    let architectures = ["amd64", "arm64"]
+    let operating_systems = ["windows", "linux", "darwin"]
 
     $architectures | each { |arch|
         $operating_systems | each { |os|
@@ -16,44 +19,42 @@ def build [architectures: list<string>, operating_systems: list<string>] {
                 $binary_path = $"($binary_path).exe"
             }
 
+            let options =  ["build", "-o",  $binary_path] ++ $build_options
 
-            let version =  $env.RELEASE_VERSION? | default "dev"
-
-            let ldflags = [
-                $"-X ($go_import_path)/internal/ldflags.Version=($version)"
-            ] | str join ' '
-
-            go build -o $binary_path -ldflags $ldflags
-            echo $"built ($binary_path)"
+            run-external go $options
+            print $"built ($binary_path)"
         }
     }
 }
 
-def build-all [] {
-    echo "building all binaries..."
-
-    let architectures = ["amd64", "arm64"]
-    let operating_systems = ["windows", "linux", "darwin"]
-
-    build $architectures $operating_systems
+def build-local [build_options: list<string>] {
+    print "building local binary..."
+    let binary_path = $"($output_path)/sbot"
+    let options = ["build", "-o", $binary_path] ++ $build_options
+    run-external go $options
+    print $"built ($binary_path)"
 }
 
-def build-local [] {
-    echo "building local binary..."
-    go build -o $"($output_path)/sbot"
+def get-ldflags [version: string] {
+    const go_import_path = "github.com/restechnica/semverbot"
+
+    let ldflags = [
+        $"\"-X ($go_import_path)/internal/ldflags.Version=($version)\""
+    ] | str join ' '
+
+    return $ldflags
 }
 
-def "main build-all" [] {
-    build-all
-}
+def "main build" [--all, --version: string = "dev"] {
+    let ldflags = get-ldflags $version
 
-def "main build-local" [] {
-    build-local
-}
+    let options: list<string> = ["-ldflags", $ldflags]
 
-def "main build" [] {
-    main build-local
-    main build-all
+    if $all {
+        build-all $options
+    } else {
+        build-local $options
+    }
 }
 
 def main [] {}

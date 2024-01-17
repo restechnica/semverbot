@@ -40,14 +40,13 @@ jobs:
 
       - name: build prerelease
         run: |
-          make build-prerelease
+          nu run.nu build
+          sbot version
           sbot update version --debug
-          release_version="$(sbot predict version --debug)"
-          echo "RELEASE_VERSION=${release_version}" >> $GITHUB_ENV
 
       - name: build
         run: |
-          make build
+          nu run.nu build --all --version "$(sbot predict version --debug)"
           cp bin/sbot-linux-amd64 bin/sbot
           sbot version
 
