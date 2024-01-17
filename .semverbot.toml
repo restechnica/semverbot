@@ -20,4 +20,4 @@ major = ["release"]
 delimiters = "/"
 
 [modes.git-commit]
-delimiters = "[]"
+delimiters = "[]/"
