@@ -42,12 +42,12 @@ jobs:
 
       - name: build prerelease
         run: |
-          nu run.nu build
+          nu main.nu build
           sbot version
           sbot update version --debug
 
       - name: build
         run: |
-          nu run.nu build --all --version "$(sbot predict version --debug)"
+          nu main.nu build --all --version "$(sbot predict version --debug)"
           cp bin/sbot-linux-amd64 bin/sbot
           sbot version
