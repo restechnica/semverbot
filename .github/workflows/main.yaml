@@ -6,7 +6,7 @@ on:
 
 env:
   GO_VERSION: 1.21
-  NUSHELL_VERSION: 0.88.0
+  NUSHELL_VERSION: 0.91.0
 
 jobs:
   build:
