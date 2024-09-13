@@ -13,13 +13,14 @@ import (
 // API an API to work with versions.
 type API struct {
 	Prefix string
+	Suffix string
 	GitAPI git.API
 }
 
 // NewAPI creates a new version API.
 // Returns the new API.
-func NewAPI(prefix string) API {
-	return API{Prefix: prefix, GitAPI: git.NewCLI()}
+func NewAPI(prefix string, suffix string) API {
+	return API{Prefix: prefix, Suffix: suffix, GitAPI: git.NewCLI()}
 }
 
 // GetVersion gets the latest valid semver version from the git tags.
@@ -35,11 +36,11 @@ func (api API) GetVersion() (currentVersion string, err error) {
 	// strip all newlines
 	var versions = strings.Fields(tags)
 
-	if currentVersion, err = semver.Find(api.Prefix, versions); err != nil {
+	if currentVersion, err = semver.Find(api.Prefix, api.Suffix, versions); err != nil {
 		return currentVersion, err
 	}
 
-	return semver.Trim(api.Prefix, currentVersion)
+	return semver.Trim(api.Prefix, api.Suffix, currentVersion)
 }
 
 // GetVersionOrDefault gets the current version or a default version if it failed.
@@ -63,8 +64,15 @@ func (api API) GetVersionOrDefault(defaultVersion string) (version string) {
 // PredictVersion increments a version based on a modes.Mode.
 // Returns the next version or an error if the increment failed.
 func (api API) PredictVersion(version string, mode modes.Mode) (string, error) {
+	var err error
+
 	log.Info().Msg("predicting version...")
-	return mode.Increment(api.Prefix, version)
+
+	version, err = mode.Increment(api.Prefix, api.Suffix, version)
+
+	log.Info().Msg(version)
+
+	return version, err
 }
 
 // ReleaseVersion releases a version by creating an annotated git tag with a prefix.
@@ -72,7 +80,8 @@ func (api API) PredictVersion(version string, mode modes.Mode) (string, error) {
 func (api API) ReleaseVersion(version string) (err error) {
 	log.Info().Msg("releasing version...")
 	var prefixedVersion = AddPrefix(version, api.Prefix)
-	return api.GitAPI.CreateAnnotatedTag(prefixedVersion)
+	var prefixedAndSuffixedVersion = AddSuffix(prefixedVersion, api.Suffix)
+	return api.GitAPI.CreateAnnotatedTag(prefixedAndSuffixedVersion)
 }
 
 // PushVersion pushes a version by pushing a git tag with a prefix.
@@ -80,7 +89,8 @@ func (api API) ReleaseVersion(version string) (err error) {
 func (api API) PushVersion(version string) (err error) {
 	log.Info().Msg("pushing version...")
 	var prefixedVersion = AddPrefix(version, api.Prefix)
-	return api.GitAPI.PushTag(prefixedVersion)
+	var prefixedAndSuffixedVersion = AddSuffix(prefixedVersion, api.Suffix)
+	return api.GitAPI.PushTag(prefixedAndSuffixedVersion)
 }
 
 // UpdateVersion updates the version by making the git repo unshallow and by fetching all git tags.

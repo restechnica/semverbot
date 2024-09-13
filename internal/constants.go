@@ -15,6 +15,9 @@ const (
 	// DefaultGitTagsPrefix the default prefix prepended to git tags.
 	DefaultGitTagsPrefix = "v"
 
+	// DefaultGitTagsSuffix the default prefix prepended to git tags.
+	DefaultGitTagsSuffix = ""
+
 	// DefaultMode the default mode for incrementing versions.
 	DefaultMode = modes.Auto
 

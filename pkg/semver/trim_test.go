@@ -16,6 +16,7 @@ func TestTrim(t *testing.T) {
 		Patch    string
 		Prebuild string
 		Prefix   string
+		Suffix   string
 	}
 
 	var tests = []Test{
@@ -24,23 +25,30 @@ func TestTrim(t *testing.T) {
 		{Name: "Minor", Major: "0", Minor: "2", Patch: "0"},
 		{Name: "Major", Major: "3", Minor: "0", Patch: "0"},
 		{Name: "DiscardPrefix", Major: "1", Minor: "0", Patch: "0", Prefix: "v"},
+		{Name: "DiscardSuffix", Major: "1", Minor: "0", Patch: "0", Suffix: "a"},
+		{Name: "DiscardSuffixAlt", Major: "1", Minor: "0", Patch: "0", Suffix: "-alt"},
 		{Name: "DiscardPrebuild", Major: "2", Minor: "0", Patch: "0", Prebuild: "-pre+001"},
 	}
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-			var version = fmt.Sprintf(`%s%s.%s.%s%s`, test.Prefix, test.Major, test.Minor, test.Patch,
-				test.Prebuild)
+			var version = fmt.Sprintf(`%s%s.%s.%s%s%s`, test.Prefix, test.Major, test.Minor, test.Patch,
+				test.Suffix, test.Prebuild)
 
 			var want = strings.ReplaceAll(version, test.Prefix, "")
+			want = strings.ReplaceAll(want, test.Suffix, "")
 			want = strings.ReplaceAll(want, test.Prebuild, "")
 
-			var got, err = Trim(test.Prefix, version)
+			var got, err = Trim(test.Prefix, test.Suffix, version)
 
 			assert.Equal(t, want, got, `want: "%s", got: "%s"`, want, got)
 
 			if test.Prefix != "" {
 				assert.False(t, strings.HasPrefix(got, test.Prefix))
+			}
+
+			if test.Suffix != "" {
+				assert.False(t, strings.HasSuffix(got, test.Suffix))
 			}
 
 			if test.Prebuild != "" {
@@ -62,7 +70,7 @@ func TestTrim(t *testing.T) {
 
 	for _, test := range errorTests {
 		t.Run(test.Name, func(t *testing.T) {
-			var _, got = Trim("v", test.Version)
+			var _, got = Trim("v", "a", test.Version)
 			assert.Error(t, got)
 		})
 	}

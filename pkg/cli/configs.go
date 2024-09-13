@@ -10,6 +10,9 @@ const (
 	// GitTagsPrefixConfigKey key for the git tags prefix config.
 	GitTagsPrefixConfigKey = "git.tags.prefix"
 
+	// GitTagsSuffixConfigKey key for the git tags suffix config.
+	GitTagsSuffixConfigKey = "git.tags.suffix"
+
 	// ModeConfigKey key for the mode config.
 	ModeConfigKey = "mode"
 

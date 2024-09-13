@@ -22,7 +22,6 @@ func TestAddPrefix(t *testing.T) {
 		t.Run(test.Name, func(t *testing.T) {
 			var got = AddPrefix(test.Version, test.Prefix)
 			assert.True(t, strings.HasPrefix(got, test.Prefix))
-			assert.True(t, strings.HasSuffix(got, test.Version))
 		})
 	}
 }

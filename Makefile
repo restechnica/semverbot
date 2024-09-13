@@ -1,15 +1,21 @@
 # make sure targets do not conflict with file and folder names
 .PHONY: build clean test
 
-build-prerelease:
-	@nu run.nu build
-
 # build the project
-build:
-	@nu run.nu build-all
+build: build-prerelease
+
+build-prerelease:
+	@nu main.nu build
+
+build-all:
+	@nu main.nu build --all --version "$$(sbot predict version --debug)"
 
 # run quality assessment checks
 check:
+	@echo "Running go version check ..."
+	@go version | grep -q 'go1.21' || (echo "Go version 1.21 required. Your version is '$$(go version)'" && exit 1)
+	@echo "Ok!"
+
 	@echo "Running gofmt ..."
 	@! gofmt -s -d -l . 2>&1 | grep -vE '^\.git/'
 	@echo "Ok!"
@@ -41,7 +47,7 @@ provision:
 
 # run the binary
 run:
-	./bin/sbot
+	./bin/sbot $(arg)
 
 # run tests
 test:

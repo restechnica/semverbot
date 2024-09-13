@@ -22,6 +22,9 @@ var (
 	// DefaultGitTagsPrefix the default prefix prepended to git tags.
 	DefaultGitTagsPrefix = internal.DefaultGitTagsPrefix
 
+	// DefaultGitTagsSuffix the default suffix prepended to git tags.
+	DefaultGitTagsSuffix = internal.DefaultGitTagsSuffix
+
 	// DefaultMode the default mode for incrementing versions.
 	DefaultMode = internal.DefaultMode
 
@@ -40,6 +43,7 @@ name = "semverbot"
 
 [git.tags]
 prefix = "%s"
+suffix = "%s"
 
 [semver]
 patch = ["fix", "bug"]
@@ -59,6 +63,7 @@ delimiters = "%s"
 		template,
 		DefaultMode,
 		DefaultGitTagsPrefix,
+		DefaultGitTagsSuffix,
 		DefaultGitBranchDelimiters,
 		DefaultGitCommitDelimiters,
 	)

@@ -39,7 +39,7 @@ def get-ldflags [version: string] {
     const go_import_path = "github.com/restechnica/semverbot"
 
     let ldflags = [
-        $"\"-X ($go_import_path)/internal/ldflags.Version=($version)\""
+        $"-X ($go_import_path)/internal/ldflags.Version=($version)"
     ] | str join ' '
 
     return $ldflags

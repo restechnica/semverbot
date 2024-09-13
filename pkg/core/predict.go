@@ -11,6 +11,7 @@ type PredictVersionOptions struct {
 	GitBranchDelimiters string
 	GitCommitDelimiters string
 	GitTagsPrefix       string
+	GitTagsSuffix       string
 	Mode                string
 	SemverMap           semver.Map
 }
@@ -22,7 +23,7 @@ func PredictVersion(options *PredictVersionOptions) (prediction string, err erro
 	var gitBranchMode = modes.NewGitBranchMode(options.GitBranchDelimiters, options.SemverMap)
 	var gitCommitMode = modes.NewGitCommitMode(options.GitCommitDelimiters, options.SemverMap)
 
-	var versionAPI = versions.NewAPI(options.GitTagsPrefix)
+	var versionAPI = versions.NewAPI(options.GitTagsPrefix, options.GitTagsSuffix)
 	var version = versionAPI.GetVersionOrDefault(options.DefaultVersion)
 
 	var modeAPI = modes.NewAPI(gitBranchMode, gitCommitMode)

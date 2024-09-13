@@ -27,7 +27,7 @@ func NewGitCommitMode(delimiters string, semverMap semver.Map) GitCommitMode {
 
 // Increment increments a given version based on the latest git commit message.
 // Returns the incremented version or an error if it failed to detect the mode based on the git commit.
-func (mode GitCommitMode) Increment(prefix string, targetVersion string) (nextVersion string, err error) {
+func (mode GitCommitMode) Increment(prefix string, suffix string, targetVersion string) (nextVersion string, err error) {
 	var message string
 	var detectedMode Mode
 
@@ -39,7 +39,7 @@ func (mode GitCommitMode) Increment(prefix string, targetVersion string) (nextVe
 		return
 	}
 
-	return detectedMode.Increment(prefix, targetVersion)
+	return detectedMode.Increment(prefix, suffix, targetVersion)
 }
 
 // DetectMode detects the mode (patch, minor, major) based on a git commit message.

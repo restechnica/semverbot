@@ -41,6 +41,7 @@ func PredictVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 		GitBranchDelimiters: viper.GetString(cli.ModesGitBranchDelimitersConfigKey),
 		GitCommitDelimiters: viper.GetString(cli.ModesGitCommitDelimitersConfigKey),
 		GitTagsPrefix:       viper.GetString(cli.GitTagsPrefixConfigKey),
+		GitTagsSuffix:       viper.GetString(cli.GitTagsSuffixConfigKey),
 		Mode:                viper.GetString(cli.ModeConfigKey),
 		SemverMap:           viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
 	}

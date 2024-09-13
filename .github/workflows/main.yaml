@@ -40,15 +40,15 @@ jobs:
       - name: test
         run: make test
 
-      - name: build prerelease
+      - name: build-prerelease
         run: |
-          nu main.nu build
+          make build
           sbot version
           sbot update version --debug
 
-      - name: build
+      - name: build-all
         run: |
-          nu main.nu build --all --version "$(sbot predict version --debug)"
+          make build-all
           cp bin/sbot-linux-amd64 bin/sbot
           sbot version
 

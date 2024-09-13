@@ -20,10 +20,10 @@ func NewMajorMode() MajorMode {
 
 // Increment increments a given version using the MajorMode.
 // Returns the incremented version.
-func (mode MajorMode) Increment(prefix string, targetVersion string) (nextVersion string, err error) {
+func (mode MajorMode) Increment(prefix string, suffix string, targetVersion string) (nextVersion string, err error) {
 	var version blangsemver.Version
 
-	if version, err = semver.Parse(prefix, targetVersion); err != nil {
+	if version, err = semver.Parse(prefix, suffix, targetVersion); err != nil {
 		return
 	}
 

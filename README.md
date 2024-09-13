@@ -152,6 +152,7 @@ name = "semverbot"
 
 [git.tags]
 prefix = "v"
+suffix = ""
 
 [semver]
 patch = ["fix", "bug"]
@@ -200,6 +201,13 @@ Different platforms and environments work with different (or without) version pr
 The `"v"` prefix, e.g. `v1.0.1` is used by default due to its popularity, e.g. some Golang tools completely depend on it.
 
 Note: `sbot` will always display the version without the prefix.
+
+### git.tags.suffix
+
+In case you need a version suffix, this option enables you to set whatever you would like to work with.
+By default, no suffix is used.
+
+Note: `sbot` will always display the version without the suffix.
 
 ### semver
 
