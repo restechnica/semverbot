@@ -17,5 +17,7 @@ func LoadConfig(path string) (err error) {
 
 	log.Debug().Str("path", path).Msg("loading config file...")
 
+	viper.AutomaticEnv()
+
 	return viper.ReadInConfig()
 }

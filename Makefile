@@ -47,7 +47,7 @@ provision:
 
 # run the binary
 run:
-	./bin/sbot $(arg)
+	$(env) && ./bin/sbot $(args)
 
 # run tests
 test:

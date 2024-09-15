@@ -58,6 +58,8 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 
 	log.Debug().Msg("loading default config values...")
 
+	LoadEnvironmentVariablesConfig()
+
 	LoadDefaultConfigValues()
 
 	if err = LoadConfigFile(cmd); err != nil {
@@ -94,6 +96,12 @@ func SetLogLevel() {
 	if cli.DebugFlag {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
+}
+
+// LoadEnvironmentVariablesConfig
+func LoadEnvironmentVariablesConfig() {
+	viper.SetEnvPrefix("SBOT")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 }
 
 // LoadConfigFile loads the SemverBot configuration file.

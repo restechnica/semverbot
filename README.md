@@ -243,6 +243,17 @@ Defaults to `"[]/"` due to their popular use in git commit messages. The "/" cha
 commit messages on GitHub, GitLab and Bitbucket. If somehow the branch name recognition
 fails, the merge commit message is used as backup.
 
+## Using Environment Variables
+
+You can use environment variables to override configuration properties. The environment variable name is the uppercase 
+version of the configuration property name, prefixed with `SBOT_`. For example, to override the `git.tags.suffix` 
+property, you can set the `SBOT_GIT_TAGS_SUFFIX` environment variable.
+
+```shell
+export SBOT_GIT_TAGS_SUFFIX="-beta"
+sbot release version
+```
+
 ## Examples
 
 ### Local
