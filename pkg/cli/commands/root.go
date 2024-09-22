@@ -58,6 +58,8 @@ func RootCommandPersistentPreRunE(cmd *cobra.Command, args []string) (err error)
 
 	log.Debug().Msg("loading default config values...")
 
+	LoadEnvironmentVariablesConfig()
+
 	LoadDefaultConfigValues()
 
 	if err = LoadConfigFile(cmd); err != nil {
@@ -94,6 +96,12 @@ func SetLogLevel() {
 	if cli.DebugFlag {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
+}
+
+// LoadEnvironmentVariablesConfig
+func LoadEnvironmentVariablesConfig() {
+	viper.SetEnvPrefix("SBOT")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 }
 
 // LoadConfigFile loads the SemverBot configuration file.
@@ -135,6 +143,7 @@ func LoadConfigFile(cmd *cobra.Command) (err error) {
 // LoadDefaultConfigValues loads the default SemverBot config.
 func LoadDefaultConfigValues() {
 	viper.SetDefault(cli.GitTagsPrefixConfigKey, cli.DefaultGitTagsPrefix)
+	viper.SetDefault(cli.GitTagsSuffixConfigKey, cli.DefaultGitTagsSuffix)
 	viper.SetDefault(cli.ModeConfigKey, cli.DefaultMode)
 	viper.SetDefault(cli.ModesGitBranchDelimitersConfigKey, cli.DefaultGitBranchDelimiters)
 	viper.SetDefault(cli.ModesGitCommitDelimitersConfigKey, cli.DefaultGitCommitDelimiters)
@@ -144,8 +153,8 @@ func LoadDefaultConfigValues() {
 // LoadFlagsIntoConfig loads root command flags.
 // Returns an error if it fails.
 func LoadFlagsIntoConfig(cmd *cobra.Command) (err error) {
+	//err = viper.BindPFlag("git.tags.prefix", cmd.Flags().Lookup("prefix"))
 	return err
-	//return viper.BindPFlag("git.tags.fetch", cmd.Flags().Lookup("fetch")) -- example on how to load flags
 }
 
 // SetGitConfigIfConfigured Sets the git config only when the SemverBot config exists and the git config does not exist.
@@ -161,7 +170,6 @@ func SetGitConfigIfConfigured() (err error) {
 		if value, err = gitAPI.SetConfigIfNotSet("user.email", email); err != nil {
 			return err
 		}
-
 	}
 
 	log.Debug().Str("user.email", strings.Trim(value, "\n")).Msg("")
@@ -173,7 +181,6 @@ func SetGitConfigIfConfigured() (err error) {
 		if value, err = gitAPI.SetConfigIfNotSet("user.name", name); err != nil {
 			return err
 		}
-
 	}
 
 	log.Debug().Str("user.name", strings.Trim(value, "\n")).Msg("")

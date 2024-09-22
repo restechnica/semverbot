@@ -28,11 +28,13 @@ func PushVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 	var options = &core.PushVersionOptions{
 		DefaultVersion: cli.DefaultVersion,
 		GitTagsPrefix:  viper.GetString(cli.GitTagsPrefixConfigKey),
+		GitTagsSuffix:  viper.GetString(cli.GitTagsSuffixConfigKey),
 	}
 
 	log.Debug().
 		Str("default", options.DefaultVersion).
 		Str("prefix", options.GitTagsPrefix).
+		Str("suffix", options.GitTagsSuffix).
 		Msg("options")
 
 	if err = core.PushVersion(options); err != nil {

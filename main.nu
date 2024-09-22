@@ -40,6 +40,7 @@ def get-ldflags [version: string] {
 
     let ldflags = [
         $"\"-X ($go_import_path)/internal/ldflags.Version=($version)\""
+        # $"-X ($go_import_path)/internal/ldflags.Version=($version)"
     ] | str join ' '
 
     return $ldflags

@@ -28,6 +28,7 @@ func GetVersionCommandRun(cmd *cobra.Command, args []string) {
 
 	var options = &core.GetVersionOptions{
 		GitTagPrefix:   viper.GetString(cli.GitTagsPrefixConfigKey),
+		GitTagSuffix:   viper.GetString(cli.GitTagsSuffixConfigKey),
 		DefaultVersion: cli.DefaultVersion,
 	}
 

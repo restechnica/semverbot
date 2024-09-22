@@ -39,6 +39,7 @@ func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 		GitBranchDelimiters: viper.GetString(cli.ModesGitBranchDelimitersConfigKey),
 		GitCommitDelimiters: viper.GetString(cli.ModesGitCommitDelimitersConfigKey),
 		GitTagsPrefix:       viper.GetString(cli.GitTagsPrefixConfigKey),
+		GitTagsSuffix:       viper.GetString(cli.GitTagsSuffixConfigKey),
 		Mode:                viper.GetString(cli.ModeConfigKey),
 		SemverMap:           viper.GetStringMapStringSlice(cli.SemverMapConfigKey),
 	}
@@ -47,6 +48,7 @@ func ReleaseVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 		Str("default", predictOptions.DefaultVersion).
 		Str("mode", predictOptions.Mode).
 		Str("prefix", predictOptions.GitTagsPrefix).
+		Str("suffix", predictOptions.GitTagsSuffix).
 		Msg("options")
 
 	if err = core.ReleaseVersion(predictOptions); err != nil {

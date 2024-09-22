@@ -6,11 +6,12 @@ import (
 
 type UpdateVersionOptions struct {
 	GitTagsPrefix string
+	GitTagsSuffix string
 }
 
 // UpdateVersion updates to the latest version.
 // Returns an error if updating the version went wrong.
 func UpdateVersion(updateOptions *UpdateVersionOptions) error {
-	var versionAPI = versions.NewAPI(updateOptions.GitTagsPrefix)
+	var versionAPI = versions.NewAPI(updateOptions.GitTagsPrefix, updateOptions.GitTagsSuffix)
 	return versionAPI.UpdateVersion()
 }

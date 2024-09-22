@@ -27,6 +27,7 @@ func UpdateVersionCommandRunE(cmd *cobra.Command, args []string) (err error) {
 
 	var updateOptions = &core.UpdateVersionOptions{
 		GitTagsPrefix: viper.GetString(cli.GitTagsPrefixConfigKey),
+		GitTagsSuffix: viper.GetString(cli.GitTagsSuffixConfigKey),
 	}
 
 	if err = core.UpdateVersion(updateOptions); err != nil {

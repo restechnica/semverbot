@@ -7,7 +7,7 @@ import (
 // ReleaseVersion releases a new version.
 // Returns an error if anything went wrong with the prediction or releasing.
 func ReleaseVersion(predictOptions *PredictVersionOptions) error {
-	var versionAPI = versions.NewAPI(predictOptions.GitTagsPrefix)
+	var versionAPI = versions.NewAPI(predictOptions.GitTagsPrefix, predictOptions.GitTagsSuffix)
 	var predictedVersion, err = PredictVersion(predictOptions)
 
 	if err != nil {

@@ -152,6 +152,7 @@ name = "semverbot"
 
 [git.tags]
 prefix = "v"
+suffix = ""
 
 [semver]
 patch = ["fix", "bug"]
@@ -201,6 +202,13 @@ The `"v"` prefix, e.g. `v1.0.1` is used by default due to its popularity, e.g. s
 
 Note: `sbot` will always display the version without the prefix.
 
+### git.tags.suffix
+
+In case you need a version suffix, this option enables you to set whatever you would like to work with.
+By default, no suffix is used.
+
+Note: `sbot` will always display the version without the suffix.
+
 ### semver
 
 This is where you configure what you think a semver level should be mapped to.
@@ -234,6 +242,17 @@ and the `feature` and ` some-feature` strings will be matched against semver map
 Defaults to `"[]/"` due to their popular use in git commit messages. The "/" character is often used in pull request
 commit messages on GitHub, GitLab and Bitbucket. If somehow the branch name recognition
 fails, the merge commit message is used as backup.
+
+## Using Environment Variables
+
+You can use environment variables to override configuration properties. The environment variable name is the uppercase 
+version of the configuration property name, prefixed with `SBOT_`. For example, to override the `git.tags.suffix` 
+property, you can set the `SBOT_GIT_TAGS_SUFFIX` environment variable.
+
+```shell
+export SBOT_GIT_TAGS_SUFFIX="-beta"
+sbot release version
+```
 
 ## Examples
 

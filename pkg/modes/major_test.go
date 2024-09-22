@@ -10,12 +10,15 @@ func TestMajorMode_Increment(t *testing.T) {
 	type Test struct {
 		Name    string
 		Version string
+		Suffix  string
 		Want    string
 	}
 
 	var tests = []Test{
 		{Name: "IncrementMajor", Version: "0.0.0", Want: "1.0.0"},
 		{Name: "DiscardPrefix", Version: "v1.0.0", Want: "2.0.0"},
+		{Name: "DiscardSuffix", Version: "1.0.0a", Suffix: "a", Want: "1.0.0"},
+		{Name: "DiscardSuffixAlt", Version: "1.0.0-alt", Suffix: "-alt", Want: "1.0.0"},
 		{Name: "DiscardPrebuild", Version: "2.0.0-pre+001", Want: "3.0.0"},
 		{Name: "ResetMinor", Version: "4.5.0", Want: "5.0.0"},
 		{Name: "ResetPatch", Version: "3.0.4", Want: "4.0.0"},
@@ -24,7 +27,7 @@ func TestMajorMode_Increment(t *testing.T) {
 
 	for _, test := range tests {
 		var mode = NewMajorMode()
-		var got, err = mode.Increment("v", test.Version)
+		var got, err = mode.Increment("v", test.Suffix, test.Version)
 
 		assert.NoError(t, err)
 		assert.IsType(t, test.Want, got, `want: "%s, got: "%s"`, test.Want, got)
@@ -32,7 +35,7 @@ func TestMajorMode_Increment(t *testing.T) {
 
 	t.Run("ReturnErrorOnInvalidVersion", func(t *testing.T) {
 		var mode = NewMajorMode()
-		var _, got = mode.Increment("v", "invalid")
+		var _, got = mode.Increment("v", "", "invalid")
 		assert.Error(t, got)
 	})
 }

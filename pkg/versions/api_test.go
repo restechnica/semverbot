@@ -23,11 +23,12 @@ func TestAPI_GetVersion(t *testing.T) {
 	type Test struct {
 		Name    string
 		Prefix  string
+		Suffix  string
 		Version string
 	}
 
 	var tests = []Test{
-		{Name: "ReturnVersion", Prefix: "v", Version: "0.0.0"},
+		{Name: "ReturnVersion", Prefix: "v", Suffix: "", Version: "0.0.0"},
 	}
 
 	for _, test := range tests {
@@ -36,7 +37,7 @@ func TestAPI_GetVersion(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var got, err = versionAPI.GetVersion()
 
@@ -49,10 +50,11 @@ func TestAPI_GetVersion(t *testing.T) {
 		Error  error
 		Name   string
 		Prefix string
+		Suffix string
 	}
 
 	var gitErrorTests = []GitErrorTest{
-		{Name: "ReturnErrorOnGitError", Prefix: "v", Error: fmt.Errorf("some-error")},
+		{Name: "ReturnErrorOnGitError", Prefix: "v", Suffix: "", Error: fmt.Errorf("some-error")},
 	}
 
 	for _, test := range gitErrorTests {
@@ -61,7 +63,7 @@ func TestAPI_GetVersion(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var _, got = versionAPI.GetVersion()
 
@@ -74,6 +76,7 @@ func TestAPI_GetVersion(t *testing.T) {
 		Error    error
 		Name     string
 		Prefix   string
+		Suffix   string
 		Versions string
 	}
 
@@ -88,7 +91,7 @@ func TestAPI_GetVersion(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Versions, nil)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var _, got = versionAPI.GetVersion()
 
@@ -102,11 +105,12 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 	type Test struct {
 		Name    string
 		Prefix  string
+		Suffix  string
 		Version string
 	}
 
 	var tests = []Test{
-		{Name: "ReturnVersionWithoutError", Prefix: "v", Version: "0.0.0"},
+		{Name: "ReturnVersionWithoutError", Prefix: "v", Suffix: "", Version: "0.0.0"},
 	}
 
 	for _, test := range tests {
@@ -115,7 +119,7 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var got, err = versionAPI.GetVersion()
 
@@ -127,11 +131,12 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 	type ErrorTest struct {
 		Error  error
 		Prefix string
+		Suffix string
 		Name   string
 	}
 
 	var errorTests = []ErrorTest{
-		{Name: "ReturnDefaultVersionOnGitApiError", Prefix: "v", Error: fmt.Errorf("some-error")},
+		{Name: "ReturnDefaultVersionOnGitApiError", Prefix: "v", Suffix: "", Error: fmt.Errorf("some-error")},
 	}
 
 	for _, test := range errorTests {
@@ -140,7 +145,7 @@ func TestAPI_GetVersionOrDefault(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return("", test.Error)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var got = versionAPI.GetVersionOrDefault(cli.DefaultVersion)
 
@@ -154,14 +159,15 @@ func TestAPI_PredictVersion(t *testing.T) {
 		Mode    modes.Mode
 		Name    string
 		Prefix  string
+		Suffix  string
 		Version string
 		Want    string
 	}
 
 	var tests = []Test{
-		{Name: "ReturnPatchPrediction", Prefix: "v", Mode: modes.NewPatchMode(), Version: "0.0.0", Want: "0.0.1"},
-		{Name: "ReturnMinorPrediction", Prefix: "v", Mode: modes.NewMinorMode(), Version: "0.0.0", Want: "0.1.0"},
-		{Name: "ReturnMajorPrediction", Prefix: "v", Mode: modes.NewMajorMode(), Version: "0.0.0", Want: "1.0.0"},
+		{Name: "ReturnPatchPrediction", Prefix: "v", Suffix: "", Mode: modes.NewPatchMode(), Version: "0.0.0", Want: "0.0.1"},
+		{Name: "ReturnMinorPrediction", Prefix: "v", Suffix: "", Mode: modes.NewMinorMode(), Version: "0.0.0", Want: "0.1.0"},
+		{Name: "ReturnMajorPrediction", Prefix: "v", Suffix: "", Mode: modes.NewMajorMode(), Version: "0.0.0", Want: "1.0.0"},
 	}
 
 	for _, test := range tests {
@@ -170,7 +176,7 @@ func TestAPI_PredictVersion(t *testing.T) {
 			cmder.On("Output", mock.Anything, mock.Anything).Return(test.Version, nil)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var got, err = versionAPI.PredictVersion(test.Version, test.Mode)
 
@@ -183,6 +189,7 @@ func TestAPI_PredictVersion(t *testing.T) {
 		Error   error
 		Name    string
 		Prefix  string
+		Suffix  string
 		Version string
 	}
 
@@ -192,10 +199,10 @@ func TestAPI_PredictVersion(t *testing.T) {
 
 	for _, test := range errorTests {
 		t.Run(test.Name, func(t *testing.T) {
-			var versionAPI = API{Prefix: test.Prefix}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix}
 
 			var mode = mocks.NewMockMode()
-			mode.On("Increment", mock.Anything, mock.Anything).Return(test.Version, test.Error)
+			mode.On("Increment", mock.Anything, mock.Anything, mock.Anything).Return(test.Version, test.Error)
 
 			var _, got = versionAPI.PredictVersion("0.0.0", mode)
 
@@ -210,6 +217,7 @@ func TestAPI_PushVersion(t *testing.T) {
 		Mode    modes.Mode
 		Name    string
 		Prefix  string
+		Suffix  string
 		Version string
 		Want    string
 	}
@@ -217,12 +225,15 @@ func TestAPI_PushVersion(t *testing.T) {
 	var tests = []Test{
 		{Name: "PushWithPrefix", Mode: modes.NewPatchMode(), Prefix: "v", Version: "0.0.1", Want: "v0.0.1"},
 		{Name: "PushWithoutPrefix", Mode: modes.NewPatchMode(), Prefix: "", Version: "0.0.1", Want: "0.0.1"},
+		{Name: "PushWithSuffix", Mode: modes.NewPatchMode(), Prefix: "v", Suffix: "a", Version: "0.0.1", Want: "v0.0.1a"},
+		{Name: "PushWithSuffixAlt", Mode: modes.NewPatchMode(), Prefix: "v", Suffix: "-alt", Version: "0.0.1", Want: "v0.0.1-alt"},
+		{Name: "PushWithoutSuffix", Mode: modes.NewPatchMode(), Prefix: "", Suffix: "", Version: "0.0.1", Want: "0.0.1"},
 	}
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
 			var gitAPI = fakes.NewFakeGitAPI()
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var err = versionAPI.PushVersion(test.Version)
 
@@ -250,7 +261,7 @@ func TestAPI_PushVersion(t *testing.T) {
 			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: "v", GitAPI: gitAPI}
+			var versionAPI = API{Prefix: "v", Suffix: "", GitAPI: gitAPI}
 
 			var got = versionAPI.PushVersion("0.0.1")
 
@@ -265,19 +276,23 @@ func TestAPI_ReleaseVersion(t *testing.T) {
 		Mode    modes.Mode
 		Name    string
 		Prefix  string
+		Suffix  string
 		Version string
 		Want    string
 	}
 
 	var tests = []Test{
-		{Name: "PushWithPrefix", Mode: modes.NewPatchMode(), Prefix: "v", Version: "0.0.1", Want: "v0.0.1"},
-		{Name: "PushWithoutPrefix", Mode: modes.NewPatchMode(), Prefix: "", Version: "0.0.1", Want: "0.0.1"},
+		{Name: "ReleaseWithPrefix", Mode: modes.NewPatchMode(), Prefix: "v", Version: "0.0.1", Want: "v0.0.1"},
+		{Name: "ReleaseWithoutPrefix", Mode: modes.NewPatchMode(), Prefix: "", Version: "0.0.1", Want: "0.0.1"},
+		{Name: "ReleaseWithSuffix", Mode: modes.NewPatchMode(), Prefix: "v", Suffix: "a", Version: "0.0.1", Want: "v0.0.1a"},
+		{Name: "ReleaseWithSuffixAlt", Mode: modes.NewPatchMode(), Prefix: "v", Suffix: "-alt", Version: "0.0.1", Want: "v0.0.1-alt"},
+		{Name: "ReleaseWithoutSuffix", Mode: modes.NewPatchMode(), Prefix: "", Suffix: "", Version: "0.0.1", Want: "0.0.1"},
 	}
 
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
 			var gitAPI = fakes.NewFakeGitAPI()
-			var versionAPI = API{Prefix: test.Prefix, GitAPI: gitAPI}
+			var versionAPI = API{Prefix: test.Prefix, Suffix: test.Suffix, GitAPI: gitAPI}
 
 			var err = versionAPI.ReleaseVersion(test.Version)
 
@@ -305,7 +320,7 @@ func TestAPI_ReleaseVersion(t *testing.T) {
 			cmder.On("Run", mock.Anything, mock.Anything).Return(test.Error)
 
 			var gitAPI = git.CLI{Commander: cmder}
-			var versionAPI = API{Prefix: "v", GitAPI: gitAPI}
+			var versionAPI = API{Prefix: "v", Suffix: "", GitAPI: gitAPI}
 
 			var got = versionAPI.ReleaseVersion("0.0.1")
 
@@ -353,7 +368,7 @@ func TestAPI_UpdateVersion(t *testing.T) {
 
 func TestNewAPI(t *testing.T) {
 	t.Run("ValidateState", func(t *testing.T) {
-		var api = NewAPI("v")
+		var api = NewAPI("v", "")
 		assert.NotNil(t, api.GitAPI)
 	})
 }

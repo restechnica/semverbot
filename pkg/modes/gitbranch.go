@@ -28,7 +28,7 @@ func NewGitBranchMode(delimiters string, semverMap semver.Map) GitBranchMode {
 // Increment increments the semver level based on the naming of the source branch of a git merge.
 // Returns the incremented version or an error if the last git commit is not a merge or if no mode was detected
 // based on the branch name.
-func (mode GitBranchMode) Increment(prefix string, targetVersion string) (nextVersion string, err error) {
+func (mode GitBranchMode) Increment(prefix string, suffix string, targetVersion string) (nextVersion string, err error) {
 	var branchName string
 	var matchedMode Mode
 
@@ -46,7 +46,7 @@ func (mode GitBranchMode) Increment(prefix string, targetVersion string) (nextVe
 		return nextVersion, err
 	}
 
-	return matchedMode.Increment(prefix, targetVersion)
+	return matchedMode.Increment(prefix, suffix, targetVersion)
 }
 
 // DetectMode detects the mode (patch, minor, major) based on a git branch name.
