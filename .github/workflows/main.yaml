@@ -48,7 +48,7 @@ jobs:
 
       - name: build all
         run: |
-          make build all
+          make build-all
           cp bin/sbot-linux-amd64 bin/sbot
           sbot version
 
