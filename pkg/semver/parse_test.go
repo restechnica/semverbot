@@ -14,9 +14,9 @@ func TestParse(t *testing.T) {
 		Major    string
 		Minor    string
 		Patch    string
+		Prebuild string
 		Prefix   string
 		Suffix   string
-		Prebuild string
 	}
 
 	var tests = []Test{
