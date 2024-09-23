@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/restechnica/semverbot/pkg/semver"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/restechnica/semverbot/internal/mocks"
-
-	"github.com/stretchr/testify/assert"
+	"github.com/restechnica/semverbot/pkg/semver"
 )
 
 func TestGitCommitMode_GitCommitConstant(t *testing.T) {
@@ -18,91 +17,6 @@ func TestGitCommitMode_GitCommitConstant(t *testing.T) {
 
 		assert.Equal(t, want, got, `want: '%s', got: '%s'`, want, got)
 	})
-}
-
-func TestGitCommitMode_DetectMode(t *testing.T) {
-	var semverMap = semver.Map{
-		Patch: {"fix", "bug"},
-		Minor: {"feature", "feat"},
-		Major: {"release"},
-	}
-
-	type Test struct {
-		CommitMessage string
-		Delimiters    string
-		Name          string
-		SemverMap     semver.Map
-		Want          Mode
-	}
-
-	var tests = []Test{
-		{Name: "DetectPatchMode", CommitMessage: "[bug] some fix", Delimiters: "[]", SemverMap: semverMap, Want: NewPatchMode()},
-		{Name: "DetectPatchMode", CommitMessage: "[fix] some bug", Delimiters: "[]", SemverMap: semverMap, Want: NewPatchMode()},
-		{Name: "DetectMinorMode", CommitMessage: "feat(subject): some changes", Delimiters: "():", SemverMap: semverMap, Want: NewMinorMode()},
-		{Name: "DetectMinorMode", CommitMessage: "[feature] some changes", Delimiters: "[]", SemverMap: semverMap, Want: NewMinorMode()},
-		{Name: "DetectMajorMode", CommitMessage: "release/some-bug", Delimiters: "/", SemverMap: semverMap, Want: NewMajorMode()},
-	}
-
-	for _, test := range tests {
-		t.Run(test.Name, func(t *testing.T) {
-			var mode = NewGitBranchMode(test.Delimiters, test.SemverMap)
-			var got, err = mode.DetectMode(test.CommitMessage)
-
-			assert.NoError(t, err)
-			assert.IsType(t, test.Want, got, `want: '%s, got: '%s'`, test.Want, got)
-		})
-	}
-
-	type ErrorTest struct {
-		CommitMessage string
-		Delimiters    string
-		Error         error
-		Name          string
-		SemverMap     semver.Map
-	}
-
-	var errorTests = []ErrorTest{
-		{
-			Name:          "DetectNothingWithEmptySemverMap",
-			CommitMessage: "[feature] some changes",
-			Delimiters:    "[]",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name '[feature] some changes' with delimiters '[]'`),
-			SemverMap:     semver.Map{},
-		},
-		{
-			Name:          "DetectNothingWithEmptyDelimiters",
-			CommitMessage: "[feature] some changes",
-			Delimiters:    "",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name '[feature] some changes' with delimiters ''`),
-			SemverMap:     semverMap,
-		},
-		{
-			Name:          "DetectNothingWithEmptyCommitMessage",
-			CommitMessage: "",
-			Delimiters:    "/",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name '' with delimiters '/'`),
-			SemverMap:     semverMap,
-		},
-		{
-			Name:          "DetectNothingWithFaultySemverMap",
-			CommitMessage: "[feature] some changes",
-			Delimiters:    "[]",
-			Error:         fmt.Errorf(`failed to detect mode from git branch name '[feature] some changes' with delimiters '[]'`),
-			SemverMap: semver.Map{
-				"mnr": {"feature"},
-			},
-		},
-	}
-
-	for _, test := range errorTests {
-		t.Run(test.Name, func(t *testing.T) {
-			var mode = NewGitBranchMode(test.Delimiters, test.SemverMap)
-			var _, got = mode.DetectMode(test.CommitMessage)
-
-			assert.Error(t, got)
-			assert.Equal(t, test.Error, got, `want: '%s, got: '%s'`, test.Error, got)
-		})
-	}
 }
 
 func TestGitCommitMode_Increment(t *testing.T) {

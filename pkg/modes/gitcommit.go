@@ -1,9 +1,6 @@
 package modes
 
 import (
-	"fmt"
-
-	"github.com/restechnica/semverbot/internal/util"
 	"github.com/restechnica/semverbot/pkg/git"
 	"github.com/restechnica/semverbot/pkg/semver"
 )
@@ -35,40 +32,11 @@ func (mode GitCommitMode) Increment(prefix string, suffix string, targetVersion 
 		return
 	}
 
-	if detectedMode, err = mode.DetectMode(message); err != nil {
+	if detectedMode, err = DetectModeFromString(message, mode.SemverMap, mode.Delimiters); err != nil {
 		return
 	}
 
 	return detectedMode.Increment(prefix, suffix, targetVersion)
-}
-
-// DetectMode detects the mode (patch, minor, major) based on a git commit message.
-// Returns the detected mode.
-// TODO is duplicate code with GitBranchMode
-func (mode GitCommitMode) DetectMode(commitMessage string) (detected Mode, err error) {
-	for level, values := range mode.SemverMap {
-		for _, value := range values {
-			if mode.isMatch(commitMessage, value) {
-				switch level {
-				case Patch:
-					detected = NewPatchMode()
-				case Minor:
-					detected = NewMinorMode()
-				case Major:
-					detected = NewMajorMode()
-				}
-				return detected, err
-			}
-		}
-	}
-
-	return detected, fmt.Errorf(`failed to detect mode from git commit message '%s' with delimiters '%s'`,
-		commitMessage, mode.Delimiters)
-}
-
-// isMatch returns true if a string is part of commit message, after splitting the git commit message with delimiters
-func (mode GitCommitMode) isMatch(commitMessage string, value string) bool {
-	return util.Contains(commitMessage, value, mode.Delimiters)
 }
 
 // String returns a string representation of an instance.
